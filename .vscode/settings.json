@@ -1,0 +1,44 @@
+{
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "lualatex (shell-escape)",
+      "tools": [
+        "lualatex-shell",
+        "lualatex-shell"
+      ]
+    },
+    {
+      "name": "lualatex + biber (shell-escape)",
+      "tools": [
+        "lualatex-shell",
+        "biber",
+        "lualatex-shell",
+        "lualatex-shell"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.tools": [
+    {
+      "name": "lualatex-shell",
+      "command": "lualatex",
+      "args": [
+        "--shell-escape",
+        "-interaction=nonstopmode",
+        "-synctex=1",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "%DOCFILE%"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.recipe.default": "lastUsed",
+  "latex-workshop.latex.autoBibtex": false
+}

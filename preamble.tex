@@ -1,0 +1,130 @@
+%==============================================================================
+% PREAMBLE.TEX
+%==============================================================================
+
+%------------------------------------------------------------------------------
+% LANGUAGE & FONTS
+%------------------------------------------------------------------------------
+\usepackage{polyglossia}
+\setmainlanguage{german}
+
+
+\usepackage{fontspec}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+\usefonttheme[onlymath]{serif}
+
+%------------------------------------------------------------------------------
+% HYPERREF & BOOKMARKS
+%------------------------------------------------------------------------------
+\usepackage{bookmark}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\hypersetup{bookmarksdepth=3}
+
+%------------------------------------------------------------------------------
+% BASIC PACKAGES
+%------------------------------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{wrapfig}
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{xparse}
+\usepackage{twemojis}
+\usepackage{svg}
+\usepackage{ifthen}
+\usepackage[table]{xcolor}
+\usepackage{siunitx}
+\sisetup{locale=DE, group-digits=integer} % Vorkommastellen gruppieren, Nachkommastellen nicht
+
+
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\arraybackslash}m{#1}}
+
+%------------------------------------------------------------------------------
+% POSITIONING & OVERLAYS
+%------------------------------------------------------------------------------
+\usepackage[absolute,overlay]{textpos}
+\usepackage{pgfpages}
+%\setbeameroption{show notes on second screen=left}
+
+%------------------------------------------------------------------------------
+% TIKZ & PLOTS
+%------------------------------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{
+  calc,
+  automata,
+  positioning,
+  arrows.meta,
+  trees,
+  shapes,
+  shapes.callouts,
+  shapes.arrows,
+  shapes.geometric,
+  decorations.pathmorphing,
+  decorations.pathreplacing,
+  overlay-beamer-styles,
+  graphs,
+  backgrounds,
+  graphdrawing,
+  intersections
+}
+\usegdlibrary{force}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+%------------------------------------------------------------------------------
+% UML
+%------------------------------------------------------------------------------
+\usepackage{pgf-umlcd}
+\renewcommand{\umltextcolor}{TextColor}
+\renewcommand{\umldrawcolor}{TextColor}
+\renewcommand{\umlfillcolor}{White}
+
+%------------------------------------------------------------------------------
+% ALGORITHMS
+%------------------------------------------------------------------------------
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\setlength{\algomargin}{2em}
+\SetAlgorithmName{Algorithmus}{Algorithmuslistname}{List of Algorithms}
+\renewcommand{\thealgocf}{}
+
+\newcommand{\commentstyle}{\itshape\color{gray}}
+\SetCommentSty{commentstyle}
+%------------------------------------------------------------------------------
+% CODE (MINTED)
+%------------------------------------------------------------------------------
+\usepackage{minted}
+\usemintedstyle{manni}
+
+\definecolor{codeframe}{RGB}{200,200,200}
+\setminted{
+  frame=single,
+  framesep=1mm,
+  rulecolor=\color{codeframe},
+  breaklines,
+  tabsize=4,
+  autogobble,
+  numbersep=4pt
+}
+
+%------------------------------------------------------------------------------
+% BIBLIOGRAPHY
+%------------------------------------------------------------------------------
+\usepackage[
+  style=alphabetic,
+  backend=biber
+]{biblatex}
+
+%------------------------------------------------------------------------------
+% THEOREMS & LENGTHS
+%------------------------------------------------------------------------------
+\newtheorem{satz}{Satz}
+\newlength{\blockh}

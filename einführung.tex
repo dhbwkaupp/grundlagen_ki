@@ -1,0 +1,232 @@
+%\makesectionpage[figures/besondereDatentypen_neu.png]{Besondere Typen}
+\makesectionpage[figures/quiz.png]{Einführung}
+
+
+
+\begin{frame}{Bevor es los geht\dots}
+  \begin{columns}
+    % Linke Spalte: Text (asymmetrisch breiter)
+    \begin{column}{0.6\textwidth}
+
+
+      \vspace{0.5em}
+      \begin{itemize}
+        \item Mit \textbf{Particify} können Sie mir während der Vorlesung
+              anonymes Feedback zum Vorlesungstempo geben oder Ihre Fragen
+              formulieren, bevor sie verloren gehen.
+        \item Ich werde die Plattform auch nutzen, um Ihnen
+              Verständnisfragen zu stellen.
+      \end{itemize}
+    \end{column}
+
+    % Rechte Spalte: Bild + Link
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=0.8\linewidth]{figures/quiz-qr.png}
+
+      \vspace{0.5em}
+      \footnotesize
+      \href{https://partici.fi/33103264}{\texttt{https://partici.fi/33103264}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Was macht gute Informatiker*innen aus?}
+  \begin{columns}
+    % Linke Spalte: Twemoji
+    \begin{column}{0.35\textwidth}
+      \begin{center}
+        \twemoji[width=0.9\linewidth]{jigsaw}
+      \end{center}
+    \end{column}
+
+    % Rechte Spalte: Text
+    \begin{column}{0.6\textwidth}
+      Auch wenn sich die Inhalte der Informatik ständig ändern,
+      bleiben zwei Fähigkeiten zentral:
+      \vspace{0.5em}
+      \begin{itemize}
+        \item \textbf{Abstraktionsvermögen:}  
+              Komplexe Zusammenhänge erfassen und auf das
+              Wesentliche reduzieren.
+        \item \textbf{Logisches Denken:}  
+              Probleme strukturiert und effizient lösen.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Theoretische Informatik}
+    \bigskip
+    \begin{columns}
+    % Linke Spalte: Bild (35 %)
+    \begin{column}{0.35\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/dijkstra.png}
+    \end{column}
+
+    % Rechte Spalte: Zitat sehr groß
+    \begin{column}{0.60\textwidth}
+      \vspace{1.5em}
+{\Large\bfseries
+\begin{minipage}{\linewidth}
+\emph{„In der Informatik geht es}\par\vspace{0.3em}
+\emph{genauso wenig um Computer}\par\vspace{0.3em}
+\emph{wie in der Astronomie}\par\vspace{0.3em}
+\emph{um Teleskope.“}
+\end{minipage}
+}
+      
+      \vspace{1em}
+      \raggedleft
+      {\normalsize Edsger W. Dijkstra}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+% ---------- Frame 2: Vorteile der Theoretischen Informatik ----------
+\begin{frame}{Theoretische Informatik: Ihre Vorteile}
+  \begin{columns}[T]
+    % Linke Spalte (50 %)
+    \begin{column}{0.50\textwidth}
+      \begin{blockC1}{Was Sie mitnehmen}
+        Die Vorlesungsreihe \emph{Theoretische Informatik~1--3} vermittelt
+        \begin{itemize}
+          \item \textbf{Zugang zu Ideen, Modellen und Erkenntnissen}
+                vieler kluger Informatiker*innen
+          \item \textbf{Zeitlose Konzepte und Fähigkeiten},
+                die über konkrete Technologien hinausgehen
+        \end{itemize}
+      \end{blockC1}
+    \end{column}
+
+    % Rechte Spalte (45 %) → zusammen 95 %
+    \begin{column}{0.45\textwidth}
+      \begin{blockC2}{Warum das wichtig ist}
+        \begin{itemize}
+          \item \textbf{Unabhängig einsetzbar} von
+                Rechenmaschinen und Plattformen
+          \item \textbf{Grundlage für strukturiertes,
+                effizientes und flexibles Problemlösen}
+        \end{itemize}
+      \end{blockC2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Was ist theoretische Informatik?}
+    \small
+  \begin{columns}
+    \begin{column}{0.30\textwidth}
+\begin{itemize}
+              \item Informatik hat sich zu einer \textbf{eigenständigen Wissenschaft}
+              entwickelt.
+        \item Zentrale Teilbereiche der Informatik sind:
+              \begin{itemize}
+                \item Technische Informatik
+                \item \textbf{Theoretische Informatik}
+                \item Praktische Informatik
+                \item Angewandte Informatik
+              \end{itemize}
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.65\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/teilbereiche.png}
+    \end{column}
+  \end{columns}
+  \source{\cite{Hoff22}}
+\end{frame}
+
+\begin{frame}{Die vier Säulen der Informatik}
+\bigskip
+\centering
+\begin{tikzpicture}[
+    font=\footnotesize,
+    pillar/.style={
+        rounded corners,
+        align=left,
+        text width=3.0cm,
+        minimum height=5.8cm,
+        inner sep=6pt,
+        text=TextColor
+    },
+    title/.style={
+        font=\bfseries,
+        align=center
+    }
+]
+
+% Farben der Säulen
+\def\colTech{AlertColor}
+\def\colTheo{SecondaryColor}
+\def\colPrak{ThirdColor}
+\def\colAnw{AccentColor}
+
+% --- Technische Informatik ---
+\node[pillar, fill=\colTech!15, draw=\colTech] (tech) at (0,0) {
+\begin{center}
+\textbf{Technische\\Informatik}\\
+\vspace{1.0em}
+Logische Schaltungen\\*[0.5ex]
+Prozessoren\\*[0.5ex]
+Schaltwerke\\*[0.5ex]
+Rechner\-architekturen\\*[0.5ex]
+Hardware-Entwurf
+\end{center}
+};
+
+% --- Theoretische Informatik ---
+\node[pillar, fill=\colTheo!15, draw=\colTheo] (theo) at (3.7,0) {
+\begin{center}
+\textbf{Theoretische\\Informatik}\\
+\vspace{1.0em}
+Logik\\*[0.5ex]
+Relationen\\*[0.5ex]
+Komplexität\\
+
+\rule{0.9\linewidth}{0.4pt}\\*[0.5ex]
+Algorithmentheorie\par
+\rule{0.9\linewidth}{0.4pt}\\*[0.5ex]
+
+Formale Sprachen\\*[0.5ex]
+Berechenbarkeit\\*[0.5ex]
+Entscheidbarkeit
+\end{center}
+};
+
+% --- Praktische Informatik ---
+\node[pillar, fill=\colPrak!15, draw=\colPrak] (prak) at (7.4,0) {
+\begin{center}
+\textbf{Praktische\\Informatik}\\
+\vspace{1.0em}
+Algorithmen\\*[0.5ex]
+Datenstrukturen\\*[0.5ex]
+Programmieren\\*[0.5ex]
+Compilerbau\\*[0.5ex]
+Betriebssysteme\\*[0.5ex]
+Verteilte Systeme\\*[0.5ex]
+Software-Engineering
+\end{center}
+};
+
+% --- Angewandte Informatik ---
+\node[pillar, fill=\colAnw!15, draw=\colAnw] (anw) at (11.1,0) {
+\begin{center}
+\textbf{Angewandte\\Informatik}\\
+\vspace{1.0em}
+Computergrafik\\*[0.5ex]
+Künstliche Intelligenz\\*[0.5ex]
+Medieninformatik\\*[0.5ex]
+Signalverarbeitung\\*[0.5ex]
+Assistenzsysteme
+\end{center}
+};
+\end{tikzpicture}
+\source{\cite{Hoff22}}
+\end{frame}
+
