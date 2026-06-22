@@ -2,231 +2,722 @@
 \makesectionpage[figures/quiz.png]{Einführung}
 
 
-
-\begin{frame}{Bevor es los geht\dots}
-  \begin{columns}
-    % Linke Spalte: Text (asymmetrisch breiter)
-    \begin{column}{0.6\textwidth}
-
-
-      \vspace{0.5em}
-      \begin{itemize}
-        \item Mit \textbf{Particify} können Sie mir während der Vorlesung
-              anonymes Feedback zum Vorlesungstempo geben oder Ihre Fragen
-              formulieren, bevor sie verloren gehen.
-        \item Ich werde die Plattform auch nutzen, um Ihnen
-              Verständnisfragen zu stellen.
-      \end{itemize}
-    \end{column}
-
-    % Rechte Spalte: Bild + Link
-    \begin{column}{0.35\textwidth}
-      \centering
-      \includegraphics[width=0.8\linewidth]{figures/quiz-qr.png}
-
-      \vspace{0.5em}
-      \footnotesize
-      \href{https://partici.fi/33103264}{\texttt{https://partici.fi/33103264}}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-
-\begin{frame}{Was macht gute Informatiker*innen aus?}
-  \begin{columns}
-    % Linke Spalte: Twemoji
-    \begin{column}{0.35\textwidth}
-      \begin{center}
-        \twemoji[width=0.9\linewidth]{jigsaw}
-      \end{center}
-    \end{column}
-
-    % Rechte Spalte: Text
-    \begin{column}{0.6\textwidth}
-      Auch wenn sich die Inhalte der Informatik ständig ändern,
-      bleiben zwei Fähigkeiten zentral:
-      \vspace{0.5em}
-      \begin{itemize}
-        \item \textbf{Abstraktionsvermögen:}  
-              Komplexe Zusammenhänge erfassen und auf das
-              Wesentliche reduzieren.
-        \item \textbf{Logisches Denken:}  
-              Probleme strukturiert und effizient lösen.
-      \end{itemize}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-
-\begin{frame}{Theoretische Informatik}
-    \bigskip
-    \begin{columns}
-    % Linke Spalte: Bild (35 %)
-    \begin{column}{0.35\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/dijkstra.png}
-    \end{column}
-
-    % Rechte Spalte: Zitat sehr groß
-    \begin{column}{0.60\textwidth}
-      \vspace{1.5em}
-{\Large\bfseries
-\begin{minipage}{\linewidth}
-\emph{„In der Informatik geht es}\par\vspace{0.3em}
-\emph{genauso wenig um Computer}\par\vspace{0.3em}
-\emph{wie in der Astronomie}\par\vspace{0.3em}
-\emph{um Teleskope.“}
-\end{minipage}
-}
-      
-      \vspace{1em}
-      \raggedleft
-      {\normalsize Edsger W. Dijkstra}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-
-% ---------- Frame 2: Vorteile der Theoretischen Informatik ----------
-\begin{frame}{Theoretische Informatik: Ihre Vorteile}
-  \begin{columns}[T]
-    % Linke Spalte (50 %)
-    \begin{column}{0.50\textwidth}
-      \begin{blockC1}{Was Sie mitnehmen}
-        Die Vorlesungsreihe \emph{Theoretische Informatik~1--3} vermittelt
-        \begin{itemize}
-          \item \textbf{Zugang zu Ideen, Modellen und Erkenntnissen}
-                vieler kluger Informatiker*innen
-          \item \textbf{Zeitlose Konzepte und Fähigkeiten},
-                die über konkrete Technologien hinausgehen
-        \end{itemize}
-      \end{blockC1}
-    \end{column}
-
-    % Rechte Spalte (45 %) → zusammen 95 %
-    \begin{column}{0.45\textwidth}
-      \begin{blockC2}{Warum das wichtig ist}
-        \begin{itemize}
-          \item \textbf{Unabhängig einsetzbar} von
-                Rechenmaschinen und Plattformen
-          \item \textbf{Grundlage für strukturiertes,
-                effizientes und flexibles Problemlösen}
-        \end{itemize}
-      \end{blockC2}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Was ist theoretische Informatik?}
-    \small
-  \begin{columns}
-    \begin{column}{0.30\textwidth}
+\begin{frame}{Was ist Künstliche Intelligenz?}
+\begin{columns}
+\column{0.6\linewidth}
+\textbf{Definition:}
 \begin{itemize}
-              \item Informatik hat sich zu einer \textbf{eigenständigen Wissenschaft}
-              entwickelt.
-        \item Zentrale Teilbereiche der Informatik sind:
-              \begin{itemize}
-                \item Technische Informatik
-                \item \textbf{Theoretische Informatik}
-                \item Praktische Informatik
-                \item Angewandte Informatik
-              \end{itemize}
+\item \textbf{Künstliche Intelligenz (KI)} bezeichnet die Fähigkeit von Maschinen, Aufgaben auszuführen, die normalerweise \textbf{menschliche Intelligenz} erfordern.
+\item Dazu gehören \textbf{Lernen}, \textbf{Problemlösen}, \textbf{Mustererkennung} und \textbf{Entscheidungsfindung}.
+\item KI basiert auf \textbf{Algorithmen} und \textbf{Daten} und wird in vielen Anwendungen eingesetzt, z.\,B. \textbf{Sprachverarbeitung} oder \textbf{Bildanalyse}.
+\end{itemize}
+
+\column{0.35\linewidth}
+\centering
+\twemoji[width=0.9\linewidth]{brain}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Vom Schachtürken zum Analperlenbetrüger}
+\medskip
+\begin{columns}
+\column{0.5\linewidth}
+\centering
+\includegraphics[width=0.9\linewidth]{figures/schachtürke.jpg}
+
+\column{0.5\linewidth}
+\centering
+\includegraphics[width=0.75\linewidth]{figures/analperlen.png}
+
+\end{columns}
+\note{Was wir für intelligent halten ändert sich. \\
+
+Schachtürke: 18. Jahrhundert\\
+
+Analperlen: 2022
+
+
+}
+
+\source{\cite{schach_analperlen_2024}}
+
+\end{frame}
+
+
+\begin{frame}{Begriffe in der KI}
+\medskip
+\begin{columns}
+
+% Linke Spalte: TikZ-Grafik
+\begin{column}{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.85, every node/.style={font=\footnotesize}]
+
+% KI
+\filldraw[fill=PrimaryColor, fill opacity=0.1, draw=PrimaryColor, line width=1pt] (0,0) circle (3.75);
+\node[align=center] at (0,3.1)
+{\textbf{Künstliche}\\\textbf{Intelligenz}};
+
+% Machine Learning
+\filldraw[fill=AccentColor, fill opacity=0.1, draw=AccentColor, line width=1pt] (0,-0.6) circle (3);
+\node[align=center] at (0,1.7)
+{\textbf{Machine}\\\textbf{Learning}};
+
+% Deep Learning
+\filldraw[fill=AlertColor, fill opacity=0.1, draw=AlertColor, line width=1pt] (0,-1.2) circle (2.2);
+\node[align=center] at (0,0.4)
+{\textbf{Deep}\\\textbf{Learning}};
+
+% Generative AI
+\filldraw[fill=ThirdColor, fill opacity=0.1, draw=ThirdColor, line width=1pt] (0,-1.7) circle (1.5);
+\node[align=center] at (0,-1.1)
+{\textbf{Generative}\\\textbf{KI}};
+
+% LLM
+\filldraw[fill=ExampleColor, fill opacity=0.1, draw=ExampleColor, line width=1pt] (0,-2.3) circle (0.75);
+\node[align=center] at (0,-2.3)
+{\textbf{LLM}};
+
+\end{tikzpicture}
+\end{column}
+
+% Rechte Spalte: Erklärung
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+  \item \textbf{Künstliche Intelligenz}: Oberbegriff
+  \item \textbf{Machine Learning}: Lernen aus Daten
+  \item \textbf{Deep Learning}: Viele Schichten
+  \item \textbf{Generative KI}: Erzeugt Inhalte
+  \item \textbf{LLMs}: Sprachmodelle
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{KI-Methoden in der Praxis: Überblick}
+  \begin{columns}
+    \begin{column}{0.60\linewidth}
+      \textbf{Klassifikation} -- typische Fragen:
+      \begin{itemize}
+        \item Gehört dieses Beispiel zu \textbf{Klasse A, B, C}?
+        \item Ist eine Transaktion \textbf{betrügerisch} oder \textbf{legitim}?
+        \item Spamnachricht? \textbf{ja}, \textbf{nein}, \textbf{vielleicht}.  
+      \end{itemize}
+
+      \vspace{0.5em}
+
+      \textbf{Regression} -- typische Fragen:
+      \begin{itemize}
+        \item Welchen \textbf{numerischen Wert} nimmt eine Größe an?
+        \item Wie hoch wird der \textbf{Preis}, das \textbf{Risiko} oder der \textbf{Verbrauch} sein?
       \end{itemize}
     \end{column}
+    \begin{column}{0.35\linewidth}
+      \begin{block}{Typische Algorithmen}
+        \begin{itemize}
+          \item Lineare und logistische Regression
+          \item Statistische Modelle (Nayes),
+          \item Entscheidungsbäume, Random Forests, 
+          \item k-NN, SVM, einfache neuronale Netze
+        \end{itemize}
+      \end{block}
 
-    \begin{column}{0.65\textwidth}
-      \centering
-      \includegraphics[width=\linewidth]{figures/teilbereiche.png}
     \end{column}
   \end{columns}
-  \source{\cite{Hoff22}}
 \end{frame}
 
-\begin{frame}{Die vier Säulen der Informatik}
-\bigskip
+\begin{frame}{Finanzbranche: Klassifikation und Regression}
+\begin{columns}[T]
+  \column{0.48\linewidth}
+    \begin{blockC1}{Klassifikation in Finanzen}
+      \begin{itemize}
+        \item \textbf{Kreditscoring}: Kunde zahlt zurück ja/nein
+        \item \textbf{Betrugserkennung}: Transaktion legitim oder Betrug
+        \item Kundensegmentierung nach \textbf{Risikoprofilen}
+        \item Frühwarnsysteme für \textbf{Ausfallrisiken}
+      \end{itemize}
+    \end{blockC1}
+
+  \column{0.47\linewidth}
+    \begin{blockC3}{Regression in Finanzen}
+      \begin{itemize}
+        \item Vorhersage von \textbf{Aktienkursen} (vereinfachtes Modell)
+        \item Prognose von \textbf{Cashflows} und Umsätzen
+        \item Schätzung von \textbf{Recovery Rates} bei Ausfällen
+      \end{itemize}
+    \end{blockC3}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Smartphones und Online-Dienste}
+\begin{columns}[T]
+  \column{0.47\linewidth}
+    \begin{blockC2}{Klassifikation auf Geräten}
+      \begin{itemize}
+        \item \textbf{Spam-Erkennung} in E-Mails und Messengern
+        \item \textbf{Bild- und Objekterkennung} in Fotos
+        \item \textbf{Spracherkennung}: Zuordnung von Audios zu Text
+        \item Erkennung von \textbf{Nutzeraktivitäten} (gehen, laufen, fahren)
+      \end{itemize}
+    \end{blockC2}
+
+  \column{0.48\linewidth}
+    \begin{blockC4}{Regression in Diensten}
+      \begin{itemize}
+        \item Vorhersage von \textbf{Nutzungsdauer} von Apps
+        \item Prognose von \textbf{Werbeklick-Raten}
+        \item Schätzung der \textbf{Verbindungsqualität} im Mobilfunk
+      \end{itemize}
+    \end{blockC4}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Industrie und Produktion}
+\begin{columns}[T]
+  \column{0.48\linewidth}
+    \begin{blockC1}{Klassifikation in der Industrie}
+      \begin{itemize}
+        \item \textbf{Qualitätskontrolle}: Gutteil vs. Schlechtteil
+        \item Erkennung von \textbf{Fehlertypen} an Bauteilen
+        \item Einordnung von \textbf{Maschinenzuständen}
+        \item Klassifikation von \textbf{Alarmsituationen}
+      \end{itemize}
+    \end{blockC1}
+
+  \column{0.47\linewidth}
+    \begin{blockC3}{Regression in der Produktion}
+      \begin{itemize}
+        \item Vorhersage von \textbf{Restlebensdauer} von Komponenten
+        \item Prognose von \textbf{Energieverbrauch}
+        \item Schätzung von \textbf{Durchlaufzeiten} in Fertigungslinien
+      \end{itemize}
+    \end{blockC3}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Automotive: Vom Fahrzeug bis zur Flotte}
+\begin{columns}[T]
+  \column{0.48\linewidth}
+    \begin{blockC2}{Klassifikation im Fahrzeug}
+      \begin{itemize}
+        \item \textbf{Objekterkennung}: Fahrzeuge, Fußgänger, Schilder
+        \item \textbf{Fahrzustände}: normal vs. kritisch
+        \item Erkennung von \textbf{Fahreraufmerksamkeit}
+        \item Einordnung von \textbf{Straßenzuständen}
+      \end{itemize}
+    \end{blockC2}
+
+  \column{0.47\linewidth}
+    \begin{blockC4}{Regression in Automotive}
+      \begin{itemize}
+        \item \textbf{Reichweitenprognose} für E-Fahrzeuge
+        \item Schätzung von \textbf{Kraftstoff- oder Energieverbrauch}
+        \item Vorhersage von \textbf{Wartungszeitpunkten} (Predictive Maintenance)
+      \end{itemize}
+    \end{blockC4}
+\end{columns}
+\end{frame}
+
+\begin{frame}{KI-Kunstmarkt: Portrait of Edmond de Belamy}
+  \begin{columns}
+    \begin{column}{0.47\linewidth}
+      \centering
+      \includegraphics[width=0.8\linewidth]{figures/Edmond_de_Belamy.png}
+    \end{column}
+    \begin{column}{0.47\linewidth}
+      \begin{itemize}
+        \item \textbf{Titel:} Portrait of Edmond de Belamy
+        \item \textbf{Verkauf:} Am 25.\ Oktober 2018 vom Auktionshaus Christie's
+              verkauft
+        \item \textbf{Preis:} \(\approx 432{.}500\) US-Dollar
+        \item Häufig als \textbf{Meilenstein der KI-Kunst} im Auktionsmarkt
+              diskutiert
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \source{\cite{wikipedia_edmond_de_belamy}}
+\end{frame} 
+
+\begin{frame}{Generatives Modell: Entstehung}
+  \begin{columns}
+    \begin{column}{0.60\linewidth}
+      \begin{itemize}
+        \item Ein Computerprogramm analysierte \textbf{15\,000 handgemalte Porträts}
+              aus dem 14.--20.\ Jahrhundert.
+        \item Aus den Bilddaten wurde ein \textbf{Klassifikator (Diskriminator)}
+              trainiert, der misst, wie stark ein Bild den Datenbankbildern ähnelt.
+        \item Ein \textbf{Generator} erzeugte so lange zufällige Bilder, bis der
+              Klassifikator eine \textbf{ausreichend hohe Ähnlichkeit} attestierte.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.35\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/Edmond_de_Belamy.png}
+    \end{column}
+  \end{columns}
+
+  \source{\cite{wikipedia_edmond_de_belamy}}
+\end{frame}
+
+\begin{frame}{Signatur: Algorithmus hinter Edmond de Belamy}
+  \begin{itemize}
+    \item Die \textbf{Signatur} beschreibt den Algorithmus, mit dem das Bild
+          erzeugt wurde.
+    \item Das Formelzeichen \(\mathbb{E}\) steht für den \textbf{Erwartungswert},
+          also den in der Statistik verwendeten Durchschnitt.
+    \item Das Verfahren wertet damit \textbf{statistische Merkmale} der
+          zugrunde liegenden Bilder aus.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \centering
+  \includegraphics[width=0.6\linewidth]{figures/Edmond_de_Belamy_formel.png}
+
+  \source{Bildquelle: \cite{wikipedia_edmond_de_belamy}}
+\end{frame}
+
+
+\begin{frame}{Grundidee des maschinellen Lernens}
+  \begin{itemize}
+    \item Wir haben \textbf{Daten}.
+    \item Mit diesen Daten \textbf{trainieren wir ein Modell}.
+    \item Das Modell verwenden wir für \textbf{Vorhersagen}.
+  \end{itemize}
+
+
+
+  \vspace{3.em}
+  \centering
+  \begin{tikzpicture}[node distance=1.6cm]
+    \tikzstyle{mybox} = [
+      rectangle,
+      rounded corners,
+      minimum width=2.9cm,
+      minimum height=1.0cm,
+      draw,
+      very thick,
+      align=center,
+      text=TextColor
+    ]
+    \tikzstyle{myarrow} = [
+      -latex,
+      very thick
+    ]
+
+    % Nodes
+    \node[mybox, fill=SecondaryColor!25, draw=PrimaryColor]          (data) {Daten};
+    \node[mybox, fill=ThirdColor!15,  draw=ThirdColor, right=of data] (model) {Modell};
+    \node[mybox, fill=AccentColor!25,   draw=AccentColor,  right=of model] (pred) {Vorhersage};
+
+    % Arrows (farbig)
+    \draw[myarrow, draw=PrimaryColor] (data)  -- (model);
+    \draw[myarrow, draw=PrimaryColor]  (model) -- (pred);
+  \end{tikzpicture}
+\end{frame}
+
+
+
+\begin{frame}{Grundidee des maschinellen Lernens}
+
+\begin{columns}
+
+% ---------------- LEFT ----------------
+\begin{column}{0.35\textwidth}
+\textbf{Beispiel:}
+\begin{itemize}
+      \item  Vorhersage, ob eine Person \textbf{Diabetes} hat.  
+      \item Dazu werden \textbf{Probant*innen} untersucht und befragt.
+      \item Aus diesen \textbf{Daten} werden \textbf{Diagnosen für neue Patient*innen} abgeleitet.
+    \end{itemize}
+
+\end{column}
+
+
+% ---------------- RIGHT ----------------
+\begin{column}{0.60\textwidth}
+\raggedleft
+
+% STEP 1
+\only<1>{
+\footnotesize
+\begin{tabular}{>{\columncolor{AccentColor!15}}c}
+\toprule
+\rowcolor{AccentColor!15}
+\textbf{$y$} \\
+\textbf{Diabetes?} \\
+\midrule
+nein \\
+ja \\
+ja \\
+nein \\
+ja \\
+nein \\
+\bottomrule
+\end{tabular}
+}
+
+% STEP 2
+\only<2>{
+\footnotesize
+\begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
+\toprule
+\rowcolor{SecondaryColor!20}
+\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
+\midrule
+80  & hoch    & ja    & blond   & nein \\
+95  & hoch    & ja    & braun   & ja   \\
+88  & niedrig & nein  & schwarz & ja   \\
+72  & normal  & nein  & blond   & nein \\
+110 & hoch    & ja    & schwarz & ja   \\
+85  & normal  & nein  & braun   & nein \\
+\bottomrule
+\end{tabular}
+}
+
+% STEP 3
+\only<3>{
+\footnotesize
+\begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
+\toprule
+\rowcolor{SecondaryColor!20}
+\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
+\midrule
+80  & hoch    & ja    & blond   & nein \\
+95  & hoch    & ja    & braun   & ja   \\
+88  & niedrig & nein  & schwarz & ja   \\
+72  & normal  & nein  & blond   & nein \\
+110 & hoch    & ja    & schwarz & ja   \\
+85  & normal  & nein  & braun   & nein \\
+\addlinespace
+\textbf{90}  & \textbf{hoch} & \textbf{ja} & \textbf{schwarz} & \textbf{} \\
+\bottomrule
+\end{tabular}
+}
+
+% STEP 4
+\only<4>{
+\footnotesize
+\begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
+\toprule
+\rowcolor{SecondaryColor!20}
+\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
+\midrule
+80  & hoch    & ja    & blond   & nein \\
+95  & hoch    & ja    & braun   & ja   \\
+88  & niedrig & nein  & schwarz & ja   \\
+72  & normal  & nein  & blond   & nein \\
+110 & hoch    & ja    & schwarz & ja   \\
+85  & normal  & nein  & braun   & nein \\
+\addlinespace
+\textbf{90}  & \textbf{hoch} & \textbf{ja} & \textbf{schwarz} & \textbf{???} \\
+\bottomrule
+\end{tabular}
+}
+
+\end{column}
+
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Aufgabe: Kontinuierliche Werte vorhersagen}
+
+\begin{columns}
+
+% ---------------- LEFT ----------------
+\begin{column}{0.6\textwidth}
 \centering
-\begin{tikzpicture}[
-    font=\footnotesize,
-    pillar/.style={
-        rounded corners,
-        align=left,
-        text width=3.0cm,
-        minimum height=5.8cm,
-        inner sep=6pt,
-        text=TextColor
-    },
-    title/.style={
-        font=\bfseries,
-        align=center
-    }
-]
+\begin{tikzpicture}[scale=0.7]
 
-% Farben der Säulen
-\def\colTech{AlertColor}
-\def\colTheo{SecondaryColor}
-\def\colPrak{ThirdColor}
-\def\colAnw{AccentColor}
+% Achsen
+\draw[->, thick] (0,0) -- (10,0);
+\draw[->, thick] (0,0) -- (0,6);
 
-% --- Technische Informatik ---
-\node[pillar, fill=\colTech!15, draw=\colTech] (tech) at (0,0) {
-\begin{center}
-\textbf{Technische\\Informatik}\\
-\vspace{1.0em}
-Logische Schaltungen\\*[0.5ex]
-Prozessoren\\*[0.5ex]
-Schaltwerke\\*[0.5ex]
-Rechner\-architekturen\\*[0.5ex]
-Hardware-Entwurf
-\end{center}
-};
+% X-Ticks + Beschriftung
+\foreach \x/\label in {
+1.5/125, 3/250, 4.5/375, 6/500, 7.5/625, 9/750
+}
+{
+\draw (\x,0) -- (\x,-0.15);
+\node[below, font=\footnotesize] at (\x,0) {\label};
+}
 
-% --- Theoretische Informatik ---
-\node[pillar, fill=\colTheo!15, draw=\colTheo] (theo) at (3.7,0) {
-\begin{center}
-\textbf{Theoretische\\Informatik}\\
-\vspace{1.0em}
-Logik\\*[0.5ex]
-Relationen\\*[0.5ex]
-Komplexität\\
+% Y-Ticks + Beschriftung
+\foreach \y/\label in {
+1/20, 2/40, 3/60, 4/80, 5/100
+}
+{
+\draw (0,\y) -- (-0.15,\y);
+\node[left, font=\footnotesize] at (0,\y) {\label};
+}
 
-\rule{0.9\linewidth}{0.4pt}\\*[0.5ex]
-Algorithmentheorie\par
-\rule{0.9\linewidth}{0.4pt}\\*[0.5ex]
+% Achsenbeschriftungen
+\node[below, font=\footnotesize] at (5,-1) {\textbf{Kaffeekonsum in ml}};
+\node[rotate=90, font=\footnotesize] at (-1.2,3) {\textbf{Konzentrationsfähigkeit in \%}};
 
-Formale Sprachen\\*[0.5ex]
-Berechenbarkeit\\*[0.5ex]
-Entscheidbarkeit
-\end{center}
-};
+% Punkte (nah am Bild)
+\foreach \x/\y in {
+1.4/2.1,
+2.8/2.0,
+3.6/3.0,
+4.8/3.7,
+5.8/2.7,
+7.0/3.2,
+7.3/4.5,
+8.8/3.1,
+9.5/4.3
+}
+{
+\fill[PrimaryColor] (\x,\y) circle (4pt);
+}
 
-% --- Praktische Informatik ---
-\node[pillar, fill=\colPrak!15, draw=\colPrak] (prak) at (7.4,0) {
-\begin{center}
-\textbf{Praktische\\Informatik}\\
-\vspace{1.0em}
-Algorithmen\\*[0.5ex]
-Datenstrukturen\\*[0.5ex]
-Programmieren\\*[0.5ex]
-Compilerbau\\*[0.5ex]
-Betriebssysteme\\*[0.5ex]
-Verteilte Systeme\\*[0.5ex]
-Software-Engineering
-\end{center}
-};
+% Regressionsgerade
+\draw[thick, AlertColor] (0,1.3) -- (10,4.5);
 
-% --- Angewandte Informatik ---
-\node[pillar, fill=\colAnw!15, draw=\colAnw] (anw) at (11.1,0) {
-\begin{center}
-\textbf{Angewandte\\Informatik}\\
-\vspace{1.0em}
-Computergrafik\\*[0.5ex]
-Künstliche Intelligenz\\*[0.5ex]
-Medieninformatik\\*[0.5ex]
-Signalverarbeitung\\*[0.5ex]
-Assistenzsysteme
-\end{center}
-};
 \end{tikzpicture}
-\source{\cite{Hoff22}}
+\end{column}
+
+% ---------------- RIGHT ----------------
+\begin{column}{0.35\textwidth}
+
+\begin{itemize}
+  \item Bei der \textbf{Regression} sagt man \textbf{Zahlenwerte} voraus.
+  \item Diese Werte sind \textbf{kontinuierlich}, d.\,h.\ sie können viele
+        Zwischenwerte annehmen.
+  \item Häufig handelt es sich dabei um \textbf{Kommazahlen}
+        (z.\,B.\ Temperatur, Preis, Gewicht).
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{seemann2024mlaz}}
 \end{frame}
 
+\begin{frame}{Aufgabe: Kontinuierliche Werte vorhersagen}
+\medskip
+\begin{columns}
+
+% ---------------- LEFT ----------------
+\begin{column}{0.35\textwidth}
+
+\begin{itemize}
+  \item Wir haben \textbf{Datenpunkte} mit bekannten \textbf{Klassen}
+        (z.\,B.\ krank/gesund).
+  \item Für neue Datenpunkte wollen wir die \textbf{Klasse vorhersagen}.
+  \item Diese Art von Aufgabe heißt \textbf{Klassifikation}.
+\end{itemize}
+
+\end{column}
+
+
+% ---------------- RIGHT ----------------
+\begin{column}{0.60\textwidth}
+\centering
+
+\begin{tikzpicture}[scale=0.8]
+
+% Achsen
+\draw[->, thick] (0,0) -- (8,0);
+\draw[->, thick] (0,0) -- (0,6);
+
+% Achsbeschriftungen (mittig & parallel)
+\node[below, font=\footnotesize] at (4,-0.3) {\textbf{Temperatur [°C]}};
+\node[rotate=90, font=\footnotesize] at (-0.4,3) {\textbf{Druck [Bar]}};
+
+% Klasse A
+\foreach \x/\y in {
+1/2, 1.5/3.6, 2.3/2.8, 2.1/1.3, 3/2.1, 3.3/3.6, 2.8/4.8
+}{
+\filldraw[
+  fill=PrimaryColor, 
+  draw=PrimaryColor!90!black, 
+  line width=0.8pt
+] (\x,\y) circle (4.5pt);
+}
+
+% Klasse B
+\foreach \x/\y in {
+5/2.5, 5.6/3.9, 6.2/2.7, 6.8/3.3,
+5.9/1.1, 6.6/1.8, 7.4/2.2, 6.5/4.0
+}{
+\filldraw[
+  fill=AccentColor, 
+  draw=AccentColor!90!black, 
+  line width=0.8pt
+] (\x,\y) circle (4.5pt);
+}
+
+% unbekannter Punkt
+\filldraw[fill=white, draw=black, line width=0.8pt]
+(6.8,4.5) circle (4.5pt);
+
+\node[above, font=\footnotesize\bfseries] at (6.8,4.7) {???};
+
+% Legende
+\draw[fill=white, draw=black] (6.5,5.6) rectangle (9.2,6.6);
+
+\filldraw[fill=PrimaryColor, draw=PrimaryColor!90!black]
+(6.9,6.3) circle (4pt);
+\node[right, font=\footnotesize] at (7.2,6.3) {Klasse A};
+
+\filldraw[fill=AccentColor, draw=AccentColor!90!black]
+(6.9,5.9) circle (4pt);
+\node[right, font=\footnotesize] at (7.2,5.9) {Klasse B};
+
+\end{tikzpicture}
+
+\end{column}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Clustering}
+
+\begin{columns}
+
+% ---------------- LEFT ----------------
+\begin{column}{0.38\textwidth}
+
+\begin{itemize}
+\item Gegeben sind Datenpunkte \textbf{ohne bekannte Klassen}.
+
+\item Ziel: \textbf{ähnliche Punkte gruppieren} und  
+\textbf{Strukturen erkennen}.
+
+\item Diese Aufgabe heißt  
+\textbf{Clustering}.
+\end{itemize}
+
+\end{column}
+
+
+% ---------------- RIGHT ----------------
+\begin{column}{0.58\textwidth}
+\centering
+
+\begin{tikzpicture}[scale=0.9]
+
+% Achsen
+\draw[->, thick] (0,0) -- (8.0,0);
+\draw[->, thick] (0,0) -- (0,6);
+
+% Achsbeschriftungen (näher dran)
+\node[below, font=\footnotesize] at (4.7,-0.3) {\textbf{Temperatur [°C]}};
+\node[rotate=90, font=\footnotesize] at (-0.3,3.5) {\textbf{Druck [Bar]}};
+
+% -------- Cluster links --------
+\draw[thick, PrimaryColor, rotate around={60:(2.2,3.2)}]
+(2.2,3.2) ellipse (2.2 and 1.7);
+
+\foreach \x/\y in {
+1.1/2.2,
+1.6/3.7,
+2.0/2.8,
+2.0/1.6,
+2.9/2.3,
+3.0/3.6,
+2.4/4.8
+}{
+\filldraw[
+  fill=gray!65,
+  draw=gray!90!black,
+  line width=0.8pt
+] (\x,\y) circle (4.5pt);
+}
+
+% -------- Cluster rechts --------
+\draw[thick, AlertColor, rotate around={0:(6.0,3.2)}]
+(6.0,3.2) ellipse (1.7 and 2.3);
+
+\foreach \x/\y in {
+4.8/2.7,
+5.4/3.9,
+5.9/2.9,
+6.5/3.4,
+6.2/1.8,
+6.9/2.3,
+6.6/4.4,
+5.6/1.9
+}{
+\filldraw[
+  fill=gray!65,
+  draw=gray!90!black,
+  line width=0.8pt
+] (\x,\y) circle (4.5pt);
+}
+
+\end{tikzpicture}
+
+\end{column}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Problemstellungen im Maschinellen Lernen}
+
+\begin{columns}
+
+% -------- LEFT --------
+\begin{column}{0.55\textwidth}
+
+Wir haben also verschiedenartige Problemstellungen:
+
+\vspace{0.8em}
+
+\begin{tikzpicture}
+
+% Items
+\node[anchor=west] (r) at (0,1.6) {\textbf{Regression}};
+\node[anchor=west] (k) at (0,1.0) {\textbf{Klassifikation}};
+\node[anchor=west] (c) at (0,0.4) {\textbf{Clustering}};
+
+% Klammer überwacht (hinter den ersten beiden Items)
+\draw[decorate, decoration={brace, amplitude=3pt}]
+(2.8,1.8) -- node[right=6pt] {\footnotesize \textbf{überwachtes Lernen}} (2.8,0.8);
+
+% Klammer unüberwacht (nur drittes Item)
+\draw[decorate, decoration={brace, amplitude=3pt}]
+(2.8,0.6) -- node[right=6pt] {\footnotesize \textbf{unüberwachtes Lernen}} (2.8,0.3);
+
+\end{tikzpicture}
+
+\vspace{1em}
+
+Für die verschiedenen \textbf{Problemstellungen}  
+benötigen wir \textbf{unterschiedliche Algorithmen}.
+
+\end{column}
+
+
+% -------- RIGHT --------
+\begin{column}{0.4\textwidth}
+\centering
+
+\twemoji[width=0.9\linewidth]{gear}
+
+\end{column}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
