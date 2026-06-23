@@ -2,6 +2,8 @@
 \makesectionpage[figures/quiz.png]{Einführung}
 
 
+
+
 \begin{frame}{Was ist Künstliche Intelligenz?}
 \begin{columns}
 \column{0.6\linewidth}
@@ -367,7 +369,7 @@ nein \\
 \begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
 \toprule
 \rowcolor{SecondaryColor!20}
-\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{$x_1$} & \textbf{$x_2$} & \textbf{$x_3$} & \textbf{$x_4$} & \textbf{$y$} \\
 \textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
 \midrule
 80  & hoch    & ja    & blond   & nein \\
@@ -386,7 +388,7 @@ nein \\
 \begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
 \toprule
 \rowcolor{SecondaryColor!20}
-\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{$x_1$} & \textbf{$x_2$} & \textbf{$x_3$} & \textbf{$x_4$} & \textbf{$y$} \\
 \textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
 \midrule
 80  & hoch    & ja    & blond   & nein \\
@@ -407,7 +409,7 @@ nein \\
 \begin{tabular}{cccc>{\columncolor{AccentColor!15}}c}
 \toprule
 \rowcolor{SecondaryColor!20}
-\textbf{$X_1$} & \textbf{$X_2$} & \textbf{$X_3$} & \textbf{$X_4$} & \textbf{$y$} \\
+\textbf{$x_1$} & \textbf{$x_2$} & \textbf{$x_3$} & \textbf{$x_4$} & \textbf{$y$} \\
 \textbf{Gewicht} & \textbf{Blutdruck} & \textbf{Müde?} & \textbf{Haarfarbe} & \textbf{Diabetes?} \\
 \midrule
 80  & hoch    & ja    & blond   & nein \\
@@ -717,7 +719,88 @@ benötigen wir \textbf{unterschiedliche Algorithmen}.
 \end{frame}
 
 
+\begin{frame}{Begriffe beim maschinellen Lernen}
+  \begin{columns}
+    \begin{column}{0.6\linewidth}
+      \begin{itemize}
+        \item Beim \textbf{überwachten maschinellen Lernen} haben wir eine \textbf{Eingabemenge} \(X\)
+              und eine \textbf{Ausgabemenge} \(Y\).
+        \item Ein Eingabedatum besteht meist aus mehreren \textbf{Kenngrößen} (Features) und wird als
+              \(n\)-Tupel \(\mathbf{x} = (x_1,\dots,x_n) \in X\) dargestellt.
+        \item Die Kenngrößen beschreiben gemeinsam ein Objekt und bilden einen \textbf{Eingabevektor}
+              in einem \(n\)-dimensionalen Merkmalsraum.
+        \item Das \textbf{Modell} ist eine Funktion \(f : X \rightarrow Y\), die jedem Eingang
+              \(\mathbf{x} \in X\) einen \textbf{geschätzten Ausgabewert} \(\hat{y} = f(\mathbf{x})\) zuordnet.
+      \end{itemize}
 
+      \vfill
+      \source{\cite{Frochte2020}}
+    \end{column}
+    \begin{column}{0.35\linewidth}
+      \centering
+      \includesvg[width=\linewidth]{figures/roboter_progose}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Bilddaten und Kenngrößen}
+  \footnotesize
+  \begin{columns}
+    \begin{column}{0.5\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/fussgaenger.jpg}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \begin{itemize}
+        \item Im technischen Umfeld sollen oft \textbf{Prognosen aus Bild- oder Signaldaten} getroffen werden.
+        \item Hier werden die \textbf{Kenngrößen} oft aus den \textbf{Rohdaten}  berechnet.
+        \item Beispiel \textbf{Fahrerassistenzsysteme}: Fußgänger im Fahrschlauch werden per Frontkamera erkannt.
+        \item Das ist eine \textbf{Klassifikationsaufgabe} -- nicht das Bild selbst wird klassifiziert.
+        \item Das Bild wird gerastert; für jedes Quadrat wird die Richtung des größten Hell-Dunkel-Übergangs
+              (Histogram of Oriented Gradients, HOG) als Kenngröße verwendet.
+      \end{itemize}
+
+    \end{column}
+    
+  \end{columns}
+        \source{Bildquelle: \cite{baumann2019_fahrerassistenz_ml}}
+\end{frame}
+
+
+\begin{frame}{Verarbeitungspipeline und Kenngrößen}
+\begin{columns}[T]
+\column{0.60\textwidth}
+
+\begin{tikzpicture}[
+    node distance=1.6cm,
+    every node/.style={font=\footnotesize},
+    block/.style={draw, rounded corners, minimum width=3.4cm, minimum height=0.7cm, align=center},
+    line/.style={-{Triangle[length=2mm,width=2mm]}, thick}
+]
+
+\node[block] (source) {Signalquelle};
+\node[block, below of=source] (sensor) {Sensoren};
+\node[block, below of=sensor] (signal) {Signalverarbeitung};
+\node[block, below of=signal] (features) {Kenngrößenbildung};
+\node[block, right=2.2cm of features, draw=orange, thick] (model) {Modell};
+\node[block, right=1.5cm of model, draw=green!60!black, thick] (pred) {Vorhersage};
+
+\draw[line] (source) -- node[right] {phys.\ Größen} (sensor);
+\draw[line] (sensor) -- node[right] {Signale/Bilder} (signal);
+\draw[line] (signal) -- node[right] {gefiltert,\ verstärkt} (features);
+\draw[line] (features) -- node[above] {Kenngrößen} (model);
+\draw[line] (model) -- (pred);
+
+\end{tikzpicture}
+
+\column{0.35\textwidth}
+\begin{block}{Berechnete Kenngrößen}
+Die Verwendung berechneter Kenngrößen macht die Vorhersage meist flexibler und robuster gegenüber Störungen.
+\end{block}
+
+\end{columns}
+\source{\cite{AbellanNebot2010_MachiningMonitoringAI}}
+\end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
