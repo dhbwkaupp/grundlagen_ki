@@ -604,10 +604,6 @@ Die lineare Regression wählt die \textbf{am besten passenden Parameter} für di
 \end{frame}
 
 
-
-
-
-
 \begin{frame}{Lineare Modelle und Hyperebenen}
 \footnotesize
 \begin{columns}
@@ -623,7 +619,7 @@ Man schreibt das typischerweise als Skalarprodukt
 \[
     f(\mathbf{x} ) = u_0 + \mathbf{b}^T \cdot \mathbf{x}  
 \]
-mit  $u_0\in \mathbb{R}, \mathbf{b}^T = (u_1, \dots, u_n) \in \mathbb{R}^n$. 
+mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^T \in \mathbb{R}^n$. 
 
 
 \column{0.47\textwidth}
@@ -711,6 +707,437 @@ df.head()
 
 \end{frame}
 
+
+\begin{frame}{Aufstellen des linearen Modells}
+\footnotesize
+\begin{columns}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Die Hyperebene ist durch ihre Koeffizienten $u_i$ definiert.
+\item  Im Boston Housing Dataset: 13 Merkmale + Offset $u_0$ $\Rightarrow$ 14 unbekannte Parameter
+\item Wir setzen die erste Datenzeile in das Modell ein:
+\[
+y = u_0 + \sum_{i=1}^{13} u_i x_i
+\]
+\end{itemize}
+
+\textbf{Ziel}:
+\begin{itemize}
+\item Bestimme $u_i$ so, dass alle Daten gut approximiert werden
+\end{itemize}
+
+\column{0.6\textwidth}
+
+\textbf{Beispiel (erste Zeile):}
+\[
+\begin{aligned}
+24.0 =\;& u_0 
++ u_1 \cdot 0.00632
++ u_2 \cdot 18.0
++ u_3 \cdot 2.31 \\
+&+ u_4 \cdot 0
++ u_5 \cdot 0.538
++ u_6 \cdot 6.575 \\
+&+ u_7 \cdot 65.2
++ u_8 \cdot 4.0900
++ u_9 \cdot 1 \\
+&+ u_{10} \cdot 296
++ u_{11} \cdot 15.3
++ u_{12} \cdot 4.98
++ u_{13} \cdot 0
+\end{aligned}
+\]
+
+\medskip
+
+\textbf{Interpretation:}
+\begin{itemize}
+\item Links: Zielwert (MEDV)
+\item Rechts: gewichtete Summe der anderen Merkmale
+\end{itemize}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Lineares Gleichungssystem}
+\footnotesize
+\begin{columns}
+
+\column{0.35\textwidth}
+
+Es ergibt sich ein lineares Gleichungssystem:
+\begin{itemize}
+\item Pro Zeile eine Gleichung
+\item Insgesamt: 506 Gleichungen
+\item Unbekannt: 14 Parameter $u_0, \dots, u_{13}$
+\item Mehr Gleichungen als Unbekannte
+\item $\Rightarrow$ überbestimmtes System
+\end{itemize}
+
+\medskip
+
+\textbf{Problem:}
+\begin{itemize}
+\item keine exakte Lösung möglich
+\item stattdessen beste Approximation gesucht
+\end{itemize}
+
+\column{0.60\textwidth}
+
+\textbf{Gleichungen:}
+
+\[
+\begin{aligned}
+u_0 &+ u_1 \cdot 6.3\cdot 10^{-3} + u_2 \cdot 1.8\cdot 10^{1} + \cdots + u_{13} \cdot 4.9\cdot 10^{0} = 24.0 \\
+u_0 &+ u_1 \cdot 2.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{13} \cdot 9.1\cdot 10^{0} = 21.6 \\
+&\vdots \\
+u_0 &+ u_1 \cdot 4.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{13} \cdot 7.8\cdot 10^{0} = 11.9
+\end{aligned}
+\]
+
+\medskip
+
+\textbf{Ziel:}
+\begin{itemize}
+\item Alle Gleichungen gleichzeitig möglichst gut erfüllen
+\end{itemize}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Matrixformulierung des Regressionsproblems}
+
+\begin{itemize}
+\item Aus den Zielwerten bilden wir den Vektor
+\[
+\mathbf{y} = (24.0, 21.6, \ldots, 11.9)^T
+\]
+
+\item Die übrigen Werte (Merkmale) fassen wir in einer Matrix $A$ zusammen:
+
+\[
+A =
+\begin{pmatrix}
+1 & 6.3\cdot 10^{-3} & 1.8\cdot 10^1 & \dots & 3.9\cdot 10^2 & 4.9\cdot 10^0 \\
+1 & 2.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots & 3.9\cdot 10^2 & 9.1\cdot 10^0 \\
+\vdots & \vdots & \vdots & & \vdots & \vdots \\
+1 & 4.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots & 3.9\cdot 10^2 & 7.8\cdot 10^0
+\end{pmatrix}
+\]
+
+\item Dann hat unser Gleichungssystem für \(\mathbf{u} = (u_0, \ldots, u_{13})^T\) die Form 
+\[
+A \mathbf{u} = \mathbf{y}
+\]
+\end{itemize}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Fehler im Regressionsmodell}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\begin{block}{Fehler definieren}
+Für jeden Datenpunkt gilt:
+\[
+r_i = y_i - (A\mathbf{u})_i
+\]
+
+\medskip
+
+\begin{itemize}
+\item $r_i$ heißt \textbf{Residuum}
+\item beschreibt den Fehler eines einzelnen Punkts
+\end{itemize}
+\end{block}
+
+\textbf{Norm (Länge) eines Vektors:}
+\[
+\|A\mathbf{u} - \mathbf{y}\| = \sqrt{r_1^2 + r_2^2 + \dots + r_n^2}
+\]
+
+\column{0.48\textwidth}
+
+\begin{block}{Gesamtfehler}
+Alle Fehler zusammen:
+\[
+\sum_{i=1}^{n} r_i^2
+= \sum_{i=1}^{n} (y_i - f(x_i))^2
+\]
+
+\medskip
+
+Kompakte Schreibweise:
+\[
+\|A\mathbf{u} - \mathbf{y}\|^2
+\]
+
+\medskip
+
+\begin{itemize}
+\item Summe der Fehlerquadrate
+\item Maß für die Modellgüte
+\end{itemize}
+\end{block}
+
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Ziel der Methode}
+
+\begin{columns}
+
+\column{0.6\textwidth}
+
+\textbf{Wir lösen nicht mehr:}
+\[
+A \mathbf{u} = \mathbf{y}
+\]
+
+\textbf{sondern:}
+\[
+\boxed{
+\min_{\mathbf{u}} \|A\mathbf{u} - \mathbf{y}\|^2
+}
+\]
+
+\begin{itemize}
+\item  \twemoji[height=1em]{point_right} finde die Parameter, die den Fehler minimal machen
+\end{itemize}
+
+
+\column{0.35\textwidth}
+\twemoji[width=0.9\linewidth]{dart}
+
+
+\medskip
+
+
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Minimierung der Fehlerfunktion}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\textbf{Fehlerfunktion:}
+\[
+E(\mathbf{u}) = \|A\mathbf{u} - \mathbf{y}\|^2
+\]
+
+\medskip
+
+\begin{itemize}
+\item Funktion der Parameter $\mathbf{u}$
+\item Ziel: Minimum finden
+\end{itemize}
+
+\medskip
+
+\textbf{Idee:}
+\begin{itemize}
+\item Ableitung bilden
+\item Minimum durch Nullsetzung bestimmen
+\end{itemize}
+
+\column{0.48\textwidth}
+
+\begin{block}{Gradient}
+\[
+\nabla_{\mathbf{u}} E(\mathbf{u}) = \frac{\partial E}{\partial \mathbf{u}} = 0
+\]
+
+\medskip
+
+\begin{itemize}
+\item Nabla = Vektor aller partiellen Ableitungen
+\item Bedingung für ein Minimum
+\end{itemize}
+\end{block}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Ausmultiplizieren der Fehlerfunktion}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\textbf{Schritt:}
+\[
+E(\mathbf{u}) = \|A\mathbf{u} - \mathbf{y}\|^2
+\]
+
+\medskip
+
+\textbf{Umformung:}
+\[
+E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
+\]
+
+\medskip
+
+\begin{itemize}
+\item Darstellung ohne Norm
+\item geeignet zur Ableitung
+\end{itemize}
+
+\column{0.48\textwidth}
+
+\begin{block}{Vorteil}
+\begin{itemize}
+\item nur Matrixoperationen
+\item Standardwerkzeuge der linearen Algebra
+\end{itemize}
+
+\medskip
+
+\begin{itemize}
+\item Vorbereitung für Ableitung
+\end{itemize}
+\end{block}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Ableitung der Fehlerfunktion}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\textbf{Gradient berechnen:}
+\[
+\nabla_{\mathbf{u}} E(\mathbf{u}) = 0
+\]
+
+\medskip
+
+\textbf{Ergebnis:}
+\[
+A^T (A\mathbf{u} - \mathbf{y}) = 0
+\]
+
+\medskip
+
+\begin{itemize}
+\item notwendige Bedingung für Minimum
+\item lineares Gleichungssystem entsteht
+\end{itemize}
+
+\column{0.48\textwidth}
+
+
+hier 3D-Funktion aus Gradientenabstieg Backpropagation.ipynb
+ einfügen!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+\begin{block}{Interpretation}
+\begin{itemize}
+\item Fehlervektor ist orthogonal zum Spaltenraum von $A$
+\end{itemize}
+\end{block}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Normalgleichung}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\textbf{Umformen:}
+\[
+A^T (A\mathbf{u} - \mathbf{y}) = 0
+\]
+
+\medskip
+
+\[
+A^T A \mathbf{u} = A^T \mathbf{y}
+\]
+
+\medskip
+
+\begin{block}{Normalgleichung}
+Zentrales Gleichungssystem der linearen Regression
+\end{block}
+
+\column{0.48\textwidth}
+
+\textbf{Eigenschaften:}
+\begin{itemize}
+\item quadratisches System
+\item lösen mit linearen Methoden
+\end{itemize}
+
+\medskip
+
+\textbf{Ziel:}
+\begin{itemize}
+\item Bestimme optimale Parameter $\mathbf{u}$
+\end{itemize}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Lösung der Normalgleichung}
+
+\begin{columns}
+
+\column{0.47\textwidth}
+
+\textbf{Lösung:}
+\[
+\mathbf{u} = (A^T A)^{-1} A^T \mathbf{y}
+\]
+
+\medskip
+
+\begin{itemize}
+\item geschlossene Form der Lösung
+\item ergibt optimale Parameter
+\end{itemize}
+
+\column{0.48\textwidth}
+
+\begin{block}{Einschränkung}
+\begin{itemize}
+\item Inversion kann instabil sein
+\item numerisch oft ungeeignet
+\end{itemize}
+
+\medskip
+
+\textbf{Praxis:}
+\begin{itemize}
+\item Nutzung stabiler Verfahren
+\end{itemize}
+\end{block}
+
+\end{columns}
+
+\end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
