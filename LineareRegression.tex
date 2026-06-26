@@ -1024,9 +1024,19 @@ E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
 
 \column{0.47\textwidth}
 
-\textbf{Gradient berechnen:}
+\textbf{Ableitung:}
+\[
+\nabla_{\mathbf{u}} E(\mathbf{u}) 
+= 2 A^T (A\mathbf{u} - \mathbf{y})
+\]
+
+\medskip
+
+\textbf{Null setzen:}
 \[
 \nabla_{\mathbf{u}} E(\mathbf{u}) = 0
+\quad \Rightarrow \quad
+2 A^T (A\mathbf{u} - \mathbf{y}) = 0
 \]
 
 \medskip
@@ -1039,24 +1049,15 @@ A^T (A\mathbf{u} - \mathbf{y}) = 0
 \medskip
 
 \begin{itemize}
-\item notwendige Bedingung für Minimum
-\item lineares Gleichungssystem entsteht
+\item notwendige Bedingung für ein Minimum
 \end{itemize}
 
 \column{0.48\textwidth}
 
-
-hier 3D-Funktion aus Gradientenabstieg Backpropagation.ipynb
- einfügen!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-\begin{block}{Interpretation}
-\begin{itemize}
-\item Fehlervektor ist orthogonal zum Spaltenraum von $A$
-\end{itemize}
-\end{block}
+\centering 
+\includesvg[width=\linewidth]{figures/parabolic_bowl}
 
 \end{columns}
-
 \end{frame}
 
 \begin{frame}{Normalgleichung}
@@ -1086,10 +1087,10 @@ Zentrales Gleichungssystem der linearen Regression
 
 \textbf{Eigenschaften:}
 \begin{itemize}
-\item quadratisches System
-\item lösen mit linearen Methoden
+\item $A^T A$ ist eine quadratische Matrix
+\item gleich viele Gleichungen wie Unbekannte
+\item Standardverfahren der linearen Algebra anwendbar
 \end{itemize}
-
 \medskip
 
 \textbf{Ziel:}
@@ -1101,13 +1102,14 @@ Zentrales Gleichungssystem der linearen Regression
 
 \end{frame}
 
-\begin{frame}{Lösung der Normalgleichung}
+\begin{frame}[fragile]{Lösung der Normalgleichung}
 
 \begin{columns}
 
-\column{0.47\textwidth}
+\column{0.35\textwidth}
 
-\textbf{Lösung:}
+Aus der Normalgleichung erhält man durch Umformen eine \textbf{geschlossene Formel}
+für die Parameter $\mathbf{u}$:
 \[
 \mathbf{u} = (A^T A)^{-1} A^T \mathbf{y}
 \]
@@ -1115,29 +1117,36 @@ Zentrales Gleichungssystem der linearen Regression
 \medskip
 
 \begin{itemize}
-\item geschlossene Form der Lösung
-\item ergibt optimale Parameter
+\item Diese Formel liefert direkt die optimalen Parameter.
+\item Setzt Invertierbarkeit von $(A^T A)$ voraus
 \end{itemize}
 
-\column{0.48\textwidth}
+\column{0.60\textwidth}
 
-\begin{block}{Einschränkung}
+\textbf{Problem:}
 \begin{itemize}
-\item Inversion kann instabil sein
-\item numerisch oft ungeeignet
+\item $(A^T A)$ kann schlecht konditioniert sein
+\item Inversion ist numerisch empfindlich
 \end{itemize}
+
+\begin{block}{Numerisch stabile Verfahren}
+Statt der direkten Inversion verwendet man stabilere Verfahren (QR-Zerlegung, Singular Value Decomposition). 
+Diese liefern robuste Ergebnisse.
+\end{block}
 
 \medskip
 
-\textbf{Praxis:}
-\begin{itemize}
-\item Nutzung stabiler Verfahren
-\end{itemize}
-\end{block}
+\textbf{In Python:}
+\begin{minted}[fontsize=\normalsize]{python}
+np.linalg.lstsq(A, y)
+\end{minted}
 
 \end{columns}
 
 \end{frame}
+
+
+
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
