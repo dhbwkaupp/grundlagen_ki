@@ -1,0 +1,391 @@
+\makesectionpage[figures/quiz.png]{Modellauswahl}
+
+
+\begin{frame}{Train/Test und Verallgemeinerung}
+\begin{columns}
+\column{0.6\textwidth}
+\begin{itemize}
+    \item Trainingsdaten decken meist nur einen Teil möglicher Eingaben ab
+    \item Modell muss auch für unbekannte Eingaben sinnvolle Ergebnisse liefern
+    \item Diese Fähigkeit heißt \textbf{Verallgemeinerung}
+    \item Verallgemeinerungsfähigkeit ist zentrales Qualitätsmaß
+    \item Bewertung nur mit \textbf{unbekannten Testdaten}
+    \item Typische Aufteilung:
+    \begin{itemize}
+    \item \textbf{75\%} Training
+    \item \textbf{25\%} Test
+\end{itemize}
+\end{itemize}
+
+\column{0.35\textwidth}
+\twemoji[width=0.9\linewidth]{cake}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+
+\begin{frame}{Train/Test}
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+
+\textbf{Nach welchem Kriterium soll man aufteilen?} 
+
+In der Praxis hat sich die \emph{einfache zufällige Aufteilung} (Random Split) bewährt. Dabei werden die Beobachtungen nach dem Zufallsprinzip in Trainings- und Testdaten aufgeteilt.
+\end{column}
+
+
+\begin{column}{0.6\textwidth}
+\centering
+
+\begin{tikzpicture}[
+    x=0.045cm,
+    y=0.0028cm,
+    >=latex,
+    font=\scriptsize,
+    scale=1.2
+]
+
+    % Hintergrund
+    \fill[BlockBackground] (0,0) rectangle (140,1600);
+
+    % Horizontale Gitterlinien
+    \foreach \yy in {200,400,...,1600}{
+        \draw[DarkGrey!60, line width=0.4pt]
+            (0,\yy) -- (140,\yy);
+    }
+
+    % Achsen
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (146,0);
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (0,1700);
+
+    % x-Ticks
+    \foreach \xx in {0,20,...,140}{
+        \draw[TextColor] (\xx,0) -- (\xx,-35);
+        \node[anchor=north,text=DarkGrey] at (\xx,-40) {\tiny \xx};
+    }
+
+    % y-Ticks
+    \foreach \yy in {0,200,...,1600}{
+        \draw[TextColor] (0,\yy) -- (-3,\yy);
+        \node[anchor=east,text=DarkGrey] at (-4,\yy) {\tiny \yy};
+    }
+
+    % Achsenbeschriftungen
+    \node[
+        rotate=90,
+        align=center,
+        text=TextColor,
+        font=\scriptsize\bfseries
+    ] at (-19,800) {Monatsmiete in €};
+
+    \node[
+        align=center,
+        text=TextColor,
+        font=\scriptsize\bfseries
+    ] at (70,-190) {Wohnungsgröße in qm};
+
+ 
+
+    % Messpunkte
+    \foreach \x/\y in {
+        10/140,
+        27/250,
+        50/660,
+        64/530,
+        80/800,
+        85/1020,
+        95/1010,
+        115/1200,
+        120/1520
+    }{
+        \filldraw[
+            fill=AccentColor,
+            draw=AccentTitle,
+            line width=0.8pt
+        ] (\x,\y) circle (3pt);
+    }
+
+       % Regressionsgerade
+    \draw[
+        PrimaryColor,
+        line width=1.5pt
+    ] (0,0) -- (140,1600);
+
+\end{tikzpicture}
+
+\end{column}
+\end{columns}
+\note{Die lineare Regression ist unser erstes Machine Learning Modell.\\
+Auf Basis der Größe einer Wohnung möchten wir vorhersagen, welche Miete wir erzielen können.
+}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Train/Test in Python}
+\footnotesize
+\begin{columns}
+\column{0.35\textwidth}
+\begin{itemize}
+    \item Funktion \texttt{train\_test\_split()} teilt Datenmenge auf
+    \item Übergabe von Eingabe- (\texttt{X}) und Zielwerten (\texttt{Y})
+    \item Aufteilung erfolgt gemäß Parameter
+    \item Rückgabe von \textbf{vier Datensätzen}:
+    \begin{itemize}
+        \item \texttt{X\_train}, \texttt{X\_test}
+        \item \texttt{Y\_train}, \texttt{Y\_test}
+    \end{itemize}
+    
+    \item \texttt{random\_state} ist \textbf{optional}
+    
+\end{itemize}
+
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.model_selection import train_test_split
+
+X = df[["Quadratmeter"]].to_numpy()
+Y = df[["Kaltmiete"]].to_numpy()
+
+X_train, X_test, y_train, Y_test = train_test_split(
+    X, Y,
+    random_state=0
+)
+\end{minted}
+\end{columns}
+\source{\cite{seemann2024mlaz}, RegressionMieten.ipynb}
+\end{frame}
+
+
+\begin{frame}{Bewertung von Regressionsmodellen}
+\begin{columns}
+\column{0.48\textwidth}
+\includesvg[width=\linewidth]{figures/regression_plot}
+
+\column{0.47\textwidth}
+\begin{itemize}
+    \item In der letzten Übung: Modell zur Vorhersage des Fahrzeugverbrauchs
+    \item Eingabe: Gewicht des Fahrzeugs
+    \item Ziel: Verbrauch abschätzen
+    \item Beobachtung:
+    \begin{itemize}
+        \item Reale Datenpunkte weichen teilweise deutlich ab
+        \item Modell trifft nicht immer exakte Vorhersagen
+    \end{itemize}
+    \item Frage: Wie gut ist das Modell wirklich?
+\end{itemize}
+\end{columns}
+\source{\cite{seemann2024mlaz}, Regression-mpg.ipynb}
+\end{frame}
+
+\begin{frame}{Bewertung von Regressionsmodellen}
+    
+\begin{columns}
+\column{0.7\textwidth}
+\begin{itemize}
+    \item Vermutlich lässt sich das Modell verbessern
+    \item Wir könnten zusätzliche Merkmale in die Vorhersage einbeziehen
+\end{itemize}
+
+\vspace{0.4em}
+
+\scriptsize
+\begin{tabular}{lrrrrrrrrl}
+\textbf{mpg} & \textbf{cyl} & \textbf{disp} & \textbf{hp} & \textbf{weight} & \textbf{acc} & \textbf{year} & \textbf{org} & \textbf{name}\\
+18.0 & 8 & 307.0 & 130 & 3504 & 12.0 & 70 & 1 & chevrolet ...  \\
+15.0 & 8 & 350.0 & 165 & 3693 & 11.5 & 70 & 1 & buick ... \\
+18.0 & 8 & 318.0 & 150 & 3436 & 11.0 & 70 & 1 & plymouth ... \\
+16.0 & 8 & 304.0 & 150 & 3433 & 12.0 & 70 & 1 & amc ... \\
+17.0 & 8 & 302.0 & 140 & 3449 & 10.5 & 70 & 1 & ford ... \\
+\end{tabular}
+
+\column{0.3\textwidth}
+\begin{block}{Hinweis}
+Zum Vergleich von Modellen benötigt man ein Maß für die Prognosegüte.
+
+Dies liefert das \textbf{Bestimmtheitsmaß} $R^2$.
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bewertung von Regressionsmodellen: Bestimmtheitsmaß}
+\begin{columns}
+\column{0.35\textwidth}
+\textbf{Grundidee:}
+\begin{itemize}
+    \item Vergleich mit einfachem Modell
+    \item Dieses gibt immer den \textbf{Mittelwert} der Zielwerte zurück
+    \item Vergleich:
+    \begin{itemize}
+        \item Quadratischer Fehler des Modells
+        \item vs. Fehler des Vergleichsmodells
+    \end{itemize}
+\end{itemize}
+
+\column{0.6\textwidth}
+\centering
+\begin{tikzpicture}[
+    x=0.045cm,
+    y=0.0028cm,
+    >=latex,
+    font=\scriptsize,
+    scale=1.1
+]
+
+    % Hintergrund
+    \fill[BlockBackground] (0,0) rectangle (140,1600);
+
+    % Horizontale Gitterlinien
+    \foreach \yy in {200,400,...,1600}{
+        \draw[DarkGrey!60, line width=0.4pt]
+            (0,\yy) -- (140,\yy);
+    }
+
+    % Achsen
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (146,0);
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (0,1700);
+
+    % x-Ticks
+    \foreach \xx in {0,20,...,140}{
+        \draw[TextColor] (\xx,0) -- (\xx,-35);
+        \node[anchor=north,text=DarkGrey] at (\xx,-40) {\tiny \xx};
+    }
+
+    % y-Ticks
+    \foreach \yy in {0,200,...,1600}{
+        \draw[TextColor] (0,\yy) -- (-3,\yy);
+        \node[anchor=east,text=DarkGrey] at (-4,\yy) {\tiny \yy};
+    }
+
+    % Beschriftungen
+    \node[rotate=90, text=TextColor, font=\scriptsize\bfseries]
+        at (-19,810) {Monatsmiete in €};
+
+    \node[text=TextColor, font=\scriptsize\bfseries]
+        at (70,-190) {Wohnungsgröße in qm};
+
+    % Punkte
+    \foreach \x/\y in {
+        10/140,
+        27/250,
+        50/660,
+        64/530,
+        80/800,
+        85/1020,
+        95/1010,
+        115/1200,
+        120/1520
+    }{
+        \filldraw[fill=AccentColor, draw=AccentTitle, line width=0.8pt]
+            (\x,\y) circle (3pt);
+    }
+
+    % Mittelwertlinie
+    \draw[PrimaryColor, line width=1.5pt]
+        (0,791) -- (140,791);
+
+    \node[text=PrimaryColor, anchor=west]
+        at (90,850) {\scriptsize Mittelwert 791€ = $\bar{y}$};
+
+\end{tikzpicture}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Bewertung von Regressionsmodellen: Bestimmtheitsmaß}
+\begin{columns}
+\column{0.35\textwidth}
+\begin{itemize}
+    \item \textbf{Quadratischer Fehler des Vergleichsmodells:}
+    \item 
+    \[
+        E_{\text{vergleich}} 
+        = \sum (y_i - \bar{y})^2
+    \]
+\end{itemize}
+
+\column{0.6\textwidth}
+\centering
+\begin{tikzpicture}[
+    x=0.045cm,
+    y=0.0028cm,
+    >=latex,
+    font=\scriptsize,
+    scale=1.1
+]
+
+    % Hintergrund
+    \fill[BlockBackground] (0,0) rectangle (140,1600);
+
+    % Gitter
+    \foreach \yy in {200,400,...,1600}{
+        \draw[DarkGrey!60, line width=0.4pt]
+            (0,\yy) -- (140,\yy);
+    }
+
+    % Achsen
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (146,0);
+    \draw[TextColor, line width=1pt, ->] (0,0) -- (0,1700);
+
+    % x-Ticks
+    \foreach \xx in {0,20,...,140}{
+        \draw[TextColor] (\xx,0) -- (\xx,-35);
+        \node[anchor=north,text=DarkGrey] at (\xx,-40) {\tiny \xx};
+    }
+
+    % y-Ticks
+    \foreach \yy in {0,200,...,1600}{
+        \draw[TextColor] (0,\yy) -- (-3,\yy);
+        \node[anchor=east,text=DarkGrey] at (-4,\yy) {\tiny \yy};
+    }
+
+    % Punkte
+    \foreach \x/\y in {
+        10/140,
+        27/250,
+        50/660,
+        64/530,
+        80/800,
+        85/1020,
+        95/1010,
+        115/1200,
+        120/1520
+    }{
+     % vertikale gestrichelte Linie
+        \draw[dashed, DarkGrey]
+            (\x,\y) -- (\x,791);    
+    
+    \filldraw[fill=AccentColor, draw=AccentTitle, line width=0.8pt]
+            (\x,\y) circle (3pt);
+
+       
+    }
+   
+    % Beschriftungen
+    \node[rotate=90, text=TextColor, font=\scriptsize\bfseries]
+        at (-19,810) {Monatsmiete in €};
+
+    \node[text=TextColor, font=\scriptsize\bfseries]
+        at (70,-190) {Wohnungsgröße in qm};
+
+    % Mittelwertlinie
+    \draw[PrimaryColor, line width=1.5pt]
+        (0,791) -- (140,791);
+
+    \node[text=PrimaryColor, anchor=west]
+        at (130,850) {\scriptsize $\bar{y}$};
+
+    % Beschriftung einer Differenz
+    \node[text=TextColor]
+        at (75,650) {\scriptsize $y_i - \bar{y}$};
+
+\end{tikzpicture}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}

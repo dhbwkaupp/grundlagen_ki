@@ -412,25 +412,23 @@
 }
 
 % ----------------------------------------------------------
-% Quizseite
-\newcommand{\makequizpage}[3]{%
+% Quizseite mit optionalem Titel (Standard: Quiz)
+\newcommand{\makequizpage}[4][Quiz]{%
   {%
     \setbeamertemplate{background canvas}{%
-      \includegraphics[height=\paperheight,keepaspectratio]{#3}%
+      \includegraphics[height=\paperheight,keepaspectratio]{#4}%
     }%
     \begin{frame}
       \begin{columns}
-        % Linke Leer
-        \begin{column}[T]{0.4\textwidth}
+        \begin{column}{0.4\textwidth}
         \end{column}
-        % Rechte Spalte leer
-        \begin{column}[T]{0.55\textwidth}
+        \begin{column}{0.55\textwidth}
           \vspace{0.5cm}
-          {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}\Huge Quiz\par}
+          {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}\Huge #1\par}
           \vspace{0.5cm}
           \centering
-          \includegraphics[width=0.6\linewidth]{#2}
-          {\Large \url{#1}\par}
+          \includegraphics[width=0.6\linewidth]{#3}
+          {\Large \url{#2}\par}
         \end{column}
       \end{columns}
     \end{frame}

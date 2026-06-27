@@ -1147,6 +1147,155 @@ np.linalg.lstsq(A, y)
 
 
 
+\begin{frame}[fragile]{Least Squares in Python mit NumPy}
+
+\begin{columns}
+
+\column{0.35\textwidth}
+
+\textbf{Idee:}
+\begin{itemize}
+\item Aufbau der \textbf{Gleichungsmatrix} $A$
+\item Erste Spalte = Einsen (Offset $u_0$)
+\item Lösen des Gleichungssystems (kleinsten Quadrate)
+\end{itemize}
+
+\medskip
+
+\textbf{Vorhersage:}
+\begin{itemize}
+\item  Gleichungsmatrix für Testdaten
+\item Multiplikation mit $\mathbf{u}$
+\end{itemize}
+
+\column{0.6\textwidth}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy as np
+
+# Gleichungsmatrix A
+A = np.column_stack(
+    (np.ones(X_train.shape[0]), X_train)
+)
+
+u, residuals, rank, s = np.linalg.lstsq(
+    A, y_train, rcond=None
+)
+
+# Vorhersage
+A_test = np.column_stack(
+    (np.ones(X_test.shape[0]), X_test)
+)
+
+y_pred = A_test @ u
+\end{minted}
+
+\end{columns}
+
+\note{Das @ ist die Matrix Vektor Multiplikation}
+
+\source{BostonHousingLstsq.ipynb}
+\end{frame}
+
+
+\begin{frame}{Vergleich: Lineare Regression -- zwei Ansätze}
+\medskip
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{np.linalg.lstsq}\\
+\medskip
+{\scriptsize
+\begin{tabular}{lr}
+Feature & Koeff. \\
+\hline
+Intercept & 40.3401\\
+CRIM & -0.127 \\
+ZN & -0.025 \\
+INDUS & 0.131 \\
+CHAS & 2.628 \\
+NOX & -14.930 \\
+RM & 1.347 \\
+AGE & -0.014 \\
+DIS & -0.638 \\
+RAD & 0.145 \\
+TAX & -0.007 \\
+PTRATIO & -0.552 \\
+LSTAT & -0.467 \\
+CAT. MEDV & 11.863 \\
+\end{tabular}
+}
+
+\column{0.48\textwidth}
+\textbf{LinearRegression (fit)}\\
+\medskip
+{\scriptsize
+\begin{tabular}{lr}
+Feature & Koeff. \\
+\hline
+Intercept & 40.3401\\
+CRIM & -0.127 \\
+ZN & -0.025 \\
+INDUS & 0.131 \\
+CHAS & 2.628 \\
+NOX & -14.930 \\
+RM & 1.347 \\
+AGE & -0.014 \\
+DIS & -0.638 \\
+RAD & 0.145 \\
+TAX & -0.007 \\
+PTRATIO & -0.552 \\
+LSTAT & -0.467 \\
+CAT. MEDV & 11.863 \\
+\end{tabular}
+}
+
+\end{columns}
+\medskip
+Identische Ergebnisse beider Methoden;  \texttt{LinearRegression} verwendet intern \texttt{lstsq}.
+
+\source{BostonHousingLstsq.ipynb und BostonHousingRegression.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Pandas DataFrames -- Feature-Auswahl}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+\item Regression mit genau einer Spalte;
+\begin{minted}{python}
+X = df[['Quadratmeter']]
+y = df['Kaltmiete']
+\end{minted}
+
+\item Hier jetzt alle Spalten bis auf eine:
+\begin{minted}{python}
+X = df.drop(columns=['MEDV'])
+y = df['MEDV']
+\end{minted}
+\end{itemize}
+
+\column{0.48\textwidth}
+
+\begin{itemize}
+\item Die Auswahlund auch \texttt{{drop()}} akzeptieren auch Listen von Spalten.
+\begin{minted}{python}
+# Mehrere Spalten auswählen
+X = df[['CRIM', 'CHAS',
+        'AGE', 'PTRATIO']]
+
+# Mehrere Spalten verwefen
+X = df.drop(columns=[
+    'MEDV', 'CRIM', 'AGE'
+])
+\end{minted}
+
+\end{itemize}
+
+\end{columns}
+
+\end{frame}
+
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
