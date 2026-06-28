@@ -39,17 +39,15 @@
 % Inhaltsverzeichnis
 % ==========================================================
 
-\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{section in toc}[sections unnumbered]
 \setbeamertemplate{subsection in toc}{
   \leavevmode
   \leftskip=3em
-  \rlap{\hskip-2em\inserttocsectionnumber.\inserttocsubsectionnumber}
   \inserttocsubsection\par
 }
 \setbeamertemplate{subsubsection in toc}{
   \leavevmode
   \leftskip=5em
-  \rlap{\hskip-3em\inserttocsectionnumber.\inserttocsubsectionnumber.\inserttocsubsubsectionnumber}
   \inserttocsubsubsection\par
 }
 
@@ -100,7 +98,7 @@
           \vspace{5cm} 
           \centering
           {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}\Huge
-            \thesection\quad #2\par}
+            #2\par}
         \end{column}
       \end{columns}
       
@@ -121,7 +119,7 @@
       \vspace{4cm}
       \centering
       {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}\Huge
-        \thesection.\thesubsection\quad #2\par}
+        #2\par}
 
       \ifx&#1&%
       \else
@@ -149,8 +147,7 @@
     {\usebeamerfont{title}%
      \usebeamercolor[fg]{frametitle}%
      \Huge
-     \thesection.\thesubsection.\thesubsubsection
-     \quad #1\par}
+     #1\par}
 
     \setbeamertemplate{footline}[default]
   \end{frame}
@@ -464,4 +461,3 @@
     \end{columns}
   \end{frame}
 }
-
