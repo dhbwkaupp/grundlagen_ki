@@ -1,0 +1,493 @@
+\makesectionpage[figures/quiz.png]{Datenaufbereitung}
+
+\begin{frame}[fragile]{Arten von Daten: Kategoriale Daten}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+\item Datensätze enthalten \textbf{nicht nur numerische Werte}
+\item Beispiel: Spalte \texttt{cut}
+\item Beschreibt Qualität des Schliffs
+\item \textbf{Ordinale Kategorie (Rangfolge)}:
+\begin{itemize}
+\item Fair
+\item Good
+\item Very Good
+\item Premium
+\item Ideal
+\end{itemize}
+\item Wichtig für Datenanalyse und ML
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{minted}{python}
+import pandas as pd
+
+df = pd.read_csv("diamonds.csv")
+df.head()
+\end{minted}
+
+\vspace{0.2cm}
+
+\small
+\begin{tabular}{r l l r}
+\textbf{carat} & \textbf{cut} & \textbf{color} & \textbf{price} \\
+\hline
+0.23 & Ideal & E & 326 \\
+0.21 & Premium & E & 326 \\
+0.23 & Good & E & 327 \\
+0.29 & Premium & I & 334 \\
+0.31 & Good & J & 335 \\
+\end{tabular}
+\end{columns}
+
+\source{\cite{seemann2024mlaz}, Diamanten Ordinale Daten.ipynb  }
+\end{frame}
+
+\begin{frame}[fragile]{Arten von Daten: Nominale und unstrukturierte Daten}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+\item Datensatz einer Kleinanzeigenplattform
+\item Ziel: Prognose des Verkaufspreises
+\item Spalte \texttt{fuelType}:
+\begin{itemize}
+\item Werte: benzin, diesel, hybrid, lpg
+\item Keine natürliche Ordnung
+\item Nominalskalierte Kategorie
+\end{itemize}
+\item Spalte \texttt{name}:
+\begin{itemize}
+\item Freitext (unstrukturierte Daten)
+\item Enthält Zusatzinformationen
+\item Vor Verarbeitung aufzubereiten
+\end{itemize}
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+
+df = pd.read_csv("./fahrzeug_preis.csv")
+df.head()
+\end{minted}
+
+\vspace{0.2cm}
+
+\footnotesize
+\begin{tabular}{l l l l}
+\textbf{price} & \textbf{year} & \textbf{fuelType} & \textbf{name} \\
+\hline
+1450 & 1997 & benzin & Toyota\_Toy \\
+13100 & 2005 & benzin & R32\_tausch \\
+4500 & 2008 & benzin & Toyota\_Yar \\
+6000 & 2009 & diesel & 320\_Alpinw \\
+3990 & 1999 & benzin & BMW\_318i\_E \\
+\end{tabular}
+\end{columns}
+
+\source{\cite{seemann2024mlaz}, One Hot Fahrzeugdaten.ipynb}
+\end{frame}
+
+
+\begin{frame}{Arten von Daten}
+\begin{columns}
+\column{0.35\textwidth}
+Insgesamt haben wir die nebenstehenden Arten von Daten.
+
+\column{0.60\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  every node/.style={font=\scriptsize},
+  main/.style={draw, rounded corners=4pt, very thick, align=center,
+               inner sep=7pt, text width=2.4cm,
+               fill=PrimaryColor!12, font=\scriptsize\bfseries},
+  sub/.style={draw, rounded corners=4pt, thick, align=left,
+              inner sep=7pt, text width=4.2cm, fill=SecondaryColor!8},
+  line/.style={thick, SecondaryColor!75!black, ->, >=stealth},
+  trunk/.style={thick, SecondaryColor!75!black},
+]
+
+% --- Hauptknoten ---
+\node[main, draw=PrimaryColor] (strukt)   at (0, 0.4)  {Strukturierte\\ Daten};
+\node[main, draw=PrimaryColor] (unstrukt) at (0,-3.5)  {Unstrukturierte\\ Daten};
+
+% --- Unterkategorien (strukturiert) ---
+\node[sub, draw=SecondaryColor] (metrisch) at (4.8, 2.1) {%
+  \textbf{Metrische Daten}\\[2pt]
+  Zahlenwerte (Komma-Werte)\\[1pt]
+  {\itshape\color{SecondaryColor!55!black} z.\,B. Abmessungen eines Diamanten}};
+
+\node[sub, draw=SecondaryColor] (ordinal) at (4.8, 0.4) {%
+  \textbf{Ordinale Daten}\\[2pt]
+  Kategorien \emph{mit} Rangordnung\\[1pt]
+  {\itshape\color{SecondaryColor!55!black} z.\,B. Reinheit, Farbe, Schliff}};
+
+\node[sub, draw=SecondaryColor] (nominal) at (4.8,-1.3) {%
+  \textbf{Nominale Daten}\\[2pt]
+  Kategorien \emph{ohne} Ordnung\\[1pt]
+  {\itshape\color{SecondaryColor!55!black} z.\,B. Kraftstofftyp}};
+
+% --- Detail (unstrukturiert) ---
+\node[sub, draw=SecondaryColor] (freitext) at (4.8,-3.5) {%
+  \textbf{Freitext}\\[2pt]
+  Vorverarbeitung nötig\\[1pt]
+  {\itshape\color{SecondaryColor!55!black} z.\,B. Überschrift der Fahrzeuganzeige}};
+
+% --- Verbindungen: verzweigter Konnektor ---
+\draw[trunk] (strukt.east) -- (2.1,0.4);
+\draw[trunk] (2.1, 2.1) -- (2.1,-1.3);
+\draw[line]  (2.1, 2.1) -- (metrisch.west);
+\draw[line]  (2.1, 0.4) -- (ordinal.west);
+\draw[line]  (2.1,-1.3) -- (nominal.west);
+
+\draw[line]  (unstrukt.east) -- (freitext.west);
+
+\end{tikzpicture}}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Nominale Daten: One-Hot Encoding}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Viele ML-Algorithmen brauchen numerische Werte und können nicht mit nominalen Daten umgehen.
+  \item Naive Nummerierung
+        (\texttt{benzin}=0, \texttt{diesel}=1, \texttt{hybrid}=2, \texttt{lpg}=3)
+        suggeriert \textbf{messbare Abstände}.
+  \item Das würde unserem Algorithmus aber vermitteln, dass ein Benzin-Antrieb einem Diesel näher steht  als einem Hybrid. 
+  
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{itemize}
+  \item \textbf{One-Hot Encoding:} je möglichem Wert eine eigene Spalte
+        \begin{itemize}
+          \item Wert \texttt{1}, wenn zutreffend
+          \item sonst Wert \texttt{0}
+        \end{itemize}
+\end{itemize}
+
+\medskip
+\centering
+\renewcommand{\arraystretch}{1.5}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{l cccc}
+\rowcolor{PrimaryColor}
+\textcolor{white}{\textbf{fuelType}} &
+\textcolor{white}{\textbf{benzin?}} &
+\textcolor{white}{\textbf{diesel?}} &
+\textcolor{white}{\textbf{hybrid?}} &
+\textcolor{white}{\textbf{lpg?}}\\
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{benzin}} & 1 & 0 & 0 & 0\\
+\rowcolor{SecondaryColor!12}
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{diesel}} & 0 & 1 & 0 & 0\\
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{hybrid}} & 0 & 0 & 1 & 0\\
+\rowcolor{SecondaryColor!12}
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{lpg}}    & 0 & 0 & 0 & 1\\
+\end{tabular}}
+
+\vspace{0.6em}
+{\footnotesize\itshape Aus einer Spalte werden vier 0/1-Spalten.}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Nominale Daten: One-Hot Encoding}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Die \textbf{letzte Spalte} ist immer redundant.
+  \item Ihr Wert lässt sich stets aus den übrigen Spalten ableiten
+        ({\itshape alle 0 $\Rightarrow$ es bleibt nur \texttt{lpg}}).
+  \item Redundanz stört bei der Modellbildung.
+  \item[$\Rightarrow$] Diese Spalte wird \textbf{gelöscht}.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tikzpicture}[remember picture]
+\node[inner sep=0pt] (tab) {%
+\footnotesize
+\begin{tabular}{l cccc}
+\rowcolor{PrimaryColor}
+\textcolor{white}{\textbf{fuelType}} &
+\textcolor{white}{\textbf{benzin?}} &
+\textcolor{white}{\textbf{diesel?}} &
+\textcolor{white}{\textbf{hybrid?}} &
+\tikzmark{xtl}\textcolor{white}{\textbf{lpg?}}\\
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{benzin}} & 1 & 0 & 0 & 0\\
+\rowcolor{SecondaryColor!12}
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{diesel}} & 0 & 1 & 0 & 0\\
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{hybrid}} & 0 & 0 & 1 & 0\\
+\rowcolor{SecondaryColor!12}
+\cellcolor{PrimaryColor}\textcolor{white}{\textbf{lpg}}    & 0 & 0 & 0 & 1\tikzmark{xbr}\\
+\end{tabular}};
+\end{tikzpicture}
+
+% --- rotes X ueber die letzte Spalte ---
+\begin{tikzpicture}[overlay, remember picture]
+  \coordinate (TL) at ($(pic cs:xtl)+(-0.25,0.45)$);
+  \coordinate (BR) at ($(pic cs:xbr)+(0.30,-0.20)$);
+  \draw[red, line width=2.2pt, opacity=0.85] (TL) -- (BR);
+  \draw[red, line width=2.2pt, opacity=0.85] (TL -| BR) -- (BR -| TL);
+\end{tikzpicture}
+
+\vspace{0.4em}
+{\footnotesize\itshape Spalte \texttt{lpg?} kann entfallen.}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Nominale Daten: One-Hot Encoding in Python}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+df = pd.get_dummies(df, columns=["fuelType"])
+df = df.drop(labels=["fuelType_lpg"], axis=1)
+
+df = df.drop(labels=["model", "name"], axis=1)
+df.head()
+\end{minted}
+
+\column{0.35\textwidth}
+\footnotesize
+\textbf{Tipp:} One-Hot Encoding erzeugt schnell \textbf{viele Spalten}.
+Nicht benötigte Spalten direkt mit \texttt{drop} entfernen -- das hält
+den Datensatz übersichtlich.
+\end{columns}
+
+\vspace{0.6em}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{r r r r r ccc}
+& \textbf{price} & \textbf{yearOfReg.} & \textbf{powerPS} & \textbf{kilometer}
+& \textbf{fuelType\_benzin} & \textbf{fuelType\_diesel} & \textbf{fuelType\_hybrid}\\
+\hline
+0 &  1450 & 1997 &  75 &  90000 & True  & False & False\\
+1 & 13100 & 2005 & 280 &   5000 & True  & False & False\\
+2 &  4500 & 2008 &  87 &  90000 & True  & False & False\\
+3 &  6000 & 2009 & 177 & 125000 & False & True  & False\\
+4 &  3990 & 1999 & 118 &  90000 & True  & False & False\\
+\end{tabular}}
+
+\source{\cite{seemann2024mlaz}, One Hot Fahrzeugdaten.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Ordinale Daten: Ersetzen}
+\begin{columns}
+\column{0.35\textwidth}
+Bei ordinalen Daten lohnt sich zuerst ein \textbf{Überblick} über alle
+vorkommenden Werte und ihre Häufigkeiten.
+
+\vspace{0.5em}
+\texttt{value\_counts()} liefert die Werte, \texttt{.count()} die Anzahl
+verschiedener Kategorien.
+
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+df = pd.read_csv("diamonds.csv")
+df.head()
+
+print(df["cut"].value_counts())
+print(df["cut"].value_counts().count())
+\end{minted}
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize, frame=none]{text}
+cut
+Ideal        21551
+Premium      13791
+Very Good    12082
+Good          4906
+Fair          1610
+Name: count, dtype: int64
+5
+\end{minted}
+\end{columns}
+
+\source{\cite{seemann2024mlaz}, Diamanten Ordinale Daten.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Ordinale Daten: Ersetzen}
+\footnotesize
+\begin{columns}
+\column{0.65\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+replace_map = {'cut': {'Fair': 1, 'Good': 2,
+                       'Very Good': 3, 'Premium': 4,
+                       'Ideal': 5}}
+df = df.replace(replace_map)
+df['cut'] = df['cut'].astype(int)
+df.head()
+\end{minted}
+
+\column{0.3\textwidth}
+Mit dem Wissen über die \textbf{Reihenfolge} erstellt man eine
+\textbf{replace map} und übergibt sie an \texttt{replace()}.
+
+\vspace{0.4em}
+{\footnotesize\itshape Der Cast nach \texttt{int} ist nötig, da Pandas
+nicht mehr automatisch umwandelt.}
+\end{columns}
+
+\vspace{0.6em}
+\centering
+
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{r r r c c c r r r r r}
+& \textbf{carat} & \textbf{cut} & \textbf{color} & \textbf{clarity}
+& \textbf{depth} & \textbf{table} & \textbf{price} & \textbf{x} & \textbf{y} & \textbf{z}\\
+\hline
+0 & 0.23 & 5 & E & SI2 & 61.5 & 55.0 & 326 & 3.95 & 3.98 & 2.43\\
+1 & 0.21 & 4 & E & SI1 & 59.8 & 61.0 & 326 & 3.89 & 3.84 & 2.31\\
+2 & 0.23 & 2 & E & VS1 & 56.9 & 65.0 & 327 & 4.05 & 4.07 & 2.31\\
+3 & 0.29 & 4 & I & VS2 & 62.4 & 58.0 & 334 & 4.20 & 4.23 & 2.63\\
+4 & 0.31 & 2 & J & SI2 & 63.3 & 58.0 & 335 & 4.34 & 4.35 & 2.75\\
+\end{tabular}
+
+\source{\cite{seemann2024mlaz}, Diamanten Ordinale Daten.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Unvollständige Daten: \texttt{dropna}}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+df = pd.read_csv("autos.csv")
+
+# Anzahl fehlender Werte je Spalte
+print(df.isna().sum())
+
+# Zeilen mit fehlenden Werten entfernen
+df = df.dropna()
+df.head()
+\end{minted}
+
+\column{0.35\textwidth}
+Reale Datensätze enthalten oft \textbf{fehlende Werte} (\texttt{NaN}).
+
+\vspace{0.4em}
+\texttt{dropna()} entfernt alle Zeilen mit mindestens einem fehlenden
+Wert.
+
+\vspace{0.4em}
+{\footnotesize\itshape Alternativen: gezielt Spalten füllen
+(\texttt{fillna}) statt löschen.}
+\end{columns}
+
+\vspace{0.6em}
+\centering
+{\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{r r r l r}
+& \textbf{price} & \textbf{powerPS} & \textbf{fuelType} & \textbf{kilometer}\\
+\hline
+0 &  1450 &  75 & benzin & 90000\\
+1 & 13100 & \cellcolor{red!18}NaN & benzin &  5000\\
+2 &  4500 &  87 & \cellcolor{red!18}NaN & 90000\\
+3 &  6000 & 177 & diesel & 125000\\
+4 &  3990 & 118 & benzin & \cellcolor{red!18}NaN\\
+\end{tabular}}
+
+\vspace{0.4em}
+{\footnotesize\itshape Zeilen 1, 2 und 4 werden durch \texttt{dropna()} entfernt.}
+\end{frame}
+
+
+\begin{frame}[fragile]{Unvollständige Daten: \texttt{fillna}}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+# Numerische Spalte mit Median fuellen
+df["powerPS"] = df["powerPS"].fillna(
+    df["powerPS"].median())
+
+# Kategoriale Spalte mit haeufigstem Wert
+df["fuelType"] = df["fuelType"].fillna(
+    df["fuelType"].mode()[0])
+\end{minted}
+
+\column{0.35\textwidth}
+\texttt{fillna()} ersetzt fehlende Werte, statt Zeilen zu \textbf{löschen}.
+
+\vspace{0.4em}
+{\footnotesize\itshape Median für Zahlen (robust gegen Ausreißer), Modus
+für Kategorien.}
+\end{columns}
+
+\vspace{0.5em}
+\centering
+{\footnotesize
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{6pt}
+\begin{columns}
+\column{0.48\textwidth}
+\centering
+\textbf{Vorher}\\[2pt]
+\begin{tabular}{r r l}
+& \textbf{powerPS} & \textbf{fuelType}\\
+\hline
+0 &  75 & benzin\\
+1 & \cellcolor{red!18}NaN & benzin\\
+2 &  87 & \cellcolor{red!18}NaN\\
+3 & 177 & diesel\\
+4 & 118 & benzin\\
+\end{tabular}
+
+\column{0.48\textwidth}
+\centering
+\textbf{Nachher}\\[2pt]
+\begin{tabular}{r r l}
+& \textbf{powerPS} & \textbf{fuelType}\\
+\hline
+0 &  75 & benzin\\
+1 & \cellcolor{green!20}102 & benzin\\
+2 &  87 & \cellcolor{green!20}benzin\\
+3 & 177 & diesel\\
+4 & 118 & benzin\\
+\end{tabular}
+\end{columns}}
+
+\vspace{0.4em}
+{\footnotesize\itshape Median(\texttt{powerPS})=102, Modus(\texttt{fuelType})=benzin.}
+
+\end{frame}
+
+
+\begin{frame}{ Übung Datenaufbereitung}
+\begin{columns}
+\column{0.60\textwidth}
+Der Diamantendatensatz hat neben \texttt{cut} zwei weitere
+\textbf{kategoriale} Spalten:
+
+\begin{itemize}
+  \item \textbf{color}: Werte D, E, F, \dots, J\\
+        ({\itshape D am besten, J am schlechtesten})
+  \item \textbf{clarity}: Reinheit, vom besten zum schlechtesten\\
+        FL, IF, VVS1, VVS2, VS1, VS2, SI1, SI2, I1, I2, I3
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Aufgabe:} Erweitern Sie Ihr Notebook zur Preisvorhersage, sodass
+zusätzlich \textbf{color} und \textbf{clarity} berücksichtigt werden.
+Bereiten Sie beide Spalten entsprechend auf.
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Lösung: Diamanten ordinale Daten komplett.ipynb}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
