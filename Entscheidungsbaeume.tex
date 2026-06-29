@@ -766,7 +766,7 @@ und die Klasse anschauen. Je sicherer die Vorhersage, desto geringer die
 \column{0.35\textwidth}
 \centering
 \centering
-\resizebox{0.7\linewidth}{!}{%
+\resizebox{0.6\linewidth}{!}{%
 \begin{tikzpicture}[
   kugel/.style={circle, thick, minimum size=13pt, inner sep=0pt,
                 fill=AccentColor, draw=AccentTitle}
@@ -781,7 +781,7 @@ und die Klasse anschauen. Je sicherer die Vorhersage, desto geringer die
 \medskip
 
 \centering
-\resizebox{0.7\linewidth}{!}{%
+\resizebox{0.6\linewidth}{!}{%
 \begin{tikzpicture}[
   orange/.style={circle, thick, minimum size=13pt, inner sep=0pt,
                  fill=AccentColor, draw=AccentTitle},
@@ -1310,10 +1310,6 @@ Schnee & 0{,}125 & 3 &?\\
 \source{\cite{strutz2025bilddatenkompression}}
 \end{frame}
 
-\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
-\makequestionspage{\FRAGENIMAGE}
-
-
 \begin{frame}{Quelle mit unabhängigen Symbolen}
   \small
 \begin{columns}[T]
@@ -1415,19 +1411,17 @@ Schnee & 0{,}125 & 3 &?\\
 
   \begin{column}{0.25\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.0]
-      % Behälter (oben offen)
-      \draw[thick] (0,0) -- (3,0);      % Boden
-      \draw[thick] (0,0) -- (0,2);      % linke Wand
-      \draw[thick] (3,0) -- (3,2);      % rechte Wand
-
-      % Kugeln auf dem Boden (alle gleich)
-      \draw[thick, draw=black, fill=PrimaryColor]  (0.3,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=PrimaryColor]  (0.9,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=PrimaryColor]  (1.5,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=PrimaryColor]  (2.1,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=PrimaryColor]  (2.7,0.35) circle (0.22);
-    \end{tikzpicture}
+\resizebox{0.7\linewidth}{!}{%
+\begin{tikzpicture}[
+  kugel/.style={circle, thick, minimum size=13pt, inner sep=0pt,
+                fill=AccentColor, draw=AccentTitle}
+]
+\draw[very thick] (0.0,1.5) -- (0.0,0) -- (2.0,0) -- (2.0,1.5);
+\node[kugel] at (0.5,0.4) {};
+\node[kugel] at (1.3,0.4) {};
+\node[kugel] at (0.7,0.9) {};
+\node[kugel] at (1.5,0.9) {};
+\end{tikzpicture}}
   \end{column}
 \end{columns}
 \source{\cite{strutz2025bilddatenkompression}}
@@ -1465,19 +1459,16 @@ Schnee & 0{,}125 & 3 &?\\
 
   \begin{column}{0.25\textwidth}
     \centering
-    \begin{tikzpicture}[scale=1.0]
-      % Behälter (oben offen)
-      \draw[thick] (0,0) -- (3,0);      % Boden
-      \draw[thick] (0,0) -- (0,2);      % linke Wand
-      \draw[thick] (3,0) -- (3,2);      % rechte Wand
-
-      % Kugeln auf dem Boden, bunt gemischt
-      \draw[thick, draw=black, fill=PrimaryColor]   (0.3,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=AlertColor]    (0.9,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=ThirdColor]   (1.5,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=ExampleColor]     (2.1,0.35) circle (0.22);
-      \draw[thick, draw=black, fill=AccentColor]    (2.7,0.35) circle (0.22);
-    \end{tikzpicture}
+     \resizebox{0.7\linewidth}{!}{%
+\begin{tikzpicture}[
+  kugel/.style={circle, thick, minimum size=13pt, inner sep=0pt}
+]
+\draw[very thick] (0.0,1.5) -- (0.0,0) -- (2.0,0) -- (2.0,1.5);
+\node[kugel, fill=AccentColor,    draw=AccentTitle]    at (0.5,0.4) {};
+\node[kugel, fill=PrimaryColor,   draw=PrimaryTitle]   at (1.3,0.4) {};
+\node[kugel, fill=SecondaryColor, draw=SecondaryTitle] at (0.7,0.9) {};
+\node[kugel, fill=ExampleTitle,   draw=ExampleTitle!60!black] at (1.5,0.9) {};
+\end{tikzpicture}}
   \end{column}
 \end{columns}
 \source{\cite{strutz2025bilddatenkompression}}
@@ -1485,20 +1476,950 @@ Schnee & 0{,}125 & 3 &?\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}{Entropie als Auswahlkriterium}
+\begin{columns}
+\column{0.47\textwidth}
+Die Entropie ist genau das Maß, das wir für die Erstellung von
+Entscheidungsbäumen \textbf{gesucht} haben.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Ziel: die Trainingsdaten möglichst \textbf{sortenrein} trennen.
+  \item Je \textbf{homogener} eine Menge, desto \textbf{geringer} ihre
+        Entropie.
+  \item[$\Rightarrow$] Splits, die die Entropie stark senken, sind
+        besonders gut.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  punkt/.style={circle, thick, minimum size=6pt, inner sep=0pt},
+  schlecht/.style={punkt, fill=AccentColor, draw=AccentTitle},
+  gut/.style={punkt, fill=PrimaryColor, draw=PrimaryTitle}
+]
+
+% Achsen mit dreieckigen Pfeilspitzen
+\draw[-{Triangle[]}, thick] (0,0) -- (9,0)
+  node[below, font=\small, pos=1, anchor=north east] {Druck [bar]};
+\draw[-{Triangle[]}, thick] (0,0) -- (0,6)
+  node[font=\small, rotate=90, anchor=south east, pos=1] {Temperatur [°C]};
+
+% Trennebene bei Druck = 800 (senkrecht)
+\draw[ExampleTitle, line width=2pt] (4.3,0) -- (4.3,5.6);
+\draw[ExampleTitle, thick] (4.3,0.12) -- (4.3,-0.12);
+\node[font=\small, anchor=north] at (4.3,-0.15) {800};
+\node[ExampleTitle, font=\small\itshape, anchor=south] at (4.3,5.6) {Trennebene};
+
+% Schlechtteile
+\node[schlecht] at (1.3,1.8) {};
+\node[schlecht] at (2.6,1.4) {};
+\node[schlecht] at (3.4,1.9) {};
+\node[schlecht] at (2.4,2.6) {};
+\node[schlecht] at (1.9,3.1) {};
+\node[schlecht] at (3.4,3.1) {};
+\node[schlecht] at (3.1,4.2) {};
+
+% Gutteile
+\node[gut] at (5.3,3.4) {};
+\node[gut] at (5.8,2.7) {};
+\node[gut] at (6.6,1.6) {};
+\node[gut] at (5.5,1.3) {};
+\node[gut] at (6.3,0.7) {};
+\node[gut] at (7.0,2.5) {};
+\node[gut] at (6.6,3.7) {};
+\node[gut] at (5.9,4.6) {};
+\node[gut] at (7.0,5.0) {};
+
+\end{tikzpicture}}
+\end{columns}
+\end{frame}
 
 
 
+\begin{frame}{Bäume aus Lerndaten erstellen: Bedingte Entropie}
+\begin{columns}
+\column{0.60\textwidth}
+Wir übertragen das Prinzip auf das \textbf{Radfahren}-Beispiel. Was
+passiert an einem Knoten?
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Jedes Attribut (z.\,B. Schnee: ja/nein) ist ein
+        \textbf{Zufallsexperiment} $W$.
+  \item Das Zielattribut (Rad fahren: ja/nein) ist $V$.
+  \item \textbf{Fragestellung:} „Wie unsicher ist $V$, wenn wir $W$ kennen?"
+\end{itemize}
+
+
+\column{0.35\textwidth}
+\begin{blockDef}{Bedingte Entropie}
+\centering
+\vspace{0.2em}
+\[
+  H(V \mid W)
+\]
+\vspace{0.2em}
+\end{blockDef}
+
+\centering
+{\footnotesize\itshape Unsicherheit über $V$ bei bekanntem $W$.}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Bedingte Entropie: Formale Definition}
+\begin{columns}
+\column{0.62\textwidth}
+\footnotesize
+Sei $V$ ein Zufallsexperiment mit Ausgängen $A_1, \dots, A_k$ und $W$ ein
+zweites mit Ausgängen $B_1, \dots, B_s$. Dann gilt:
+\[
+  H(V \mid W) = \sum_{j=1}^{s} P(B_j)\, H(V \mid B_j),
+\]
+mit
+\[
+  H(V \mid B_j) = -\sum_{i=1}^{k} P(A_i \mid B_j)\,\log_2\bigl(P(A_i \mid B_j)\bigr).
+\]
+
+Eingesetzt ergibt sich:
+\[
+  H(V \mid W) = -\sum_{j=1}^{s} P(B_j) \sum_{i=1}^{k}
+  P(A_i \mid B_j)\,\log_2\bigl(P(A_i \mid B_j)\bigr).
+\]
+
+\column{0.35\textwidth}
+\footnotesize
+\begin{blockC1}{\footnotesize Anmerkung}
+Die \textbf{bedingte Entropie} ist die \textbf{gewichtete mittlere
+Entropie} nach der Aufteilung gemäß $W$. Die Gewichtung erfolgt über die
+Wahrscheinlichkeiten der einzelnen Ausprägungen von $W$ -- also über die
+\textbf{Größe der entstehenden Teilmengen}.
+
+\end{blockC1}
+
+{\footnotesize\itshape Die Wahrscheinlichkeiten werden durch
+relative Häufigkeiten aus den Trainingsdaten angenähert.}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Bedingte Entropie: Beispiel „Schnee"}
+\begin{columns}
+\column{0.50\textwidth}
+\footnotesize
+Aus dem Datensatz entnehmen wir:
+\begin{itemize}
+  \item \textbf{Schnee nein} (7 von 9): 4$\times$ Rad fahren ja,
+        3$\times$ nein.
+  \item \textbf{Schnee ja} (2 von 9): 0$\times$ ja, 2$\times$ nein
+\end{itemize}
+
+Damit erhalten wir: 
+
+\vspace{0.6em}
+\[
+  H(\text{Rad} \mid \text{Schnee}) = -\Bigl[\;
+    \underbrace{\tfrac{7}{9}}_{\substack{\text{Schnee}\\\text{nein}}}
+    \Bigl(
+      \underbrace{\tfrac{4}{7}\log_2\tfrac{4}{7}}_{\substack{\text{Rad ja,}\\\text{S. nein}}}
+      +
+      \underbrace{\tfrac{3}{7}\log_2\tfrac{3}{7}}_{\substack{\text{Rad nein,}\\\text{S. nein}}}
+    \Bigr)
+\]
+\[
+  \phantom{H(\text{Rad} \mid \text{Schnee}) = -\Bigl[\;}
+    +\;
+    \underbrace{\tfrac{2}{9}}_{\substack{\text{Schnee}\\\text{ja}}}
+    \Bigl(
+      \underbrace{\tfrac{0}{2}\log_2\tfrac{0}{2}}_{\substack{\text{Rad ja,}\\\text{S. ja}}}
+      +
+      \underbrace{\tfrac{2}{2}\log_2\tfrac{2}{2}}_{\substack{\text{Rad nein,}\\\text{S. ja}}}
+    \Bigr)
+  \Bigr]
+\]
 
 
 
+\column{0.48\textwidth}
+\centering
+{\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{3pt}
+\rowcolors{2}{SecondaryColor!12}{white}
+\begin{tabular}{c l c c c c c}
+\rowcolor{PrimaryColor}
+\textcolor{white}{\textbf{Nr.}} &
+\textcolor{white}{\textbf{Wetter}} &
+\textcolor{white}{\textbf{Son.?}} &
+\textcolor{white}{\textbf{Schnee}} &
+\textcolor{white}{\textbf{Auto}} &
+\textcolor{white}{\textbf{Start}} &
+\textcolor{white}{\textbf{Rad}}\\
+1 & sonnig & Ja   & Nein & Nein & Nein & Ja\\
+2 & Regen  & Nein & Nein & Nein & Nein & Nein\\
+3 & Regen  & Nein & Nein & Ja   & Nein & Ja\\
+4 & Regen  & Nein & Nein & Nein & Nein & Nein\\
+5 & sonnig & Ja   & Nein & Ja   & Nein & Ja\\
+6 & Regen  & Nein & Nein & Ja   & Ja   & Ja\\
+7 & sonnig & Ja   & Nein & Nein & Ja   & Nein\\
+8 & sonnig & Ja   & Ja   & Nein & Nein & Nein\\
+9 & sonnig & Ja   & Ja   & Ja   & Nein & Nein\\
+\dots & \dots & \dots & \dots & \dots & \dots & \dots\\
+\end{tabular}}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
 
 
+\begin{frame}{Bedingte Entropie und Informationsgewinn}
+\begin{columns}
+\column{0.55\textwidth}
+Über die Entropie $H(V)$ und die bedingte Entropie $H(V \mid W)$ können wir den \textbf{Informationsgewinn} berechnen.\\
+\medskip
+Der Informationsgewinn misst, wie stark die Kenntnis von $W$ die
+Unsicherheit über $V$ senkt:
+\[
+  IG(V, W) = H(V) - H(V \mid W).
+\]
+
+\begin{itemize}
+  \item $H(V)$: Unsicherheit \textbf{vor} dem Split.
+  \item $H(V \mid W)$: Unsicherheit \textbf{nach} dem Split.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Split-Kriterium}
+\centering
+\vspace{0.2em}
+ID3 wählt an jedem Knoten das Attribut $W$ mit dem
+\textbf{größten Informationsgewinn} $IG(V, W)$.
+\vspace{0.2em}
+\end{blockC1}
+
+\vspace{0.4em}
+\begin{blockC2}{Vereinfachung}
+$H(V)$ ist an einem Knoten \textbf{konstant}. Es genügt daher, $H(V \mid W)$
+zu berechnen und das \textbf{kleinste} zu wählen.
+\end{blockC2}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Bedingte Entropie: Beispiel}
+\[
+  H(V \mid \text{Wetter}) = -\Bigl[\,
+    \underbrace{\tfrac{5}{9}}_{\text{sonnig}}
+    \bigl(\tfrac{3}{5}\log_2\tfrac{3}{5} + \tfrac{2}{5}\log_2\tfrac{2}{5}\bigr)
+    +
+    \underbrace{\tfrac{4}{9}}_{\text{Regen}}
+    \bigl(\tfrac{2}{4}\log_2\tfrac{2}{4} + \tfrac{2}{4}\log_2\tfrac{2}{4}\bigr)
+  \,\Bigr] \approx 0{,}9839
+\]
+
+\[
+  H(V \mid \text{Schnee}) = -\Bigl[\,
+    \underbrace{\tfrac{7}{9}}_{\text{S. nein}}
+    \bigl(\tfrac{4}{7}\log_2\tfrac{4}{7} + \tfrac{3}{7}\log_2\tfrac{3}{7}\bigr)
+    +
+    \underbrace{\tfrac{2}{9}}_{\text{S. ja}}
+    \bigl(\tfrac{0}{2}\log_2\tfrac{0}{2} + \tfrac{2}{2}\log_2\tfrac{2}{2}\bigr)
+  \,\Bigr] \approx 0{,}7663
+\]
+
+\[
+  H(V \mid \text{Auto defekt}) = -\Bigl[\,
+    \underbrace{\tfrac{5}{9}}_{\text{nein}}
+    \bigl(\tfrac{4}{5}\log_2\tfrac{4}{5} + \tfrac{1}{5}\log_2\tfrac{1}{5}\bigr)
+    +
+    \underbrace{\tfrac{4}{9}}_{\text{ja}}
+    \bigl(\tfrac{1}{4}\log_2\tfrac{1}{4} + \tfrac{3}{4}\log_2\tfrac{3}{4}\bigr)
+  \,\Bigr] \approx 0{,}7616
+\]
+
+\[
+  H(V \mid \text{08:00}) = -\Bigl[\,
+    \underbrace{\tfrac{7}{9}}_{\text{8 nein}}
+    \bigl(\tfrac{4}{7}\log_2\tfrac{4}{7} + \tfrac{3}{7}\log_2\tfrac{3}{7}\bigr)
+    +
+    \underbrace{\tfrac{2}{9}}_{\text{8 ja}}
+    \bigl(\tfrac{1}{2}\log_2\tfrac{1}{2} + \tfrac{1}{2}\log_2\tfrac{1}{2}\bigr)
+  \,\Bigr] \approx 0{,}9885
+\]
+
+\vspace{0.4em}
+\centering
+{Kleinste bedingte Entropie: \textbf{Auto defekt} $\Rightarrow$ Wird als erstes Kriterium verwendet.}
+\source{\cite{Frochte2020}}
+\end{frame}
 
 
+\begin{frame}{ID3: Resultierender Entscheidungsbaum}
+Führt man die Attributwahl \textbf{rekursiv} für alle Teilmengen aus,
+ergibt sich folgender Entscheidungsbaum:
+
+\vspace{0.4em}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  test/.style={draw=PrimaryColor, very thick, rounded corners=4pt,
+               align=center, inner sep=5pt, text width=2.0cm,
+               font=\footnotesize},
+  rad/.style={draw=ExampleTitle, very thick, ellipse,
+              align=center, inner sep=2pt, text width=1.3cm,
+              minimum height=1.2cm, font=\scriptsize},
+  nicht/.style={draw=AlertTitle, very thick, ellipse,
+                align=center, inner sep=2pt, text width=1.3cm,
+                minimum height=1.2cm, font=\scriptsize},
+  kante/.style={->, >=Stealth, thick},
+  lab/.style={font=\footnotesize\itshape, fill=white, inner sep=1pt}
+]
+
+% Ebene 0
+\node[test]  (auto)  at (0,0)         {Auto kaputt};
+
+% Ebene 1
+\node[test]  (sch1)  at (-6.0,-1.8)   {Schnee};
+\node[test]  (wett)  at (5.0,-1.8)    {Wetterlage sonnig};
+
+% Ebene 2 links
+\node[nicht] (n1)    at (-8.0,-3.6)   {nicht Radfahren};
+\node[rad]   (r1)    at (-4.2,-3.6)   {Radfahren};
+
+% Ebene 2 rechts
+\node[test]  (sch2)  at (3.0,-3.6)    {Schnee};
+\node[nicht] (n2)    at (8.0,-3.6)    {nicht Radfahren};
+
+% Ebene 3
+\node[nicht] (n3)    at (1.0,-5.4)    {nicht Radfahren};
+\node[test]  (start) at (4.6,-5.4)    {Start 8 Uhr};
+
+% Ebene 4
+\node[nicht] (n4)    at (3.0,-7.2)    {nicht Radfahren};
+\node[rad]   (r2)    at (6.4,-7.2)    {Radfahren};
+
+% Kanten
+\draw[kante] (auto) -- (sch1) node[lab, midway] {ja};
+\draw[kante] (auto) -- (wett) node[lab, midway] {nein};
+\draw[kante] (sch1) -- (n1)   node[lab, midway] {ja};
+\draw[kante] (sch1) -- (r1)   node[lab, midway] {nein};
+\draw[kante] (wett) -- (sch2) node[lab, midway] {ja};
+\draw[kante] (wett) -- (n2)   node[lab, midway] {nein};
+\draw[kante] (sch2) -- (n3)   node[lab, midway] {ja};
+\draw[kante] (sch2) -- (start)node[lab, midway] {nein};
+\draw[kante] (start) -- (n4)  node[lab, midway] {ja};
+\draw[kante] (start) -- (r2)  node[lab, midway] {nein};
+
+\end{tikzpicture}}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Zusammenfassung und Erweiterung}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{blockC1}{ID3-Algorithmus}
+
+\begin{itemize}
+  \item Baut Bäume auf \textbf{diskreten} Merkmalen.
+  \item Attributwahl über \textbf{maximalen Information Gain}.
+  \item Arbeitet \textbf{rekursiv} bis zur reinen Klassifikation.
+\end{itemize}
+\end{blockC1}
+
+\column{0.48\textwidth}
+\begin{blockC3}{Numerische Merkmale}
+
+\textbf{Quantitative} Merkmale brauchen eine Sonderbehandlung:
+\begin{itemize}
+  \item Binär-Splits an \textbf{Schwellenwerten} (z.\,B. „Druck < 800?").
+  \item Sortieren und optimale Trennpunkte suchen.
+\end{itemize}
+\end{blockC3}
+\end{columns}
+
+\vspace{0.4em}
+
+\textbf{Erweiterte Algorithmen}
+\begin{itemize}
+  \item \textbf{C4.5} -- Nachfolger von ID3; unterstützt numerische Merkmale
+        und \textbf{Pruning}.
+  \item \textbf{CART} (Classification and Regression Trees) -- Klassifikation
+        \textbf{und} Regression.
+\end{itemize}
+\source{\cite{Frochte2020}}
+\end{frame}
 
 
+\begin{frame}{Entscheidungsbäume: Vor- und Nachteile}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\begin{blockC4}{Vorteile}
+\begin{itemize}
+  \item Entscheidungen sehr gut \textbf{nachvollziehbar} -- der Weg eines
+        Datensatzes durch den Baum ist klar verfolgbar.
+  \item Berechnungen \textbf{schnell und einfach}.
+  \item Baum und Entscheidungen gut \textbf{visualisierbar}.
+\end{itemize}
+\end{blockC4}
 
+\column{0.49\textwidth}
+\begin{blockC2}{Nachteile}
+\begin{itemize}
+  \item Neigung zur \textbf{Überanpassung} an die Trainingsdaten
+        (Overfitting).
+  \item Nur \textbf{senkrechte und waagerechte} Trennebenen -- komplexe
+        Entscheidungsgrenzen schwer nachbildbar.
+\end{itemize}
+\end{blockC2}
+\end{columns}
+
+\vspace{0.8em}
+\centering
+{\footnotesize\itshape Gut interpretierbar und schnell -- aber anfällig für
+Overfitting und auf achsenparallele Grenzen beschränkt.}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}[fragile]{Anwendung in Python}
+\begin{columns}
+\column{0.58\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier(criterion='entropy')
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize, frame=none]{text}
+0.9066666666666666
+\end{minted}
+
+\column{0.35\textwidth}
+Wir nutzen unser vorgefertigtes \textbf{Klassifikationstemplate}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \texttt{criterion='entropy'} wählt die \textbf{Entropie} als
+        Split-Maß.
+  \item \texttt{score} liefert bei Klassifikatoren die \textbf{Trefferquote}.
+\end{itemize}
+
+\vspace{0.4em}
+{\footnotesize\itshape Hier: rund \textbf{90,7\,\%} korrekt klassifiziert.}
+\end{columns}
+\source{Entscheidungsbaum.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Vorhersage für unbekannte Werte}
+\begin{columns}
+\column{0.48\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy as np
+
+X_wert = np.array([[830, 240]])
+ergebnis = model.predict(X_wert)
+print(ergebnis[0])
+\end{minted}
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize, frame=none]{text}
+1
+\end{minted}
+
+\column{0.47\textwidth}
+Mit dem trainierten Modell lassen sich Vorhersagen für \textbf{unbekannte
+Werte} treffen.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Eingabe als \textbf{numpy-Array} im richtigen Format.
+  \item \texttt{predict} liefert ein Feld mit Vorhersagen für alle
+        übergebenen Datensätze (hier nur einer).
+\end{itemize}
+
+\vspace{0.4em}
+{\footnotesize\itshape Beispiel: 830\,bar, 240\,°C $\Rightarrow$ Ergebnis
+\textbf{1} = Gutteil.}
+\end{columns}
+\source{Entscheidungsbaum.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Entscheidungsbäume: Visualisierung in Python}
+\begin{columns}
+\column{0.47\textwidth}
+\small
+In \texttt{helper.py} liegt die Funktion \texttt{plot\_classifier}, die die
+\textbf{Entscheidungsgrenzen} eines Klassifikators visualisiert.
+
+\vspace{0.3em}
+Dazu kopieren wir die Datei in das Verzeichnis der aktuellen
+\texttt{.ipynb}-Datei.
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize]{python}
+from helper import plot_classifier
+
+plot_classifier(model, X_train, 
+                y_train,
+                proba=False,
+                xlabel="Druck",
+                ylabel="Temperatur",
+                cmapName="bwr")
+\end{minted}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatterplot_baum_train.svg}
+\end{columns}
+\source{Entscheidungsbaum.ipynb}
+\end{frame}
+
+\begin{frame}{Überanpassung an Ausreißer}
+\begin{columns}
+\column{0.60\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatterplot_baum_test.svg}
+
+\column{0.40\textwidth}
+Zeichnet man die \textbf{Testdaten} mit den Entscheidungsgrenzen, finden
+sich viele kleine Abschnitte dort \textbf{nicht wieder}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Diese Bereiche entstanden durch \textbf{Ausreißer} in den
+        Trainingsdaten.
+  \item Ihre Berücksichtigung macht das Modell unnötig komplex.
+  \item[$\Rightarrow$] Klassisches Zeichen für \textbf{Überanpassung}
+        (Overfitting).
+\end{itemize}
+\end{columns}
+\source{Entscheidungsbaum.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Entscheidungsbaum grafisch darstellen}
+\begin{columns}
+\column{0.4\textwidth}
+\footnotesize
+Nach dem Training lässt sich der Baum auch direkt \textbf{grafisch}
+darstellen:
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\scriptsize]{python}
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+
+plot_tree(model)
+plt.show()
+\end{minted}
+
+\column{0.6\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/baum_einfach.svg}
+\end{columns}
+\source{Entscheidungsbaum visualisiert.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Entscheidungsbaum: lesbarer gestalten}
+\begin{columns}
+\column{0.4\textwidth}
+\footnotesize
+Mit etwas \textbf{Feinschliff} wird der Baum noch besser lesbar:
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\scriptsize]{python}
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+
+plot_tree(model,
+          feature_names=["Druck", "Temperatur"],
+          class_names=["gut", "schlecht"],
+          filled=True,
+          rounded=True)
+plt.show()
+\end{minted}
+
+\column{0.60\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/baum_farbig.svg}
+\end{columns}
+\source{Entscheidungsbaum visualisiert.ipynb}
+\end{frame}
+
+\begin{frame}{Aufbau eines Baumknotens}
+\begin{columns}
+\column{0.52\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  knoten/.style={draw=black, thick, rounded corners=3pt, align=left,
+                 inner sep=5pt, text width=3.0cm, font=\scriptsize},
+  kante/.style={->, >=Stealth, thick},
+  lab/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt}
+]
+
+% Wurzel
+\node[knoten, fill=SecondaryColor!20] (root) at (0,0) {
+  \textbf{Temperatur $\leq$ 250,17}\\
+  entropy $= 0{,}985$\\
+  samples $= 222$\\
+  value $= [95, 127]$\\
+  class $=$ schlecht
+};
+
+% linkes Kind
+\node[knoten, fill=AccentColor!70] (l) at (-3.0,-3.2) {
+  \textbf{Druck $\leq$ 808,04}\\
+  entropy $= 0{,}664$\\
+  samples $= 110$\\
+  value $= [91, 19]$\\
+  class $=$ gut
+};
+
+% rechtes Kind
+\node[knoten, fill=SecondaryColor!70] (r) at (3.0,-3.2) {
+  \textbf{Temperatur $\leq$ 263,39}\\
+  entropy $= 0{,}222$\\
+  samples $= 112$\\
+  value $= [4, 108]$\\
+  class $=$ schlecht
+};
+
+\draw[kante] (root) -- (l) node[lab, midway, above left] {True};
+\draw[kante] (root) -- (r) node[lab, midway, above right] {False};
+
+\end{tikzpicture}}
+
+\column{0.43\textwidth}
+\footnotesize
+Jeder Knoten zeigt fünf Angaben:
+\begin{itemize}
+  \item \textbf{Bedingung}: der Schwellwert-Test (z.\,B. Temperatur
+        $\leq 250{,}17$).
+  \item \textbf{entropy}: Unreinheit der Menge.
+  \item \textbf{samples}: Anzahl der Datensätze.
+  \item \textbf{value} $[\,$gut$,$ schlecht$\,]$: Verteilung auf die Klassen.
+  \item \textbf{class}: die Mehrheitsklasse.
+\end{itemize}
+
+\vspace{0.3em}
+{\footnotesize\itshape True $=$ Bedingung erfüllt (links), False $=$ nicht
+erfüllt (rechts).}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Anzahl der Knotenebenen beschränken}
+\begin{columns}
+\column{0.50\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/baum_farbig.svg}
+
+\column{0.45\textwidth}
+Standardmäßig passt der Algorithmus den Baum so an, dass jeder Blattknoten
+nur \textbf{eine Klasse} enthält.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Das ist eine übertrieben starke Anpassung an die Trainingsdaten.
+  \item Ergebnis: Bäume mit \textbf{sehr vielen Knoten}.
+  \item[$\Rightarrow$] Klassisches \textbf{Overfitting}.
+\end{itemize}
+\end{columns}
+\source{Entscheidungsbaum visualisiert.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Tiefe des Baumes beschränken}
+\begin{columns}
+\column{0.58\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier(criterion='entropy',
+                               max_depth=4)
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+\texttt{0.9333333333333333}
+
+
+\column{0.35\textwidth}
+Gegen Überanpassung beschränkt man die \textbf{Tiefe} des Baumes.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \texttt{max\_depth=4} begrenzt auf \textbf{4 Ebenen}.
+  \item Das Prognoseergebnis \textbf{verbessert} sich.
+  \item Das Modell entspricht nun eher der \textbf{Realität}.
+\end{itemize}
+\end{columns}
+\source{Entscheidungsbaum beschränkt.ipynb}
+\end{frame}
+
+
+\begin{frame}{Beschränkter Baum (max\_depth = 4)}
+\begin{columns}
+\column{0.65\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/baum_beschraenkt.svg}
+
+\column{0.35\textwidth}
+Der resultierende Baum nach Begrenzung auf \textbf{4 Entscheidungsebenen}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Deutlich \textbf{weniger Knoten}.
+  \item Übersichtlicher und besser \textbf{generalisierend}.
+\end{itemize}
+\end{columns}
+\source{Entscheidungsbaum beschränkt.ipynb}
+\end{frame}
+
+\begin{frame}{Einfachere Entscheidungsgrenze}
+\begin{columns}
+\column{0.48\textwidth}
+\centering
+\textbf{Ohne Begrenzung}\\[4pt]
+\includesvg[width=\linewidth]{figures/scatterplot_baum_train.svg}
+
+\column{0.48\textwidth}
+\centering
+\textbf{max\_depth = 4}\\[4pt]
+\includesvg[width=\linewidth]{figures/scatter_baum_beschraenkt.svg}
+\end{columns}
+
+\vspace{0.6em}
+\centering
+{\footnotesize\itshape Die Reduktion der Tiefe vereinfacht die
+Entscheidungsgrenze deutlich.}
+\end{frame}
+
+\begin{frame}[fragile]{Mindestanzahl Beispiele pro Blatt}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{minted}[fontsize=\scriptsize]{python}
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier(
+      criterion='entropy',
+      max_depth=4,
+      min_samples_leaf=3)
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\column{0.40\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_min_sample.svg}
+\end{columns}
+
+\vspace{0.5em}
+\footnotesize
+Oft setzt man zusätzlich die \textbf{Mindestanzahl} an Beispielen pro
+Blattknoten (\texttt{min\_samples\_leaf}). So wird kein Blatt wegen eines
+\textbf{einzigen} Datensatzes geöffnet. Beide Stellschrauben lassen sich
+\textbf{kombinieren}: \texttt{max\_depth} begrenzt die Tiefe,
+\texttt{min\_samples\_leaf} die Mindestgröße der Blätter.
+\source{Entscheidungsbaum beschränkt.ipynb}
+\end{frame}
 
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}{Übung: Der Iris-Datensatz}
+\begin{columns}
+\column{0.65\textwidth}
+\footnotesize
+Die bekannteste Datensammlung für den Einstieg ins maschinelle Lernen ist
+\textbf{Fisher's Iris Data Set}: für drei Unterarten der Schwertlilie je
+\textbf{50 Datensätze}.
+
+\vspace{0.3em}
+Jeder Datensatz enthält vier Merkmale plus die vom Botaniker bestimmte
+Unterart:
+\begin{itemize}
+  \item Länge und Breite des \textbf{Kelchblattes} (Sepalum).
+  \item Länge und Breite des \textbf{Kronblattes} (Petalum).
+\end{itemize}
+
+\vspace{0.3em}
+Da Pflanzen unterschiedlich wachsen, variieren Längen und Breiten. Hinzu
+kommen mögliche Mess- oder systematische Fehler sowie Fehlklassifikationen.
+
+\vspace{0.3em}
+\textbf{Aufgabe:} auf Basis dieser Daten möglichst gute Prognosen abgeben.
+
+\column{0.30\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/iris.jpg}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Übung: Die drei Iris-Unterarten}
+Im Datensatz sind folgende drei Unterarten der Iris erfasst:
+
+\vspace{0.8em}
+\begin{columns}
+\column{0.32\textwidth}
+\centering
+\includegraphics[height=4cm,width=\linewidth,keepaspectratio]{figures/iris_setosa.jpg}\\[4pt]
+\textbf{Iris setosa}\\
+{\footnotesize type $= 1$}
+
+\column{0.32\textwidth}
+\centering
+\includegraphics[height=4cm,width=\linewidth,keepaspectratio]{figures/iris_virginica.jpg}\\[4pt]
+\textbf{Iris virginica}\\
+{\footnotesize type $= 2$}
+
+\column{0.32\textwidth}
+\centering
+\includegraphics[height=4cm,width=\linewidth,keepaspectratio]{figures/iris_versicolor.jpg}\\[4pt]
+\textbf{Iris versicolor}\\
+{\footnotesize type $= 3$}
+\end{columns}
+\source{Bildquellen von links nach rechts: \cite{wikimedia_iris_setosa_photo, commons_iris_virginica_2, dlanglois_iris_versicolor_2005}}
+\end{frame}
+
+
+\begin{frame}{Übung: Iris klassifizieren}
+\begin{columns}
+\column{0.65\textwidth}
+\begin{enumerate}[a)]
+  \item Verwenden Sie den Iris-Datensatz aus \texttt{iris.csv}. Erstellen Sie
+        einen Entscheidungsbaum, der die Unterarten (Spalte \texttt{type})
+        anhand der Längen und Breiten der Blütenblätter klassifiziert.
+        Stellen Sie sicher, dass keine \textbf{Überanpassung} auftritt.
+  \item Sie haben am Neckar eine Iris entdeckt und natürlich sofort vermessen. Um welche Art
+        handelt es sich?
+        \begin{itemize}
+          \item Kelchblatt: \textbf{7,2\,cm} lang, \textbf{3,0\,cm} breit.
+          \item Deckblatt: \textbf{5,9\,cm} lang, \textbf{2,0\,cm} breit.
+        \end{itemize}
+\end{enumerate}
+
+
+
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{laptop}
+
+
+
+\end{columns}
+
+\source{Lösung: Entscheidungsbaum Iris.ipynb}
+\end{frame}
+
+
+\begin{frame}{Modelle in anderen Anwendungen verwenden}
+\begin{columns}
+\column{0.52\textwidth}
+Oft möchte man ein im Jupyter Notebook erstelltes Modell in einer
+\textbf{anderen Anwendung} nutzen.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Modelle lassen sich \textbf{serialisieren} und andernorts wieder
+        einlesen.
+  \item So wird das Training vom Einsatz \textbf{getrennt}.
+\end{itemize}
+
+\vspace{0.4em}
+{\footnotesize\itshape \texttt{iris\_app.py}: eine App zur Klassifikation
+von Iris-Blüten mit einem vortrainierten sklearn-Modell.}
+
+\column{0.43\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/iris_app.jpg}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Klassifikator speichern und laden}
+\begin{columns}
+\column{0.50\textwidth}
+\footnotesize
+\textbf{Speichern}
+\begin{minted}[fontsize=\footnotesize]{python}
+import pickle
+
+file_name = "modell.pickle"
+pickle.dump(model, open(file_name, "wb"))
+\end{minted}
+
+\vspace{0.4em}
+\textbf{Laden und klassifizieren}
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy as np
+
+loaded_model = pickle.load(
+    open(file_name, "rb"))
+messwerte = np.array([[5.2, 3.4, 1.5, 0.2]])
+loaded_model.predict(messwerte)
+\end{minted}
+
+\column{0.45\textwidth}
+Ein trainiertes Modell lässt sich \textbf{serialisieren} und später wieder
+einlesen.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \texttt{pickle} eignet sich für einfache Zwecke und
+        \textbf{vertrauenswürdige} Quellen.
+  \item \texttt{dump} schreibt das Modell, \texttt{load} liest es zurück.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{blockC2}{\footnotesize Achtung}
+\footnotesize
+\texttt{pickle}-Dateien aus \textbf{unbekannten} Quellen niemals laden --
+sie können beliebigen Code ausführen.
+\end{blockC2}
+\end{columns}
+\source{Entscheidungsbaum Iris mit Export.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Modell in eigene Programme einbinden}
+\begin{columns}
+\column{0.55\textwidth}
+\footnotesize
+Man kann die serialisierten Modelle in beliebige \textbf{Python-Programme}
+importieren.
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize]{python}
+# Modell laden
+file_name = "modell.pickle"
+loaded_model = pickle.load(open(file_name, "rb"))
+...
+
+# Vorhersage machen und als Text ausgeben
+prediction = loaded_model.predict(messwerte)
+results = ["Iris setosa", "Iris virginica",
+           "Iris versicolor"]
+text = results[prediction[0]-1]
+\end{minted}
+
+\column{0.40\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/iris_app.jpg}
+\end{columns}
+\source{iris\_app.py}
+\end{frame}
+
 \makequestionspage{\FRAGENIMAGE}
