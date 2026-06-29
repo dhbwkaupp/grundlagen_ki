@@ -1,0 +1,132 @@
+\makesubsectionpage{Ensemble Learning}
+
+\begin{frame}{Ensemble Learning: Grundidee}
+\begin{columns}
+\column{0.62\textwidth}
+Einzelne Entscheidungsbäume neigen zur \textbf{Überanpassung}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \textbf{Idee:} mehrere verschiedene Bäume erstellen (ein
+        \textbf{Wald}) und per \textbf{Mehrheitsentscheidung} klassifizieren.
+  \item \textbf{Problem:} dafür braucht man \textbf{verschiedene} Bäume.
+  \item \textbf{Lösung:} jeden Baum nur auf einer \textbf{zufälligen
+        Teilmenge} der Trainingsdaten trainieren.
+  \item[$\Rightarrow$] So entstehen lauter unterschiedliche Bäume.
+\end{itemize}
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.45\linewidth]{deciduous tree}\hfill
+\twemoji[width=0.45\linewidth]{evergreen tree}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ensemble Learning: Grundidee}
+Ansätze, die mehrere Lerner kombinieren, nennt man \textbf{Ensemble
+Learning}. Das Gesamtergebnis ist die (gewichtete) \textbf{Mehrheits\-%
+entscheidung} der Basisklassifikatoren. Die zwei Varianten unterscheiden
+sich darin, wie die Trainingsdaten für die einzelnen Lerner gebildet werden:
+
+\vspace{0.6em}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{blockC1}{Bagging}
+
+Für jeden Lerner wird \textbf{zufällig} eine Teilmenge der Trainingsdaten
+gezogen. Jeder Datensatz hat dieselbe Wahrscheinlichkeit.
+
+\vspace{0.3em}
+{\itshape Bootstrapping -- die Lerner entstehen unabhängig.}
+\end{blockC1}
+
+\column{0.48\textwidth}
+\begin{blockC2}{Boosting}
+Die Lerner entstehen \textbf{nacheinander}. Datensätze, die bisher
+\textbf{falsch} vorhergesagt wurden, werden höher gewichtet.
+
+\vspace{0.3em}
+{\itshape Resampling/Reweighting -- die Lerner bauen aufeinander auf.}
+\end{blockC2}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ensemble Learning: Random Forests}
+\begin{columns}
+\column{0.45\textwidth}
+Random Forests verwenden den \textbf{Bagging}-Ansatz. Für mehr Varianz
+wird zusätzlich an jedem Entscheidungsknoten nur eine \textbf{zufällige
+Teilmenge der Spalten} verwendet.
+
+\vspace{0.4em}
+Streicht man z.\,B. die Spalte mit der niedrigsten Entropie, rutscht eine
+andere nach oben. Die einzelnen Bäume sind dadurch i.d.R. \textbf{schlechter}
+als der vollständige Baum -- per \textbf{Mehrheitsentscheidung} wird das
+Ergebnis aber meist \textbf{besser}.
+
+\column{0.5\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  test/.style={draw=PrimaryColor, very thick, rounded corners=4pt,
+               align=center, inner sep=4pt, text width=2.6cm,
+               font=\scriptsize},
+  ein/.style={fill=SecondaryColor, text=white, rounded corners=4pt,
+              align=center, inner sep=4pt, text width=2.0cm,
+              minimum height=0.9cm, font=\scriptsize},
+  nein/.style={fill=ExampleTitle, text=white, rounded corners=4pt,
+               align=center, inner sep=4pt, text width=2.0cm,
+               minimum height=0.9cm, font=\scriptsize},
+  kante/.style={->, >=Stealth, thick},
+  lab/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt}
+]
+
+% Wurzel (gestrichene Spalte)
+\node[test] (r) at (0,0) {Bewerber*in hat Masterabschluss (90)};
+\node[ein]  (e1) at (-2.8,-2.0) {Einstellen (40)};
+\node[test] (b)  at (2.6,-2.0)  {sehr guter Bachelorabschluss (50)};
+\node[ein]  (e2) at (0.4,-4.2)  {Einstellen (25)};
+\node[test] (v)  at (4.4,-4.2)  {gut im Vorstellungsgespräch (25)};
+\node[ein]  (e3) at (2.6,-6.4)  {Einstellen (20)};
+\node[nein] (n)  at (6.2,-6.4)  {Nicht einstellen (20)};
+
+\draw[kante] (r) -- (e1) node[lab, midway] {ja};
+\draw[kante] (r) -- (b)  node[lab, midway] {nein};
+\draw[kante] (b) -- (e2) node[lab, midway] {ja};
+\draw[kante] (b) -- (v)  node[lab, midway] {nein};
+\draw[kante] (v) -- (e3) node[lab, midway] {ja};
+\draw[kante] (v) -- (n)  node[lab, midway] {nein};
+
+% rotes X ueber die Wurzel (gestrichene Spalte)
+\draw[red, line width=2pt] (r.south west) -- (r.north east);
+\draw[red, line width=2pt] (r.north west) -- (r.south east);
+
+\end{tikzpicture}}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ensemble Learning: Boosting}
+\begin{columns}
+\column{0.60\textwidth}
+Es gibt verschiedene \textbf{Boosting}-Verfahren. Sie unterscheiden sich
+darin,
+\begin{itemize}
+  \item wie die Datenmengen für die schwachen Lerner gebildet werden und
+  \item wie das \textbf{Gesamtergebnis} aus den einzelnen Lernern entsteht.
+\end{itemize}
+
+\vspace{0.4em}
+Die gängigsten Verfahren sind \textbf{AdaBoost} und \textbf{LogitBoost}.
+
+\column{0.33\textwidth}
+\begin{blockC1}{In der Praxis}
+Boosting mit \textbf{flachen} Entscheidungsbäumen als Basislerner gilt als
+eines der \textbf{leistungsfähigsten} Klassifikationsmodelle -- oft genutzt
+in der automatisierten \textbf{Bildanalyse}.
+\end{blockC1}
+\end{columns}
+\source{\cite{guyon2011practical}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}

@@ -1,0 +1,453 @@
+\makesubsectionpage{Bewertung von Klassifikationsmodellen}
+
+\begin{frame}{Bewertung von Klassifikationsmodellen}
+\begin{columns}
+\column{0.60\textwidth}
+Die Güte des trainierten Modells haben wir bisher mit \texttt{model.score()}
+bewertet.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \texttt{model.score()} liefert standardmäßig die
+        \textbf{Trefferquote}.
+  \item Also: korrekt gelabelte Testdaten geteilt durch die Gesamtzahl der
+        Testdaten.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{block}{Aber}
+In vielen Fällen ist die reine Trefferquote \textbf{kein geeignetes
+Gütemaß}.
+\end{block}
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{bar chart}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Bewertung: Unbalancierte Datensätze}
+\begin{columns}
+\column{0.58\textwidth}
+Datensätze mit ungleicher Klassenverteilung nennt man
+\textbf{unbalanciert}. Reale Datensätze sind oft stark unbalanciert.
+
+\vspace{0.4em}
+\textbf{Beispiel:} Betrugserkennung bei Kreditkarten-Transaktionen
+\begin{itemize}
+  \item \textbf{99,98\,\%} zulässig, nur \textbf{0,02\,\%} Betrug.
+  \item Ein Klassifikator, der \textbf{alles erlaubt}, erreicht
+        99,98\,\% Trefferquote.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{blockC2}{Trugschluss}
+Hohe Trefferquote -- und trotzdem \textbf{völlig nutzlos}: kein einziger
+Betrug wird erkannt.
+\end{blockC2}
+
+\column{0.38\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  kugel/.style={circle, thick, minimum size=10pt, inner sep=0pt}
+]
+\draw[very thick] (-0.1,2.0) -- (-0.1,0) -- (2.1,0) -- (2.1,2.0);
+% viele "zulaessig" (blau), ein "Betrug" (rot)
+\foreach \x/\y in {0.5/0.4, 1.0/0.4, 1.5/0.4, 0.5/0.9, 1.5/0.9,
+                   0.5/1.4, 1.0/1.4, 1.5/1.4} {
+  \node[kugel, fill=PrimaryColor, draw=PrimaryTitle] at (\x,\y) {};
+}
+\node[kugel, fill=AccentColor, draw=AccentTitle] at (1.0,0.9) {};
+\end{tikzpicture}}\\[4pt]
+{\footnotesize\itshape 1 Betrug unter vielen zulässigen Fällen.}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Bewertung: Konfusionsmatrix}
+\begin{columns}
+\column{0.4\textwidth}
+Eine \textbf{Konfusionsmatrix} (confusion matrix) veranschaulicht, wie
+viele Datensätze der Klassifikator richtig und falsch zugeordnet hat.
+
+\vspace{0.4em}
+Dafür brauchen wir:
+\begin{itemize}
+  \item die \textbf{Ergebnisse} des Klassifikators für alle Testdaten,
+  \item die \textbf{erwarteten} Ergebnisse -- also die Labels der
+        Testdatenmenge.
+\end{itemize}
+
+\column{0.55\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  ekopf/.style={fill=ExampleTitle, text=white, font=\footnotesize\bfseries,
+                minimum width=3.4cm, minimum height=1.1cm},
+  skopf/.style={fill=ExampleTitle, text=white, font=\footnotesize\bfseries,
+                minimum width=2.6cm, minimum height=1.1cm},
+  zelle/.style={font=\footnotesize, align=center, text width=2.4cm,
+                minimum width=2.6cm, minimum height=1.1cm}
+]
+% Titel oben
+\node[font=\footnotesize\bfseries] at (3.5,2.0) {Tatsächlicher Zielwert};
+
+% Kopfzeile (Spaltenköpfe)
+\node[ekopf] at (1.0,1.25) {};
+\node[skopf] at (3.5,1.25) {POSITIV};
+\node[skopf] at (6.1,1.25) {NEGATIV};
+
+% erste Datenzeile (kleiner Abstand zur Kopfzeile)
+\node[ekopf] at (1.0,0.1)  {POSITIV};
+\node[zelle, fill=ExampleTitle!18] at (3.5,0.1) {Anzahl \textbf{TP}\\(true positive)};
+\node[zelle, fill=ExampleTitle!8]  at (6.1,0.1) {Anzahl \textbf{FP}\\(false positive)};
+
+% zweite Datenzeile
+\node[ekopf] at (1.0,-1.05)  {NEGATIV};
+\node[zelle, fill=ExampleTitle!8]  at (3.5,-1.05) {Anzahl \textbf{FN}\\(false negative)};
+\node[zelle, fill=ExampleTitle!18] at (6.1,-1.05) {Anzahl \textbf{TN}\\(true negative)};
+
+% Achsenbeschriftung links
+\node[font=\footnotesize\bfseries, rotate=90] at (-0.9,-0.5)
+  {Vorhersage};
+\end{tikzpicture}}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Konfusionsmatrix: Beispiel Spritzguss}
+Beim \textbf{Spritzgieß-Beispiel} ist das Label, ob ein Zyklus ein
+\textbf{Gutteil} (positiv) oder ein \textbf{Schlechtteil} (negativ)
+erzeugt hat. Die vier Möglichkeiten:
+
+\vspace{0.6em}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{blockC1}{Korrekt klassifiziert}
+\begin{itemize}
+  \item \textbf{TP} (true positive): Klassifikator sagt Gutteil -- war ein
+        Gutteil.
+  \item \textbf{TN} (true negative): Klassifikator sagt Schlechtteil --
+        war ein Schlechtteil.
+\end{itemize}
+\end{blockC1}
+
+\column{0.47\textwidth}
+\begin{blockC2}{Falsch klassifiziert}
+\begin{itemize}
+  \item \textbf{FP} (false positive): Klassifikator sagt Gutteil -- war ein
+        Schlechtteil.
+  \item \textbf{FN} (false negative): Klassifikator sagt Schlechtteil --
+        war ein Gutteil.
+\end{itemize}
+\end{blockC2}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Konfusionsmatrix: konkretes Beispiel}
+\begin{columns}
+\column{0.47\textwidth}
+Wir klassifizieren \textbf{200 Produktionszyklen}. Die Konfusionsmatrix
+könnte wie rechts aussehen.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Sie zeigt, \textbf{welche Art} von Fehlern der Klassifikator macht.
+  \item Daraus lassen sich leicht \textbf{alternative Gütemaße} berechnen.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  ekopf/.style={fill=ExampleTitle, text=white, font=\footnotesize\bfseries,
+                minimum width=3.2cm, minimum height=1.2cm},
+  skopf/.style={fill=ExampleTitle, text=white, font=\footnotesize\bfseries,
+                minimum width=2.6cm, minimum height=1.2cm},
+  zelle/.style={font=\large, align=center, text width=2.4cm,
+                minimum width=2.6cm, minimum height=1.2cm}
+]
+% Titel oben
+\node[font=\footnotesize\bfseries] at (3.4,2.2) {Tatsächlicher Zielwert};
+
+% Kopfzeile
+\node[ekopf] at (0.9,1.3) {};
+\node[skopf] at (3.4,1.3) {POSITIV};
+\node[skopf] at (6.0,1.3) {NEGATIV};
+
+% erste Datenzeile
+\node[ekopf] at (0.9,0.0)  {POSITIV};
+\node[zelle, fill=ExampleTitle!18] at (3.4,0.0) {120};
+\node[zelle, fill=ExampleTitle!8]  at (6.0,0.0) {20};
+
+% zweite Datenzeile
+\node[ekopf] at (0.9,-1.3)  {NEGATIV};
+\node[zelle, fill=ExampleTitle!8]  at (3.4,-1.3) {40};
+\node[zelle, fill=ExampleTitle!18] at (6.0,-1.3) {20};
+
+% Achsenbeschriftung links
+\node[font=\footnotesize\bfseries, rotate=90] at (-0.9,-0.7) {Vorhersage};
+\end{tikzpicture}}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Bewertung: Sensitivität (Recall)}
+\begin{columns}
+\column{0.55\textwidth}
+Die \textbf{Sensitivität} (True-Positive-Rate, Recall) gibt an, wie viele
+der positiven Datenpunkte auch tatsächlich als positiv erkannt werden.
+
+\vspace{0.4em}
+\[
+  \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\]
+
+\vspace{0.4em}
+Sie ist wichtig, wenn ein Modell \textbf{alle positiven Fälle sicher
+entdecken} soll.
+
+\column{0.42\textwidth}
+\begin{blockC1}{Anwendung: Krebserkennung}
+Ein Klassifikator soll Krebszellen erkennen.
+\begin{itemize}
+  \item \textbf{Alle} tatsächlichen Krebsfälle müssen erkannt werden
+        (frühe Behandlung).
+  \item Ein \textbf{Fehlalarm} ist unkritisch -- eine zusätzliche
+        Untersuchung schadet nicht.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{databasecamp2022konfusionsmatrix}}
+\end{frame}
+
+
+\begin{frame}{Bewertung: Spezifität}
+\begin{columns}
+\column{0.55\textwidth}
+Die \textbf{Spezifität} (True-Negative-Rate) misst, wie viele der als
+negativ klassifizierten Datenpunkte auch tatsächlich negativ sind.
+
+\vspace{0.4em}
+\[
+  \text{Spezifität} = \frac{\text{TN}}{\text{TN} + \text{FP}}
+\]
+
+\vspace{0.4em}
+Sie ist wichtig, wenn \textbf{Fehlalarme teuer} sind.
+
+\column{0.42\textwidth}
+\begin{blockC1}{Anwendung: Qualitätskontrolle}
+Überwachung eines \textbf{kostenintensiven} Produkts.
+\begin{itemize}
+  \item Fehlerhafte Produkte sollen nicht zu den Kund*innen gelangen.
+  \item Zugleich möglichst \textbf{wenige} Produkte unnötig vernichten.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{databasecamp2022konfusionsmatrix}}
+\end{frame}
+
+\begin{frame}{Bewertung: Trefferquote und Fehlerrate}
+\begin{columns}
+\column{0.49\textwidth}
+\begin{blockC1}{Trefferquote (Accuracy)}
+Anteil der korrekt klassifizierten Datensätze:
+\[
+  \frac{\text{TP} + \text{TN}}
+       {\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+\]
+\end{blockC1}
+
+\column{0.48\textwidth}
+\begin{blockC2}{Fehlerrate}
+Anteil der falsch klassifizierten Datensätze:
+\[
+  \frac{\text{FP} + \text{FN}}
+       {\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+\]
+\end{blockC2}
+\end{columns}
+
+\vspace{0.6em}
+\centering
+{\footnotesize\itshape Beide ergänzen sich zu 1: Trefferquote $+$
+Fehlerrate $= 1$.}
+\source{\cite{databasecamp2022konfusionsmatrix}}
+\end{frame}
+
+
+\begin{frame}{Bewertung: Balancierte Fehlerrate (BER)}
+\begin{columns}
+\column{0.55\textwidth}
+Bei stark \textbf{unbalancierten} Datensätzen verwendet man häufig die
+\textbf{Balancierte Fehlerrate} (BER).
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Die Fehlerrate wird für jede Klasse \textbf{separat} berechnet.
+  \item Die BER ist das \textbf{arithmetische Mittel} dieser einzelnen
+        Fehlerraten.
+\end{itemize}
+
+\vspace{0.4em}
+Man bestimmt also, wie viel Prozent der tatsächlich \textbf{positiven} und
+wie viel Prozent der tatsächlich \textbf{negativen} Datensätze
+\textbf{falsch} klassifiziert werden -- und mittelt beide Werte.
+
+\column{0.4\textwidth}
+\begin{blockC1}{Formel}
+\[
+  \text{BER} = \frac{1}{2}\!\left(
+    \frac{\text{FN}}{\text{TP} + \text{FN}}
+    +
+    \frac{\text{FP}}{\text{TN} + \text{FP}}
+  \right)
+\]
+\vspace{0.2em}
+
+{\footnotesize Mittel aus Fehlerrate der positiven und der negativen
+Klasse.}
+\end{blockC1}
+\end{columns}
+\end{frame}
+
+\begin{frame}{BER am Beispiel: Kreditkarten-Betrug}
+\begin{columns}
+\column{0.48\textwidth}
+\textbf{10.000 Transaktionen}, davon nur 20 Betrugsfälle (positiv).
+Der Klassifikator erkennt nur die Hälfte der Betrugsfälle:
+
+\vspace{0.4em}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  ekopf/.style={fill=ExampleTitle, text=white, font=\scriptsize\bfseries,
+                minimum width=2.0cm, minimum height=1.0cm},
+  skopf/.style={fill=ExampleTitle, text=white, font=\scriptsize\bfseries,
+                minimum width=1.8cm, minimum height=1.0cm},
+  zelle/.style={font=\normalsize, align=center, text width=1.7cm,
+                minimum width=1.8cm, minimum height=1.0cm}
+]
+\node[font=\scriptsize\bfseries] at (2.5,1.9) {Tatsächlich};
+\node[ekopf] at (0.7,1.2) {};
+\node[skopf] at (2.5,1.2) {Betrug};
+\node[skopf] at (4.3,1.2) {zulässig};
+\node[ekopf] at (0.7,0.1)  {Betrug};
+\node[zelle, fill=ExampleTitle!18] at (2.5,0.1) {10};
+\node[zelle, fill=ExampleTitle!8]  at (4.3,0.1) {10};
+\node[ekopf] at (0.7,-1.0)  {zulässig};
+\node[zelle, fill=ExampleTitle!8]  at (2.5,-1.0) {10};
+\node[zelle, fill=ExampleTitle!18] at (4.3,-1.0) {9970};
+\end{tikzpicture}}
+
+\column{0.47\textwidth}
+\begin{block}{Trefferquote}
+\[
+  \frac{10 + 9970}{10000} = \mathbf{99{,}8\,\%}
+\]
+Sieht hervorragend aus.
+\end{block}
+
+\begin{blockC2}{Balancierte Fehlerrate}
+\[
+  \text{BER} = \frac{1}{2}\!\left(
+    \underbrace{\tfrac{10}{20}}_{50\%}
+    +
+    \underbrace{\tfrac{10}{9980}}_{0{,}1\%}
+  \right) \approx \mathbf{25{,}0\,\%}
+\]
+Entlarvt das schlechte Modell.
+\end{blockC2}
+\end{columns}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+
+
+\begin{frame}[fragile]{Konfusionsmatrix in Python}
+\begin{columns}
+\column{0.58\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn import metrics
+
+vorhersagen = model.predict(X_test)
+confusion_matrix = metrics.confusion_matrix(
+    y_test, vorhersagen)
+print(confusion_matrix)
+\end{minted}
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize, frame=none]{text}
+[[31  2]
+ [ 5 37]]
+\end{minted}
+
+\column{0.35\textwidth}
+Die Konfusionsmatrix zeigt, welche Klassen der Klassifikator
+\textbf{verwechselt}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \texttt{confusion\_matrix} wird aus den \textbf{vorhergesagten}
+        Labels und den \textbf{Test}-Labels erstellt.
+  \item Ein Aufruf liefert alle Werte auf einmal.
+\end{itemize}
+\end{columns}
+\source{Entscheidungsbaum Confusion Matrix.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Konfusionsmatrix visualisieren}
+\begin{columns}
+\column{0.52\textwidth}
+Mit \textbf{matplotlib} lässt sich die Konfusionsmatrix anschaulicher
+darstellen -- inklusive benannter Label.
+
+\vspace{0.4em}
+\begin{minted}[fontsize=\footnotesize]{python}
+import matplotlib.pyplot as plt
+import numpy
+from sklearn import metrics
+
+cm_display = 
+    metrics.ConfusionMatrixDisplay(
+        confusion_matrix=confusion_matrix,
+        display_labels=["gut", "schlecht"])
+cm_display.plot()
+plt.show()
+\end{minted}
+
+\column{0.43\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/confusion_matrix_baum.svg}
+\end{columns}
+\source{Entscheidungsbaum Confusion Matrix.ipynb}
+\end{frame}
+
+\begin{frame}{Übung: Konfusionsmatrix für Iris}
+\begin{columns}
+
+\column{0.65\textwidth}
+Erweitern Sie Ihr Notebook mit dem \textbf{Iris-Datensatz} so, dass die
+\textbf{Konfusionsmatrix} Ihres Klassifikators berechnet und ausgegeben
+wird.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Hat die Matrix die \textbf{Form}, die Sie erwartet haben?
+  \item Welche Unterart wird mit welcher anderen \textbf{verwechselt}?
+\end{itemize}
+
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{laptop}
+
+
+\end{columns}
+\source{Lösung: Entscheidungsbaum Konfusionsmatrix.ipynb}
+\end{frame}
+
+
+
+\makequestionspage{\FRAGENIMAGE}
