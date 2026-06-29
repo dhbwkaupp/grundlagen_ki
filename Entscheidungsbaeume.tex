@@ -131,7 +131,7 @@ bekannten Person auf die Stirn geklebt und kann ihn selbst nicht sehen.
 
 \begin{frame}{Entscheidungsbäume: Beispielbaum}
 \begin{columns}
-\column{0.60\textwidth}
+\column{0.70\textwidth}
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[
@@ -165,7 +165,7 @@ bekannten Person auf die Stirn geklebt und kann ihn selbst nicht sehen.
 
 \end{tikzpicture}}
 
-\column{0.35\textwidth}
+\column{0.3\textwidth}
 \centering
 \includegraphics[width=\linewidth]{figures/WerBinIch.png}
 \end{columns}
@@ -743,6 +743,762 @@ zur Arbeit fährt.}
 \end{columns}
 \source{\cite{Frochte2020}}
 \end{frame}
+
+
+
+\begin{frame}{ID3-Algorithmus: Entropie}
+\begin{columns}
+\column{0.60\textwidth}
+Zur automatischen Baumerzeugung braucht man ein Maß für die
+\textbf{Homogenität} einer Menge. ID3 nutzt dafür die Shannon'sche
+\textbf{Informationsentropie} -- ein statistisches Maß für die Unordnung in
+einem Zufallsexperiment.
+
+\vspace{0.4em}
+{\footnotesize\itshape Bereits bekannt aus der Codierungstheorie
+(Algorithmen und Komplexität).}
+
+\vspace{0.4em}
+\textbf{Grundidee:} Alle Datensätze in einen Los-Topf werfen, einen ziehen
+und die Klasse anschauen. Je sicherer die Vorhersage, desto geringer die
+\textbf{Verblüffung} beim Eintreten.
+
+\column{0.35\textwidth}
+\centering
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tikzpicture}[
+  kugel/.style={circle, thick, minimum size=13pt, inner sep=0pt,
+                fill=AccentColor, draw=AccentTitle}
+]
+\draw[very thick] (0.0,1.5) -- (0.0,0) -- (2.0,0) -- (2.0,1.5);
+\node[kugel] at (0.5,0.4) {};
+\node[kugel] at (1.3,0.4) {};
+\node[kugel] at (0.7,0.9) {};
+\node[kugel] at (1.5,0.9) {};
+\end{tikzpicture}}\\[2pt]
+{Unsicherheit $= 0$}\par
+\medskip
+
+\centering
+\resizebox{0.7\linewidth}{!}{%
+\begin{tikzpicture}[
+  orange/.style={circle, thick, minimum size=13pt, inner sep=0pt,
+                 fill=AccentColor, draw=AccentTitle},
+  blau/.style={circle, thick, minimum size=13pt, inner sep=0pt,
+               fill=PrimaryColor, draw=PrimaryTitle}
+]
+\draw[very thick] (0.0,1.5) -- (0.0,0) -- (2.0,0) -- (2.0,1.5);
+\node[orange] at (0.5,0.4) {};
+\node[blau]   at (1.3,0.4) {};
+\node[blau]   at (0.7,0.9) {};
+\node[orange] at (1.5,0.9) {};
+\end{tikzpicture}}\\[2pt]
+{Maximale Unsicherheit}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{Information reduziert Unbestimmtheit}
+
+\begin{columns}
+
+\begin{column}{0.35\textwidth}
+\textbf{Kernprinzip}
+\begin{itemize}
+  \item Information = Verringerung von Ungewissheit.
+  \item Viele mögliche Zustände $\Rightarrow$ hohe Unbestimmtheit.
+  \item Ja/Nein-Fragen bauen die Ungewissheit Schritt für Schritt ab.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.60\textwidth}
+\begin{exampleblock}{Beispiel}
+Eine natürliche Zahl zwischen $1$ und $8$ soll erraten werden.  
+Mit passenden Fragen kann man nicht zutreffende Werte ausschließen.
+\end{exampleblock}
+\medskip
+\begin{itemize}
+  \item Unser Informationstoken hat $k=8$ mögliche Zustände.
+  \item Jede Antwort liefert 1 Bit.
+  \item Optimal: immer das Intervall halbieren.
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Entscheidungsbaum für acht mögliche Werte}
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+
+\begin{tikzpicture}[
+  level distance=12mm,
+  level 1/.style={sibling distance=38mm},
+  level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=12mm},
+  every node/.style={font=\small}
+]
+
+\node {z > 4 ?}
+  child { node {z > 2 ?}
+    child { node {z > 1 ?}
+      child { node {1} }
+      child { node {2} }
+    }
+    child { node {z > 3 ?}
+      child { node {3} }
+      child { node {4} }
+    }
+  }
+  child { node {z > 6 ?}
+    child { node {z > 5 ?}
+      child { node {5} }
+      child { node {6} }
+    }
+    child { node {z > 7 ?}
+      child { node {7} }
+      child { node {8} }
+    }
+  };
+
+\end{tikzpicture}
+
+\end{column}
+
+\begin{column}{0.43\textwidth}
+\small
+\textbf{Vollständiger Entscheidungsbaum für acht Elemente}
+
+\begin{itemize}
+  \item Es gilt \(k = 8 = 2^3\).
+  \item Genau \textbf{3 binäre Ja/Nein-Fragen} reichen immer aus.
+  \item Der Baum ist vollständig balanciert. Jede Entscheidung halbiert das verbleibende Suchintervall.
+  \item Jede Antwort liefert genau \textbf{1 Bit} Information.
+\end{itemize}
+
+\end{column}
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+
+
+\begin{frame}{Wie viel Information steckt in einer Entscheidung?}
+
+\begin{columns}
+
+\begin{column}{0.35\textwidth}
+
+\textbf{Minimale Entscheidungszahl}
+\begin{itemize}
+  \item Mit \(m\) binären Entscheidungen können höchstens \(2^m\) verschiedene Fälle unterschieden werden.
+  \item Je größer \(k\) ist, desto mehr Ja/Nein-Fragen werden benötigt.
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.60\textwidth}
+
+\begin{block}{Formel}
+Um \(k\)\; Zustände eindeutig zu unterscheiden, gilt:
+\vspace{-1.3ex}
+\[
+m = \log_2(k)
+\]
+\vspace{-1.3ex}
+\end{block}
+
+\begin{itemize}
+  \item \(m\): Anzahl der erforderlichen Ja/Nein-Fragen.
+  \item Dient als \textbf{Maß für den Informations- bzw. Entscheidungsgehalt}.
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+
+\begin{frame}{Entscheidungsbaum für neun mögliche Werte}
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+
+\begin{tikzpicture}[
+  level distance=12mm,
+  level 1/.style={sibling distance=38mm},
+  level 2/.style={sibling distance=22mm},
+  level 3/.style={sibling distance=12mm},
+  every node/.style={font=\small}
+]
+
+\node {z > 4 ?}
+  child { node {z > 2 ?}
+    child { node {z > 1 ?}
+      child { node {1} }
+      child { node {2} }
+    }
+    child { node {z > 3 ?}
+      child { node {3} }
+      child { node {4} }
+    }
+  }
+  child { node {z > 6 ?}
+    child { node {z > 5 ?}
+      child { node {5} }
+      child { node {6} }
+    }
+    % --- Hier neuer Knoten eingefügt ---
+    child { node {z > 7 ?}
+      child { node {7} }
+      child { node {z > 8 ?}
+        child { node {8} }
+        child { node {9} }
+      }
+    }
+  };
+
+\end{tikzpicture}
+
+\end{column}
+
+\begin{column}{0.43\textwidth}
+\small
+\textbf{Möglicher Entscheidungsbaum bei neun Elementen}
+
+\begin{itemize}
+  \item Für \(k = 9\) Elemente reichen \(3\) binäre Fragen nicht sicher aus.
+  \item Grund: \(2^3 = 8 < 9\).
+  \item Mindestens eine Entscheidungsebene muss daher ein zusätzliches Element aufnehmen.
+  \item Der Baum zeigt eine mögliche, aber nicht vollständig balancierte Struktur.
+\end{itemize}
+
+\end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Unbestimmtheit und Entscheidungsfragen}
+
+\begin{columns}[t]
+\begin{column}{0.47\textwidth}
+
+\begin{blockDef}{Unbestimmtheit}
+Je größer die Anzahl \(k\) möglicher Zustände, desto größer ist die
+Unbestimmtheit des Systems.
+\end{blockDef}
+
+\begin{itemize}
+  \item Mehr mögliche Zustände → mehr potentielle Information
+  \item Unbestimmtheit beschreibt, wie offen das Ergebnis noch ist
+  \item Ziel der Fragen: schrittweise Eingrenzung des wahren Zustands
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.47\textwidth}
+
+\begin{block}{Grundprinzip}
+Information = Reduktion von Unbestimmtheit durch Entscheidungen.
+\end{block}
+
+\begin{itemize}
+  \item \(m\) binäre Fragen unterscheiden höchstens \(2^m\) Zustände
+  \item Je größer \(k\), desto mehr Fragen \(m\) werden benötigt
+  \item Anzahl der Ja/Nein-Fragen misst den Informationsgehalt
+\end{itemize}
+
+\end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+
+\begin{frame}{Durchschnittlicher Entscheidungsaufwand}
+
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+
+\begin{block}{Motivation}
+Wenn feste \(m\) Fragen nicht ausreichen, ist der Mittelwert relevant.
+\end{block}
+
+\begin{itemize}
+  \item Wie viele Entscheidungen braucht man im Durchschnitt?
+  \item Das hängt von der Verteilung der Werte ab
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.48\textwidth}
+
+\begin{blockC2}{Ungleiche Wahrscheinlichkeiten}
+Ändern sich die Auftretenswahrscheinlichkeiten der Werte,
+ändert sich auch der erwartete Entscheidungsaufwand.
+\end{blockC2}
+
+\begin{itemize}
+  \item Häufigere Werte → kürzere Entscheidungspfade
+  \item Seltene Werte → längere Pfade
+\end{itemize}
+
+\end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Wahrscheinlichkeit und Informationsgehalt}
+
+\begin{columns}[T]
+
+\begin{column}{0.6\textwidth}
+
+\begin{blockDef}{Alphabet}
+\(\{s_i\}\) mit \(i = 1, 2, \dots, k\) sei die Menge aller unterschiedlichen,
+auftretenden Symbole.  
+Diese Menge heißt \textbf{Alphabet}.
+\end{blockDef}
+
+\begin{block}{Symbole und Wahrscheinlichkeit}
+Jedes Symbol \(s_i\) tritt mit einer bestimmten \textbf{Wahrscheinlichkeit} auf.  
+Diese Wahrscheinlichkeiten bestimmen den \textbf{Informationsgehalt} von Symbolen
+und Symbolfolgen.
+\end{block}
+
+\end{column}
+
+\begin{column}{0.35\textwidth}
+
+\textbf{Bezeichnungen}
+
+\begin{itemize}
+  \item \(\{s_i\}\): Alphabet mit \(k\) Symbolen
+  \item \(s_i\): einzelnes Symbol
+  \item Wahrscheinlichkeiten: Basis für Entropie und Information
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Auftretenswahrscheinlichkeit von Symbolen}
+
+\begin{blockDef}{Auftretenswahrscheinlichkeit}
+Jedes Symbol \(s_i\) besitzt eine \textbf{Auftretenswahrscheinlichkeit} \(p_i\) mit
+\[
+\sum_{i=1}^{k} p_i = 1.
+\]
+In der Praxis werden die \(p_i\) oft durch die relative Häufigkeit geschätzt:
+\[
+p_i \approx \frac{h(s_i)}{n},
+\]
+wobei \(h(s_i)\) die absolute Häufigkeit von \(s_i\) und \(n\) die Gesamtanzahl
+der Symbole in der Sequenz ist.
+\end{blockDef}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Informationsgehalt eines Symbols}
+
+\begin{columns}
+
+\begin{column}{0.35\textwidth}
+
+\begin{blockDef}{Informationsgehalt}
+Der \textbf{Informationsgehalt} eines Symbols \(s_i\) mit Wahrscheinlichkeit \(p_i\) ist definiert als
+\[
+I(s_i) = \log_2 \frac{1}{p_i} \quad [\text{bit}].
+\]
+\end{blockDef}
+
+\end{column}
+
+\begin{column}{0.6\textwidth}
+
+\begin{itemize}
+  \item \textbf{Häufige (wahrscheinliche) Symbole} liefern \textbf{wenig Information}.
+  \item \textbf{Seltene (überraschende) Symbole} liefern \textbf{viel Information}.
+\end{itemize}
+
+\medskip
+
+Die Einheit des Informationsgehalts ist \(\mathbf{[\text{bit}]}\).  
+\textbf{„Bit“} (binary digit) bezeichnet dagegen ein \textbf{zählbares 0/1-Element}, z.~B.:
+Ein Byte besteht aus \textbf{8 Bits}.
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Wetterinformation: Ausgangssituation}
+
+\begin{columns}[t]
+
+\begin{column}{0.4\textwidth}
+
+\begin{blockC4}{Beispiel}
+Ein Meteorologe meldet täglich das \textbf{Wetter} an eine Zentrale.  
+Wir unterscheiden  \textbf{vier Zustände}:
+
+\begin{itemize}
+  \item \(s_1\): Sonne
+  \item \(s_2\): Wolken
+  \item \(s_3\): Regen
+  \item \(s_4\): Schnee
+\end{itemize}
+
+\end{blockC4}
+
+
+\end{column}
+
+\begin{column}{0.55\textwidth}
+
+
+\begin{block}{Ziel}
+Anhand der Wetterdaten soll gezeigt werden, wie sich der
+\textbf{Informationsgehalt} zur Codierung von Ereignissen nutzen lässt.\\
+\medskip
+Wir wollen die Wetterzustände so darstellen, dass sie mit
+\textbf{möglichst wenig Speicherplatz} gespeichert werden können.
+Dabei spielt die Wahl einer geeigneten Codierung eine zentrale Rolle.
+\end{block}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Gleichverteiltes Wetter}
+
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+
+\begin{block}{Annahme: alle Zustände gleich häufig}
+\[
+p(s_i) = 0{,}25,\quad i = 1,\dots,4, 
+\qquad \sum_{i=1}^{4} p(s_i) = 1.
+\]
+\[
+I(s_i) = \log_2 \frac{1}{p(s_i)} = \log_2 4 = 2\,\text{bit}.
+\]
+Jeder Wetterzustand liefert also \textbf{2\,bit} Information.
+\end{block}
+
+\end{column}
+
+\begin{column}{0.35\textwidth}
+
+\textbf{Symbole}
+\begin{itemize}
+  \item \(s_1\): Sonne
+  \item \(s_2\): Wolken
+  \item \(s_3\): Regen
+  \item \(s_4\): Schnee
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Realistischere Wetterverteilung}
+
+\begin{columns}
+
+\begin{column}{0.55\textwidth}
+
+\begin{block}{Langzeitbeobachtung}
+Eine längere Beobachtung ergibt:
+$ p(s_1) = 0{,}5,\; p(s_2) = 0{,}25,\; p(s_3) = p(s_4) = 0{,}125$
+\[
+\sum_i p(s_i) = 1{,}0.
+\]
+Damit besitzen die Symbole einen \textbf{unterschiedlichen Informationsgehalt}:
+\[
+I(s_i) = \log_2 \frac{1}{p(s_i)}.
+\]
+\end{block}
+
+
+
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\textbf{Symbole}
+\begin{itemize}
+  \item \(s_1\): Sonne
+  \item \(s_2\): Wolken
+  \item \(s_3\): Regen
+  \item \(s_4\): Schnee
+\end{itemize}
+\bigskip
+\begin{itemize}
+  \item Häufige Zustände (Sonne) → kleiner Informationsgehalt.
+  \item Seltene Zustände (Regen, Schnee) → großer Informationsgehalt.
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+
+\begin{frame}{Realistischere Wetterverteilung: Informationsgehalt}
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+
+Unterschiedliche Wahrscheinlichkeiten führen zu unterschiedlichen
+Informationsgehalten \(I(s_i)\).  
+
+\medskip
+Das haben wir bei der Codierung ausgenutzt.
+
+
+\end{column}
+
+\begin{column}{0.45\textwidth}
+
+\textbf{Wettertabelle}
+\begin{center}
+\begin{tabular}{llcc}
+\hline
+Symbol & \(p(s_i)\) & \(I(s_i)\) [bit] \\
+\hline
+Sonne  & 0{,}5   & 1 &? \\
+Wolken & 0{,}25  & 2 &?\\
+Regen  & 0{,}125 & 3 &?\\
+Schnee & 0{,}125 & 3 &?\\
+\hline
+\end{tabular}
+\end{center}
+
+\end{column}
+
+\end{columns}
+
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}{Quelle mit unabhängigen Symbolen}
+  \small
+\begin{columns}[T]
+  \begin{column}{0.47\textwidth}
+    \textbf{Ausgangssituation}
+
+    \begin{itemize}
+      \item Nachrichten bestehen aus \textbf{Folgen} von Symbolen
+            (z.~B. Buchstaben, Messwerte, Pixelwerte).
+      \item Alphabet mit \(k\) Symbolen \(s_1,\dots,s_k\), Wahrscheinlichkeiten \(p_i = P(s_i)\).
+      \item Gesucht: \textbf{mittlerer Informationsgehalt} pro Symbol.
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \textbf{Informationsgehalt von Einzelinformation}
+    \[
+      I(s_i) = \log_2\!\left(\frac{1}{p_i}\right)
+    \]
+  \end{column}
+
+  \begin{column}{0.48\textwidth}
+    \begin{blockDef}{\small Statistisch unabhängige Symbole}
+      \begin{itemize}
+        \item Symbole sind \textbf{statistisch unabhängig}, wenn das Auftreten eines Symbols
+              die Wahrscheinlichkeiten der nächsten Symbole \textbf{nicht verändert}.
+        \item \textbf{Beispiel unabhängig:}
+              wiederholtes Werfen einer fairen Münze.
+        \item \textbf{Beispiel nicht unabhängig:}
+              Buchstaben in natürlicher Sprache (z.~B. nach „Q“ folgt fast immer „U“).
+        \item Modellannahme: Die \(p_i\) bleiben von Symbol zu Symbol \textbf{konstant}.
+      \end{itemize}
+    \end{blockDef}
+  \end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+\begin{frame}{Signalentropie}
+\small
+\begin{columns}]
+  \begin{column}{0.66\textwidth}
+
+    \begin{blockDef}{\small Entropie}
+    Für eine Quelle mit \(k\) Symbolen \(s_i\) und Wahrscheinlichkeiten \(p_i\) ist die \textbf{Entropie} \(H\) definiert durch:
+    \[
+      H
+      = \sum_{i=1}^{k} p_i \cdot I(s_i)
+      = \sum_{i=1}^{k} p_i \cdot \log_2\!\left(\frac{1}{p_i}\right)
+      = - \sum_{i=1}^{k} p_i \cdot \log_2(p_i)
+    \]
+
+    Sie hat die Einheit [\text{bit/Symbol}].
+    \end{blockDef}
+  \end{column}
+
+  \begin{column}{0.3\textwidth}
+    \textbf{Interpretation}
+
+    \begin{itemize}
+      \item \(H\) ist der \textbf{mittlere Informationsgehalt} pro Symbol.
+      \item Je \textbf{unsicherer} die Quelle (d.\,h. je gleichverteilter die \(p_i\)),
+            desto größer ist \(H\).
+      \item \(H\) ist die theoretische Untergrenze für die mittlere Anzahl
+            von Bits pro Symbol bei optimaler Kodierung.
+    \end{itemize}
+  \end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Entropie: Sichere Quelle}
+\begin{columns}
+  \begin{column}{0.7\textwidth}
+    \textbf{Extremfall 1: Sichere Quelle}
+    \begin{itemize}
+      \item Nur \textbf{ein} Symbol tritt auf: 
+            \(
+              p_1 = 1,\quad p_i = 0 \;\text{für } i = 2,\dots,k.
+            \)
+      \item Keine Unsicherheit, keine Überraschung.
+    \end{itemize}
+\medskip
+    \textbf{Berechnung der Entropie}
+    \[
+      H = - \sum_{i=1}^{k} p_i \log_2(p_i)
+         = - \bigl(1 \cdot \log_2(1) + 0 \cdot \log_2(0) + \dots \bigr).
+    \]
+    \[
+      \log_2(1) = 0,\quad
+      0 \cdot \log_2(0) := 0
+      \;\Rightarrow\;
+      H = -0 = 0.
+    \]
+    \[
+      \boxed{H = 0 \;\text{bit/Symbol}}
+    \]
+  \end{column}
+
+  \begin{column}{0.25\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.0]
+      % Behälter (oben offen)
+      \draw[thick] (0,0) -- (3,0);      % Boden
+      \draw[thick] (0,0) -- (0,2);      % linke Wand
+      \draw[thick] (3,0) -- (3,2);      % rechte Wand
+
+      % Kugeln auf dem Boden (alle gleich)
+      \draw[thick, draw=black, fill=PrimaryColor]  (0.3,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=PrimaryColor]  (0.9,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=PrimaryColor]  (1.5,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=PrimaryColor]  (2.1,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=PrimaryColor]  (2.7,0.35) circle (0.22);
+    \end{tikzpicture}
+  \end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+
+\begin{frame}{Entropie: Gleichverteilte Quelle}
+  \footnotesize
+\begin{columns}
+  \begin{column}{0.7\textwidth}
+    \textbf{Extremfall 2: Gleichverteilte Quelle}
+    \begin{itemize}
+      \item Alle \(k\) Symbole gleich wahrscheinlich:             \(
+              \forall i. \; (p_i = \frac{1}{k}) 
+            \)
+      \item Maximale Unsicherheit, jedes Symbol gleichermaßen „überraschend“.
+    \end{itemize}
+
+    \textbf{Berechnung der Entropie}
+    \[
+      H = - \sum_{i=1}^{k} p_i \log_2(p_i)
+        = - \sum_{i=1}^{k} \frac{1}{k} \log_2\!\left(\frac{1}{k}\right).
+    \]
+    Da alle Summanden gleich sind:
+    \[
+      H = - k \cdot \frac{1}{k} \log_2\!\left(\frac{1}{k}\right)
+        = - \log_2\!\left(\frac{1}{k}\right)
+        = \log_2(k).
+    \]
+
+    \[
+      \boxed{H_{\max} = \log_2(k) \;\text{bit/Symbol}}
+    \]
+  \end{column}
+
+  \begin{column}{0.25\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=1.0]
+      % Behälter (oben offen)
+      \draw[thick] (0,0) -- (3,0);      % Boden
+      \draw[thick] (0,0) -- (0,2);      % linke Wand
+      \draw[thick] (3,0) -- (3,2);      % rechte Wand
+
+      % Kugeln auf dem Boden, bunt gemischt
+      \draw[thick, draw=black, fill=PrimaryColor]   (0.3,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=AlertColor]    (0.9,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=ThirdColor]   (1.5,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=ExampleColor]     (2.1,0.35) circle (0.22);
+      \draw[thick, draw=black, fill=AccentColor]    (2.7,0.35) circle (0.22);
+    \end{tikzpicture}
+  \end{column}
+\end{columns}
+\source{\cite{strutz2025bilddatenkompression}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
