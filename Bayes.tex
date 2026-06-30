@@ -145,7 +145,6 @@ Mit Zahlen:
 \end{columns}
 \end{frame}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--------------------------------------------------
 {
@@ -157,6 +156,8 @@ Mit Zahlen:
 }
 
 \begin{frame}{Bedingte Wahrscheinlichkeiten: Übung}
+
+%================= Overlay 1: Aufgabe =================
 \only<1>{
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.25\textwidth}
@@ -164,37 +165,33 @@ Mit Zahlen:
 \includegraphics[width=\linewidth]{figures/landkarte.png}
 \end{column}
 
-\begin{column}{0.7\textwidth}
+\begin{column}{0.70\textwidth}
 In Baden-Württemberg sprechen 40\,\% der Einwohner*innen \textbf{Schwäbisch},
 im Rest Deutschlands nur 1\,\%. Baden-Württemberg stellt 13\,\% der
 gesamten Einwohnerzahl Deutschlands.
 
 \vspace{0.6em}
-\textbf{a)} Berechnen Sie mit dem Satz von Bayes die Wahrscheinlichkeit,
-dass eine zufällig ausgewählte Person, die schwäbisch schwätzt, aus
-\textbf{Baden-Württemberg} kommt.
 
-\vspace{0.4em}
-\textbf{b)} Wie wahrscheinlich ist es, dass diese Person \textbf{außerhalb}
-von Baden-Württemberg lebt?
+\begin{enumerate}[a)]
+  \item Berechnen Sie mit dem Satz von Bayes die Wahrscheinlichkeit, dass
+        eine zufällig ausgewählte Person, die schwäbisch schwätzt, aus
+        \textbf{Baden-Württemberg} kommt.
+  \item Wie wahrscheinlich ist es, dass diese Person \textbf{außerhalb} von
+        Baden-Württemberg lebt?
+\end{enumerate}
 \end{column}
 \end{columns}
 }
-\end{frame}
 
-\begin{frame}[plain]
-\end{frame}
-\begin{frame}[plain]
-\end{frame}
+%================= Overlay 2: leer (Karo) =================
+\only<2>{}
 
-\begin{frame}{Lösung: Satz von Bayes}
-\footnotesize
+%================= Overlay 3: Lösung =================
+\only<3>{
 \begin{columns}[T,onlytextwidth]
 
-%----------------- Linke Spalte ------------------
-\begin{column}{0.60\textwidth}
+\begin{column}{0.48\textwidth}
 \textbf{Gegebene Größen}
-
 \[
 \begin{aligned}
 p(\text{BW}) &= 0{,}13 & p(\overline{\text{BW}}) &= 0{,}87\\
@@ -202,38 +199,29 @@ p(S \mid \text{BW}) &= 0{,}40 & p(S \mid \overline{\text{BW}}) &= 0{,}01
 \end{aligned}
 \]
 
-\vspace{0.4em}
 \textbf{Totale Wahrscheinlichkeit} für „schwäbisch" ($S$):
 \[
 p(S) = p(S \mid \text{BW})\,p(\text{BW})
      + p(S \mid \overline{\text{BW}})\,p(\overline{\text{BW}})
 \]
 \[
-p(S) = 0{,}40 \cdot 0{,}13 + 0{,}01 \cdot 0{,}87
-     = 0{,}052 + 0{,}0087 = 0{,}0607
+p(S) = 0{,}40 \cdot 0{,}13 + 0{,}01 \cdot 0{,}87 = 0{,}0607
 \]
 \end{column}
 
-%----------------- Rechte Spalte ------------------
-\begin{column}{0.40\textwidth}
+\begin{column}{0.48\textwidth}
 \textbf{a) Satz von Bayes}
-
 \[
 p(\text{BW} \mid S) = \frac{p(S \mid \text{BW})\,p(\text{BW})}{p(S)}
-\]
-\[
-p(\text{BW} \mid S) = \frac{0{,}052}{0{,}0607}
-                    = \frac{520}{607} \approx 0{,}857
+                    = \frac{0{,}052}{0{,}0607} \approx 0{,}857
 \]
 \[
 \boxed{p(\text{BW} \mid S) \approx 85{,}7\,\%}
 \]
 
-\vspace{0.4em}
 \textbf{b) Gegenwahrscheinlichkeit}
-
 \[
-p(\overline{\text{BW}} \mid S) = 1 - p(\text{BW} \mid S)
+p(\overline{\text{BW}} \mid S) = 1 - p(\text{BW} \mid S) \approx 14{,}3\,\%
 \]
 \[
 \boxed{p(\overline{\text{BW}} \mid S) \approx 14{,}3\,\%}
@@ -241,13 +229,385 @@ p(\overline{\text{BW}} \mid S) = 1 - p(\text{BW} \mid S)
 \end{column}
 
 \end{columns}
+}
+
 \end{frame}
 }
+\makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}{Naive Bayes: Grundidee am Beispiel}
+\begin{columns}
+\column{0.65\textwidth}
+Ein fischverarbeitender Betrieb möchte Fische automatisch sortieren. Im
+Pilotprojekt sollen \textbf{Wolfsbarsch} und \textbf{Lachs} unterschieden
+werden -- per Kamera über einem Förderband.
+
+\vspace{0.4em}
+Die Fischarten unterscheiden sich u.\,a. in:
+\begin{itemize}
+  \item Länge und Breite,
+  \item Helligkeit,
+  \item Position der Flossen.
+\end{itemize}
+
+\vspace{0.4em}
+Am stärksten trennen \textbf{Länge} und \textbf{Helligkeit} -- daher nutzen
+wir diese beiden Merkmale für den Klassifikator.
+
+\column{0.30\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/stork_duda_fish.jpg}
+\end{columns}
+\source{\cite{duda2001pattern}, Bildquelle: \cite{duda2001pattern}}
+\end{frame}
+
+
+\begin{frame}{Naive Bayes: Klassifikation per Wahrscheinlichkeit}
+\begin{columns}
+\column{0.52\textwidth}
+\centering
+\begin{tikzpicture}
+  % SVG als Knoten
+  \node[inner sep=0pt] (plot) at (0,0)
+    {\includesvg[width=\linewidth]{figures/bayes_scatter.svg}};
+
+  % schwarzes Kreuz fuer die neue Messung
+  % x: Anteil der Breite von links, y: Anteil der Hoehe von unten
+\coordinate (xpos) at ($(plot.south west)!0.52!(plot.south east)$);
+  \coordinate (ypos) at ($(plot.south west)!0.275!(plot.north west)$);
+    \draw[black, line width=2.5pt]
+    ($(xpos |- ypos)+(-0.12,-0.12)$) -- ($(xpos |- ypos)+(0.12,0.12)$);
+  \draw[black, line width=2.5pt]
+    ($(xpos |- ypos)+(-0.12,0.12)$) -- ($(xpos |- ypos)+(0.12,-0.12)$);
+\end{tikzpicture}
+
+\column{0.45\textwidth}
+Der \textbf{Naive-Bayes-Klassifikator} arbeitet mit
+\textbf{Wahrscheinlichkeiten}.
+
+\vspace{0.4em}
+Eine neue Messung wird der Klasse zugeordnet, zu der sie mit der
+\textbf{höchsten Wahrscheinlichkeit} gehört.
+
+\vspace{0.4em}
+Das \textbf{schwarze \texttimes} markiert die \textbf{neue Messung}.
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+\begin{frame}{Naive Bayes: Grundidee}
+\begin{columns}
+\column{0.52\textwidth}
+Wir haben einen neuen Punkt $B$ mit \textbf{Helligkeit $= 7$} und
+\textbf{Länge $= 10$}.
+
+\vspace{0.6em}
+Wahrscheinlichkeit, dass $B$ ein \textbf{Lachs} ist:
+\[
+  P(\text{Lachs} \mid \text{Helligkeit}=7,\ \text{Länge}=10)
+\]
+
+\vspace{0.4em}
+Wahrscheinlichkeit, dass $B$ ein \textbf{Barsch} ist:
+\[
+  P(\text{Barsch} \mid \text{Helligkeit}=7,\ \text{Länge}=10)
+\]
+
+\vspace{0.4em}
+Der Punkt wird der Klasse mit der \textbf{höheren} Wahrscheinlichkeit
+zugeordnet.
+
+\column{0.45\textwidth}
+\centering
+\begin{tikzpicture}
+  \node[inner sep=0pt] (plot) at (0,0)
+    {\includesvg[width=\linewidth]{figures/bayes_scatter.svg}};
+
+  \coordinate (xpos) at ($(plot.south west)!0.52!(plot.south east)$);
+  \coordinate (ypos) at ($(plot.south west)!0.275!(plot.north west)$);
+  \draw[black, line width=2.5pt]
+    ($(xpos |- ypos)+(-0.12,-0.12)$) -- ($(xpos |- ypos)+(0.12,0.12)$);
+  \draw[black, line width=2.5pt]
+    ($(xpos |- ypos)+(-0.12,0.12)$) -- ($(xpos |- ypos)+(0.12,-0.12)$);
+\end{tikzpicture}
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+
+
+\begin{frame}{Naive Bayes: Grundidee}
+Der \textbf{Satz von Bayes} besagt:
+\[
+  P(A \mid B) = \frac{P(A)\cdot P(B \mid A)}{P(B)}
+\]
+
+Unsere Beobachtung ist $B = (\text{Helligkeit}=7,\ \text{Länge}=10)$. Damit
+berechnen wir die Klassenzugehörigkeit:
+
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.47\textwidth}
+\begin{blockC1}{Lachs}
+\footnotesize
+\[
+  P(\text{Lachs} \mid B) =
+  \frac{P(\text{Lachs})\cdot P(B \mid \text{Lachs})}{P(B)}
+\]
+\end{blockC1}
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{blockC2}{Barsch}
+\footnotesize
+\[
+  P(\text{Barsch} \mid B) =
+  \frac{P(\text{Barsch})\cdot P(B \mid \text{Barsch})}{P(B)}
+\]
+\end{blockC2}
+\end{column}
+\end{columns}
+
+\vspace{0.4em}
+{\itshape Der Nenner $P(B)$ ist für beide Klassen gleich -- für den
+Vergleich genügt der Zähler.}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+
+\begin{frame}{Naive Bayes: Vom Bayes-Satz zur Rechenregel}
+\textbf{Schritt 1:} Für den Vergleich der Klassen genügt der
+\textbf{Zähler}, da der Nenner $P(B)$ für beide gleich ist:
+\[
+  P(K \mid B) \ \propto\ P(K)\cdot P(B \mid K)
+\]
+
+\vspace{0.6em}
+\textbf{Schritt 2:} Mit der Beobachtung
+$B = (\text{Helligkeit}=7,\ \text{Länge}=10)$ brauchen wir also
+\[
+  P(K)\cdot P(\text{Helligkeit}=7,\ \text{Länge}=10 \mid K)
+\]
+für jede Klasse $K \in \{\text{Lachs}, \text{Barsch}\}$.
+\source{\cite{duda2001pattern}}
+\note{$\propto$ bedeutet Proportionalität}
+\end{frame}
+
+\begin{frame}{Naive Bayes: die „naive" Annahme}
+\textbf{Schritt 3:} Die Wahrscheinlichkeit
+$P(\text{H.}=7,\ \text{L.}=10 \mid \text{Lachs})$ lässt sich nicht einfach
+berechnen, da sie von \textbf{zwei} Zufallsvariablen abhängt.
+
+\vspace{0.4em}
+Der Naive-Bayes-Klassifikator nimmt (naiv) an, dass alle Kenngrößen
+\textbf{voneinander unabhängig} sind. Dann gilt:
+\[
+  P(\text{H.}{=}7,\ \text{L.}{=}10 \mid \text{Lachs}) =
+  P(\text{H.}{=}7 \mid \text{Lachs})\cdot P(\text{L.}{=}10 \mid \text{Lachs})
+\]
+
+\vspace{0.4em}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.54\textwidth}
+Aus dem schwer schätzbaren gemeinsamen Term wird so ein \textbf{Produkt}
+einzelner Wahrscheinlichkeiten -- jede pro Merkmal getrennt schätzbar.
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{blockC1}{Entscheidungsregel}
+Wähle die Klasse $K$, die
+\[
+  P(K)\cdot \prod_i P(M_i \mid K)
+\]
+maximiert.
+\end{blockC1}
+\end{column}
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+
+\begin{frame}{Naive Bayes: Schätzung der Wahrscheinlichkeiten}
+\begin{columns}
+\column{0.52\textwidth}
+Die einzelnen Wahrscheinlichkeiten wie $P(\text{H.}{=}7 \mid \text{Lachs})$
+schätzt man aus den \textbf{Stichproben} ab.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Pro Merkmal und Klasse wird z.~B. eine \textbf{Normalverteilung}
+        angenommen.
+  \item Aus den Trainingsdaten bestimmt man \textbf{Mittelwert} $\mu$ und
+        \textbf{Varianz} $\sigma^2$.
+  \item Der Wahrscheinlichkeitswert ergibt sich dann aus der
+        \textbf{Dichtefunktion}.
+\end{itemize}
+
+\vspace{0.4em}
+{\footnotesize\itshape Jedes Merkmal jeder Klasse erhält so seine eigene
+Gauß-Kurve.}
+
+\column{0.45\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  declare function={gauss(\x,\m,\s)=
+    1/(\s*sqrt(2*pi))*exp(-((\x-\m)^2)/(2*\s^2));}
+]
+\begin{axis}[
+  width=8cm, height=6cm,
+  xlabel={Helligkeit}, ylabel={Dichte},
+  domain=0:14, samples=100,
+  axis lines=left,
+  axis line style={-{Triangle[length=3mm]}},
+  xlabel style={yshift=-1.0ex},
+  xtick={4,7,10}, xticklabels={$\mu-\sigma$,$\mu$,$\mu+\sigma$},
+  ytick=\empty,
+  enlargelimits=false, clip=false
+]
+% Gauss-Kurve
+\addplot[PrimaryColor, very thick, smooth] {gauss(x,7,3)};
+% Mittelwert
+\draw[ExampleTitle, thick, dashed] (axis cs:7,0) -- (axis cs:7,0.133);
+\node[ExampleTitle, font=\footnotesize] at (axis cs:7,0.145) {$\mu$};
+% Standardabweichung
+\draw[AlertTitle, thick, dashed] (axis cs:4,0) -- (axis cs:4,0.080);
+\draw[AlertTitle, thick, dashed] (axis cs:10,0) -- (axis cs:10,0.080);
+\draw[AlertTitle, thick, <->] (axis cs:7,0.080) -- (axis cs:10,0.080)
+  node[midway, above, font=\footnotesize] {$\sigma$};
+\end{axis}
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+\begin{frame}{Naive Bayes: Schätzung der Wahrscheinlichkeiten}
+Für jede Klasse werden die Verteilungen der Merkmale aus den jeweiligen
+Stichproben geschätzt:
+
+\vspace{0.6em}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\includesvg[width=0.8\linewidth]{figures/bayes_scatter_lachs.svg}\\[4pt]
+\textbf{Lachs}
+
+\column{0.47\textwidth}
+\centering
+\includesvg[width=0.8\linewidth]{figures/bayes_scatter_barsch.svg}\\[4pt]
+\textbf{Barsch}
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+
+\begin{frame}{Naive Bayes: Die zwei naiven Annahmen}
+\begin{columns}
+\column{0.62\textwidth}
+Der Naive-Bayes-Klassifikator trifft zwei \textbf{vereinfachende Annahmen}:
+
+\vspace{0.4em}
+\begin{enumerate}[1.]
+  \item Alle Kenngrößen sind \textbf{stochastisch unabhängig} -- der Wert
+        einer Kenngröße hängt nicht von einer anderen ab.
+        \begin{itemize}
+          \item Für \textbf{Länge} und \textbf{Helligkeit} ist das vermutlich
+                korrekt.
+          \item Für \textbf{Länge} und \textbf{Gewicht} aber nicht -- mit der
+                Länge steigt meist auch das Gewicht.
+        \end{itemize}
+  \item Die Werte lassen sich durch eine \textbf{Verteilung} beschreiben
+        (z.\,B. Normalverteilung).
+\end{enumerate}
+
+\vspace{0.4em}
+{\footnotesize\itshape Beide Annahmen sind etwas „naiv" -- daher der Name.}
+
+\column{0.32\textwidth}
+\centering
+\twemoji[width=0.4\linewidth]{see-no-evil monkey}\\[6pt]
+\twemoji[width=0.4\linewidth]{hear-no-evil monkey}\\[6pt]
+\twemoji[width=0.4\linewidth]{speak-no-evil monkey}
+\end{columns}
+\source{\cite{duda2001pattern}}
+\end{frame}
+
+\begin{frame}{Naive Bayes: Vor- und Nachteile}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\begin{blockC1}{Vorteile}
+\begin{itemize}
+  \item Einfaches und \textbf{sehr schnelles} Modell.
+  \item Funktioniert gut mit \textbf{wenigen} Trainingsdaten.
+  \item Kommt sehr gut mit \textbf{hochdimensionalen} Eingabedaten zurecht.
+  \item Gut für \textbf{Mehrklassen}-Probleme geeignet.
+\end{itemize}
+\end{blockC1}
+
+\column{0.46\textwidth}
+\begin{blockC2}{Nachteile}
+\begin{itemize}
+  \item Die vereinfachenden \textbf{Grundannahmen} sind oft nicht gegeben.
+  \item Bei \textbf{diskreten} Merkmalswerten und kleinen Stichproben droht Wahrscheinlichkeit
+        $0$.
+\end{itemize}
+\end{blockC2}
+\end{columns}
+
+\vspace{0.6em}
+\centering
+{\footnotesize\itshape Schnell und robust bei wenig Daten -- aber durch die
+Unabhängigkeitsannahme begrenzt.}
+\source{\cite{duda2001pattern}}
+\end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
 
 
+\begin{frame}[fragile]{Naive Bayes: Anwendung in Python}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.naive_bayes import GaussianNB
 
+model = GaussianNB()
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\vspace{0.4em}
+Der \texttt{GaussianNB}-Klassifikator nimmt für jedes Merkmal eine
+\textbf{Normalverteilung} an.
+
+\column{0.40\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_bayes_grenzen.svg}
+\end{columns}
+\source{Naiver Bayes.ipynb}
+\end{frame}
+
+\begin{frame}{Übung: Naive Bayes für Iris und Heart Disease}
+\begin{columns}
+\column{0.65\textwidth}
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils einen \textbf{Naive-%
+Bayes-Klassifikator} anwenden:
+
+\vspace{0.4em}
+\begin{itemize}
+  \item auf den \textbf{Iris-Datensatz},
+  \item auf den \textbf{UCI Heart Disease} Datensatz.
+\end{itemize}
+
+\vspace{0.4em}
+Vergleichen Sie die Ergebnisse mit Ihren bisherigen Klassifikatoren
+(Entscheidungsbaum, Random Forest, AdaBoost).
+
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{laptop}
+\end{columns}
+\source{Lösung: Bayes Iris.ipynb, HeartDisease Bayes.ipynb}
+\end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
