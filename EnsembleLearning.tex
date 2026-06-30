@@ -130,3 +130,140 @@ in der automatisierten \textbf{Bildanalyse}.
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}[fragile]{Ensemble Learning: Anwendung in Python}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(
+    criterion="entropy",
+    n_estimators=1000)
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\vspace{0.4em}
+\footnotesize
+Die Entscheidungsregionen lassen sich auch mit
+\textbf{Wahrscheinlichkeiten} anzeigen.
+
+\vspace{0.2em}
+{\footnotesize\itshape \texttt{n\_estimators}: Anzahl der Bäume im Wald.}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_rf.svg}
+\end{columns}
+\source{Random Forest.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Ensemble Learning: AdaBoost in Python}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+model = AdaBoostClassifier(
+    estimator=DecisionTreeClassifier(max_depth=3))
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\column{0.35\textwidth}
+Dasselbe Vorgehen mit \textbf{AdaBoost}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Als Basislerner dient ein \textbf{flacher} Entscheidungsbaum
+        (\texttt{max\_depth=3}).
+  \item AdaBoost erzeugt die Bäume \textbf{nacheinander} und gewichtet
+        schwierige Fälle höher.
+\end{itemize}
+\end{columns}
+\source{AdaBoost.ipynb}
+\end{frame}
+
+\begin{frame}{Übung: Ensemble-Verfahren für Iris}
+\begin{columns}
+
+  \column{0.65\textwidth}
+Erstellen Sie ein Jupyter-Notebook, in dem Sie den \textbf{Iris-Datensatz}
+(\texttt{iris.csv}) klassifizieren:
+
+\vspace{0.4em}
+\begin{itemize}
+  \item einmal mit einem \textbf{RandomForestClassifier},
+  \item einmal mit einem \textbf{AdaBoostClassifier}.
+\end{itemize}
+
+\vspace{0.4em}
+Hat die \textbf{Anzahl} der intern verwendeten Entscheidungsbäume Einfluss
+auf die Prognosegüte?
+
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{laptop}
+
+
+\end{columns}
+\source{Lösung: Ensemble Iris.ipynb}
+\end{frame}
+
+\begin{frame}{Übung: UCI Heart Disease Dataset}
+\begin{columns}
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{anatomical heart}
+
+\column{0.65\textwidth}
+\footnotesize
+Der Iris-Datensatz ist für fortgeschrittene Verfahren keine
+\textbf{Herausforderung}. Wir betrachten daher das \textbf{UCI Heart
+Disease Dataset}:
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Medizinischer Datensatz zur Vorhersage von \textbf{Herzkrankheiten}.
+  \item \textbf{303} Patientenprofile mit klinischen Merkmalen (Alter,
+        Blutdruck, Cholesterin, EKG, \dots).
+  \item Ziel: \textbf{binäre} Klassifikation
+        ($0 =$ gesund, $1 =$ krank).
+  \item Häufig zum Vergleich von Klassifikationsmodellen in der Medizin
+        genutzt.
+\end{itemize}
+
+\vspace{0.3em}
+{\scriptsize\itshape Verfügbar z.\,B. auf Kaggle:
+\url{https://www.kaggle.com/datasets/redwankarimsony/heart-disease-data}}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Übung: Heart Disease mit Ensemble-Verfahren}
+\begin{columns}
+\column{0.65\textwidth}
+Öffnen Sie das Notebook \texttt{HeartDisease\_Entscheidungsbaum.ipynb}.
+Dort wird der \textbf{UCI Heart Disease} Datensatz eingelesen,
+vorverarbeitet und mit einem \textbf{Entscheidungsbaum} klassifiziert.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Erstellen Sie ein \textbf{zweites Notebook}, das denselben Datensatz
+        mit einem \textbf{RandomForestClassifier} und einem
+        \textbf{AdaBoostClassifier} klassifiziert.
+  \item \textbf{Optimieren} Sie die Ergebnisse durch gezielte Variation der
+        \textbf{Hyperparameter}.
+  \item \textbf{Vergleichen} Sie die Modellleistungen.
+\end{itemize}
+
+\column{0.30\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{laptop}
+\end{columns}
+\source{Lösung: HeartDisease Ensemble.ipynb}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
