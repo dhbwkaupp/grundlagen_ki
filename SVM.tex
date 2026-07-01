@@ -1,0 +1,353 @@
+\makesubsectionpage{Support Vector Machines}
+\makesubsubsectionpage{Grundidee}
+
+\begin{frame}{Support Vector Machines: Grundidee}
+\begin{columns}
+\column{0.5\textwidth}
+Klassifikatoren unterteilen den Eingaberaum in \textbf{Bereiche}, die
+unterschiedlich klassifiziert werden.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Die Grenzen zwischen den Bereichen sind die
+        \textbf{Entscheidungsgrenzen}.
+  \item Diese haben wir bei den bisherigen Klassifikatoren bereits
+        betrachtet.
+\end{itemize}
+
+\vspace{0.4em}
+{\footnotesize\itshape Beispiel rechts: Entscheidungsgrenze eines
+Entscheidungsbaumes -- achsenparallele Stufen.}
+
+\column{0.45\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_baum_beschraenkt.svg}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Support Vector Machines: Grundidee}
+\begin{columns}
+\column{0.50\textwidth}
+Reale Daten \textbf{streuen} in der Regel.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Liegt die \textbf{Entscheidungsgrenze} nahe an Datenpunkten, wird
+        sie beim Streuen schnell \textbf{übertreten}.
+  \item Die Folge sind \textbf{Falschklassifikationen}.
+\end{itemize}
+
+\column{0.4\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=6pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=6pt, inner sep=0pt},
+  xgut/.style={SecondaryColor, line width=2.5pt},
+  xschlecht/.style={AccentColor, line width=2.5pt}
+]
+% Rahmen
+\draw[thick] (0,0) rectangle (6,7);
+
+% Entscheidungsgrenze (schraeg)
+\draw[AlertTitle, line width=1.5pt] (2.6,0.0) -- (3.2,7.0);
+\node[AlertTitle, font=\footnotesize\itshape, anchor=south west]
+  at (2.2,7.1) {Entscheidungsgrenze};
+
+% blaue Punkte (oben rechts)
+\foreach \x/\y in {3.3/6.0, 3.9/6.4, 4.6/6.6, 4.2/5.4, 3.6/4.9,
+                   4.5/4.7, 3.9/4.2, 5.2/5.0, 4.8/3.6, 5.4/3.0} {
+  \node[gut] at (\x,\y) {};
+}
+% orange Punktwolke (unten links)
+\foreach \x/\y in {1.0/4.2, 1.6/3.4, 2.2/4.2, 1.9/5.0, 0.7/2.0,
+                   1.4/1.4, 2.0/1.8, 1.3/2.6} {
+  \node[schlecht] at (\x,\y) {};
+}
+
+% markierte Punkte nahe der Grenze (X) -- erst ab Overlay 2
+\onslide<2->{
+  \draw[xgut] (2.75,5.4) ++(-0.15,-0.15) -- ++(0.3,0.3);
+  \draw[xgut] (2.75,5.4) ++(-0.15,0.15) -- ++(0.3,-0.3);
+  \draw[xschlecht] (3.0,3.2) ++(-0.15,-0.15) -- ++(0.3,0.3);
+  \draw[xschlecht] (3.0,3.2) ++(-0.15,0.15) -- ++(0.3,-0.3);
+}
+
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Support Vector Machines: Large Margin}
+\begin{columns}
+\column{0.50\textwidth}
+Die Klassifikation wird \textbf{robuster}, wenn der Abstand zwischen
+Entscheidungsgrenze und Datenpunkten \textbf{groß} ist.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item SVMs sind \textbf{Large-Margin-Klassifikatoren}.
+  \item Sie platzieren eine Trennebene mit \textbf{maximalem Abstand} zu den
+        Datenpunkten.
+  \item Diese Trennebene ist die \textbf{Entscheidungsgrenze}.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=6pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=6pt, inner sep=0pt}
+]
+% Rahmen
+\draw[thick] (0,0) rectangle (7,7);
+
+% Trennebene (fallende Diagonale)
+\draw[AlertTitle, line width=1.5pt] (0,6.6) -- (7,0.4);
+\node[AlertTitle, font=\footnotesize\itshape, anchor=south west]
+  at (-0.2,7.1) {Trennebene};
+
+% gestrichelte Margin-Linien (parallel)
+\draw[SecondaryTitle, dashed] (0.5,7) -- (7,1.2);
+\draw[SecondaryTitle, dashed] (0,5.8) -- (6.6,0.0);
+
+% blaue Punkte (oben rechts)
+\foreach \x/\y in {4.2/6.2, 3.7/5.2, 4.7/5.0, 4.2/4.4, 5.0/4.0,
+                   5.0/3.0, 5.7/4.6, 6.0/3.4, 4.6/3.5} {
+  \node[gut] at (\x,\y) {};
+}
+% orange Punkte (unten links)
+\foreach \x/\y in {2.6/3.5, 1.8/2.6, 3.0/2.6, 2.4/1.9, 1.4/1.2,
+                   3.0/1.2, 2.2/0.6} {
+  \node[schlecht] at (\x,\y) {};
+}
+
+% Abstandspfeile (Margin)
+\draw[<->, thick] (2.6,3.5) -- (3.0,3.9);
+\draw[<->, thick] (5.0,3.0) -- (4.6,2.6);
+
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Mathematische Grundlage}
+    \footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+
+Im dreidimensionalen Raum ist eine \textbf{Ebene in Koordinatenform}
+definiert durch:
+\[
+  a x_1 + b x_2 + c x_3 = d
+\]
+Alle Punkte $(x_1, x_2, x_3)$, die diese Gleichung erfüllen, liegen in der
+Ebene. Dabei sind:
+
+\vspace{0.3em}
+\begin{itemize}
+  \item $a, b, c$: die Komponenten des \textbf{Normalenvektors}
+        $\mathbf{n} = (a, b, c)^T$. Er steht \textbf{senkrecht} auf der
+        Ebene und bestimmt ihre Ausrichtung.
+  \item $d$: bestimmt die \textbf{Lage} der Ebene -- der Abstand vom
+        Ursprung (entlang $\mathbf{n}$), multipliziert mit der Länge von
+        $\mathbf{n}$.
+\end{itemize}
+
+\column{0.4\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/svm_normalenvektor.svg}\\[4pt]
+{\footnotesize\itshape Die Ebene $2x_1 - 3x_2 + x_3 = 6$ mit Normalenvektor
+$(2, -3, 1)^T$.}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Support Vector Machines: Mathematische Grundlage}
+\begin{columns}
+\column{0.4\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/svm_normalenvektor.svg}
+
+\column{0.55\textwidth}
+\footnotesize
+Die Ebene trennt Punkte im Raum in \textbf{„vor"} und \textbf{„hinter"} der
+Ebene. Jeder Punkt $P$ liegt in einer Parallelebene zur unseren.
+
+\vspace{0.3em}
+Über den Abstand der Parallelebene durch $P$:
+\begin{itemize}
+  \item Abstand $> d$: $P$ liegt \textbf{vor} der Ebene.
+  \item Abstand $< d$: $P$ liegt \textbf{dahinter}.
+\end{itemize}
+
+\vspace{0.3em}
+\textbf{Berechnung der Lage von $P$:}
+\[
+  g(x_1, x_2, x_3) = a x_1 + b x_2 + c x_3 - d
+\]
+\begin{itemize}
+  \item $g(x_1, x_2, x_3) > 0$: Punkt \textbf{vor} der Ebene.
+  \item $g(x_1, x_2, x_3) < 0$: Punkt \textbf{hinter} der Ebene.
+\end{itemize}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Support Vector Machines: Hyperebene}
+\begin{columns}
+\column{0.60\textwidth}
+Beim maschinellen Lernen arbeiten wir oft in \textbf{hochdimensionalen}
+Datenräumen -- der Iris-Datensatz hat 4 Dimensionen, der Heart-Disease-%
+Datensatz nach Aufbereitung 20.
+
+\vspace{0.4em}
+Die Ebenengleichung ist mathematisch nicht an den 3D-Raum gebunden. Wie
+bereits eingeführt, ist eine \textbf{Hyperebene} die Verallgemeinerung der
+Ebene auf $n$ Dimensionen:
+\[
+  w_1 x_1 + w_2 x_2 + \dots + w_n x_n = d
+\]
+Auch hier bestimmt der Normalenvektor $(w_1, w_2, \dots, w_n)$ die
+\textbf{Orientierung}.
+
+\column{0.35\textwidth}
+\begin{blockC1}{Anschauung}
+\begin{itemize}
+  \item Im \textbf{3D}-Raum: eine gewöhnliche \textbf{Ebene}.
+  \item Im \textbf{2D}-Raum: eine \textbf{Gerade}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{SVM: Optimale Trennung -- Umformung}
+\begin{columns}
+\column{0.50\textwidth}
+\footnotesize
+Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
+
+\vspace{0.3em}
+\begin{enumerate}
+  \item Setze $w_0 = -d$ und bringe es auf die andere Seite. Für einen Punkt
+        $\mathbf{x} = (x_1, \dots, x_n) \in \mathbb{R}^n$:
+        \[
+          g(\mathbf{x}) = w_0 + w_1 x_1 + \dots + w_n x_n
+        \]
+  \item Fasse die $w_i$ im Normalenvektor
+        $\mathbf{w} = (w_1, \dots, w_n) \in \mathbb{R}^n$ zusammen:
+        \[
+          \boxed{\,g(\mathbf{x}) = w_0 + \mathbf{w} \cdot \mathbf{x}\,}
+        \]
+\end{enumerate}
+
+\column{0.45\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=5pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=5pt, inner sep=0pt}
+]
+% Achsen
+\draw[->, thick] (-0.3,0) -- (6,0) node[right] {$x_1$};
+\draw[->, thick] (0,-0.3) -- (0,5.5) node[above] {$x_2$};
+% Gerade g
+\draw[line width=1.2pt] (-0.3,2.0) -- (5.8,4.6) node[right, font=\bfseries] {$g$};
+% Achsenabschnitt w0
+\draw[very thick, dashed, ->, draw=PrimaryTitle] (0,0) -- (0,2.13);
+\node[anchor=east, font=\footnotesize] at (0,2.3) {$(0,w_0)$};
+% orange Punkte (Klasse 1, oben links)
+\node[schlecht] at (2.85,4.85) {};
+\node[schlecht] at (1.7,4.7) {};
+\node[schlecht] at (0.5,3.4) {};
+% blaue Punkte (Klasse 2, unten rechts)
+\node[gut] at (4.3,2.9) {};
+\node[gut] at (4.9,2.4) {};
+\node[gut] at (3.6,1.5) {};
+\node[gut] at (2.2,1.0) {};
+
+% Normalenvektor w
+\coordinate (fuss) at (3.4,3.55);
+\draw[thick, dashed, ->,draw=PrimaryTitle] (fuss) -- ++(-0.55,1.3);
+\node[font=\footnotesize] at (3.5,4.3) {$\mathbf{w}$ };
+%%\node[font=\footnotesize\bfseries] at (2.6,4.9) {$\mathbf{v}$};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{SVM: Optimale Trennung -- Abstand}
+\begin{columns}
+
+\column{0.45\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=5pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=5pt, inner sep=0pt}
+]
+% Achsen
+\draw[->, thick] (-0.3,0) -- (6,0) node[right] {$x_1$};
+\draw[->, thick] (0,-0.3) -- (0,5.5) node[above] {$x_2$};
+% Gerade g
+\draw[line width=1.2pt] (-0.3,2.0) -- (5.8,4.6) node[right, font=\bfseries] {$g$};
+% Achsenabschnitt w0
+\draw[very thick, dashed, ->, draw=PrimaryTitle] (0,0) -- (0,2.13);
+\node[anchor=east, font=\footnotesize] at (0,2.3) {$(0,w_0)$};
+% orange Punkte (Klasse 1, oben links)
+\node[schlecht] at (2.85,4.85) {};
+\node[schlecht] at (1.7,4.7) {};
+\node[schlecht] at (0.5,3.4) {};
+% blaue Punkte (Klasse 2, unten rechts)
+\node[gut] at (4.3,2.9) {};
+\node[gut] at (4.9,2.4) {};
+\node[gut] at (3.6,1.5) {};
+\node[gut] at (2.2,1.0) {};
+% Normalenvektor w
+\coordinate (fuss) at (3.4,3.55);
+\draw[thick, dashed, ->, draw=PrimaryTitle] (fuss) -- ++(-0.55,1.3);
+\node[font=\footnotesize] at (3.5,4.3) {$\mathbf{w}$};
+\end{tikzpicture}}
+
+\column{0.50\textwidth}
+\footnotesize
+Der \textbf{Abstand} eines Punktes $\mathbf{x} \in \mathbb{R}^n$ von der
+Hyperebene entlang der Normalen $\mathbf{w}$ ist:
+\[
+  r = \frac{g(\mathbf{x})}{\lVert \mathbf{w} \rVert}
+    = \frac{\mathbf{w} \cdot \mathbf{x} + w_0}{\lVert \mathbf{w} \rVert}
+\]
+Dabei ist $\lVert \mathbf{w} \rVert$ die Länge des Normalenvektors.
+
+\vspace{0.3em}
+Für die Klassifikation zählt nur das \textbf{Vorzeichen} -- es zeigt die
+Seite der Trennebene. Die Normierung kann daher entfallen:
+\[
+  \begin{aligned}
+    \mathbf{w} \cdot \mathbf{x} + w_0 &> 0 \quad\Rightarrow\quad \text{Klasse A}\\
+    \mathbf{w} \cdot \mathbf{x} + w_0 &< 0 \quad\Rightarrow\quad \text{Klasse B}
+  \end{aligned}
+\]
+
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
