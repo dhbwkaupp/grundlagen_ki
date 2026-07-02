@@ -27,8 +27,69 @@ Entscheidungsbaumes -- achsenparallele Stufen.}
 \end{frame}
 
 
+\begin{frame}{Support Vector Machines: Grundidee}
+  \footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Die Klassifikation wird \textbf{robuster}, wenn der Abstand zwischen
+Entscheidungsgrenze und Datenpunkten \textbf{groß} ist.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item SVMs sind \textbf{Large-Margin-Klassifikatoren}.
+  \item Sie platzieren eine Trennebene mit \textbf{maximalem Abstand} zu den
+        Datenpunkten.
+  \item Diese Trennebene ist die \textbf{Entscheidungsgrenze}.
+\end{itemize}
+\medskip
+\textbf{Der zentrale Unterschied zu anderen Klassifikatoren:} Die Grenze
+entsteht \textbf{nicht zufällig} als Nebenprodukt des Trainings. SVMs legen
+sie \textbf{ganz gezielt} so, dass der \textbf{Abstand} zu den nächsten
+Datenpunkten \textbf{maximal} wird.
 
 
+\column{0.4\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=6pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=6pt, inner sep=0pt},
+  xgut/.style={SecondaryColor, line width=2.5pt},
+  xschlecht/.style={AccentColor, line width=2.5pt}
+]
+% Rahmen
+\draw[thick] (0,0) rectangle (6,7);
+
+% Entscheidungsgrenze (schraeg)
+\draw[AlertTitle, line width=1.5pt] (2.6,0.0) -- (3.2,7.0);
+\node[AlertTitle, font=\footnotesize\itshape, anchor=south west]
+  at (2.2,7.1) {Entscheidungsgrenze};
+
+% blaue Punkte (oben rechts)
+\foreach \x/\y in {3.3/6.0, 3.9/6.4, 4.6/6.6, 4.2/5.4, 3.6/4.9,
+                   4.5/4.7, 3.9/4.2, 5.2/5.0, 4.8/3.6, 5.4/3.0, 3.3/5.6, 3.3/5.0} {
+  \node[gut] at (\x,\y) {};
+}
+% orange Punktwolke (unten links)
+\foreach \x/\y in {1.0/4.2, 1.6/3.4, 2.2/4.2, 1.7/4.5, 0.7/2.0,
+                   1.4/1.4, 2.0/1.8, 1.3/2.6, 2.5/3.3, 2.7/3.0} {
+  \node[schlecht] at (\x,\y) {};
+}
+
+% markierte Punkte nahe der Grenze (X) -- erst ab Overlay 2
+\onslide<2->{
+  \draw[xgut] (2.75,5.4) ++(-0.15,-0.15) -- ++(0.3,0.3);
+  \draw[xgut] (2.75,5.4) ++(-0.15,0.15) -- ++(0.3,-0.3);
+  \draw[xschlecht] (3.0,3.2) ++(-0.15,-0.15) -- ++(0.3,0.3);
+  \draw[xschlecht] (3.0,3.2) ++(-0.15,0.15) -- ++(0.3,-0.3);
+}
+
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
 
 \begin{frame}{Support Vector Machines: Large Margin}
 \begin{columns}
@@ -43,11 +104,6 @@ Entscheidungsgrenze und Datenpunkten \textbf{groß} ist.
         Datenpunkten.
   \item Diese Trennebene ist die \textbf{Entscheidungsgrenze}.
 \end{itemize}
-
-\textbf{Der zentrale Unterschied zu anderen Klassifikatoren:} Die Grenze
-entsteht \textbf{nicht zufällig} als Nebenprodukt des Trainings. SVMs legen
-sie \textbf{ganz gezielt} so, dass der \textbf{Abstand} zu den nächsten
-Datenpunkten \textbf{maximal} wird.
 
 \column{0.48\textwidth}
 \centering
@@ -395,6 +451,81 @@ Entscheidungsgrenze.
 \end{columns}
 \source{\cite{Frochte2020}}
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%--------------------------------------------------
+{
+\setbeamertemplate{background canvas}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[step=0.5cm,gray!35,very thin]
+      (current page.south west) grid (current page.north east);
+  \end{tikzpicture}
+}
+
+\begin{frame}{Hyperebene: Übung}
+
+%================= Overlay 1: Aufgabe =================
+\only<1>{
+\begin{columns}
+\column{0.47\textwidth}
+Gegeben ist im $\mathbb{R}^3$ die Hyperebene mit Normalenvektor
+$\mathbf{w} = \begin{pmatrix*}[r] 2 \\ -1 \\ 3 \end{pmatrix*}$ und $w_0 = -4$:
+\[
+  \begin{aligned}
+    \mathbf{w} \cdot \mathbf{x} + w_0 &> 0 \;\Rightarrow\; \text{Klasse A}\\
+    \mathbf{w} \cdot \mathbf{x} + w_0 &< 0 \;\Rightarrow\; \text{Klasse B}
+  \end{aligned}
+\]
+
+\column{0.48\textwidth}
+\textbf{Aufgabe:} Liegen die beiden Punkte
+\[
+  \mathbf{x}_1 = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}, \qquad
+  \mathbf{x}_2 = \begin{pmatrix} 0 \\ 5 \\ 1 \end{pmatrix}
+\]
+in \textbf{derselben} Klasse?
+
+\vspace{0.4em}
+Bestimmen Sie jeweils $g(\mathbf{x}_1)$ und $g(\mathbf{x}_2)$ und
+vergleichen Sie die Vorzeichen.
+\end{columns}
+}
+
+%================= Overlay 2: leer (Karo) =================
+\only<2>{}
+
+%================= Overlay 3: Loesung =================
+\only<3>{
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Punkt} $\mathbf{x}_1 = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}$:
+\[
+  \begin{aligned}
+    g(\mathbf{x}_1) &= 2\cdot 1 - 1\cdot 2 + 3\cdot 3 - 4\\
+                    &= 5 > 0
+  \end{aligned}
+\]
+$\Rightarrow$ \textbf{Klasse A}.
+
+\column{0.48\textwidth}
+\textbf{Punkt} $\mathbf{x}_2 = \begin{pmatrix} 0 \\ 5 \\ 1 \end{pmatrix}$:
+\[
+  \begin{aligned}
+    g(\mathbf{x}_2) &= 2\cdot 0 - 1\cdot 5 + 3\cdot 1 - 4\\
+                    &= -6 < 0
+  \end{aligned}
+\]
+$\Rightarrow$ \textbf{Klasse B}.
+\end{columns}
+
+\vspace{0.4em}
+Die Vorzeichen sind \textbf{unterschiedlich} $\Rightarrow$ die Punkte liegen
+\textbf{nicht} in derselben Klasse.
+}
+
+\end{frame}
+}
 
 
 \begin{frame}{SVM: Optimale Trennung}
@@ -904,8 +1035,6 @@ $\boldsymbol{\lambda}$ \textbf{maximiert}. Die Daten treten nur als
 \note{Die konkrete Lösung ist uns egal. Wir brauchen für später nur die Duale formulieren. Wegen dem Skalarprodukt}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \begin{frame}{SVM: Effizienz durch Support Vectors}
 \begin{columns}
@@ -934,7 +1063,271 @@ und Kernel-Ansätze.}
 \end{frame}
 
 
+\begin{frame}{SVM: Klassifikation eines neuen Samples}
+\begin{columns}
 
+\column{0.60\textwidth}
+Sind $\mathbf{w}^{*}$ und $w_0^{*}$ bekannt, klassifiziert man ein neues
+Sample $\mathbf{z}$ über das \textbf{Vorzeichen} der Entscheidungsfunktion:
+\[
+  g(\mathbf{z}) = \mathbf{w}^{*}\!\cdot\mathbf{z} + w_0^{*}
+\]
+
+\begin{itemize}
+  \item $g(\mathbf{z}) > 0 \;\Rightarrow\;$ Klasse A ($y = +1$).
+  \item $g(\mathbf{z}) < 0 \;\Rightarrow\;$ Klasse B ($y = -1$).
+  \item Mit $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$:
+        \[
+          g(\mathbf{z}) = \sum_{i=1}^{n}\lambda_i \cdot y_i\cdot 
+          (\mathbf{x}_i\!\cdot\mathbf{z}) + w_0^{*}
+        \]
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Support Vectors}
+Da $\lambda_i = 0$ für alle Nicht-Support-Vectors, tragen nur die
+\textbf{Support Vectors} zur Summe bei.
+\end{blockC1}
+
+\begin{blockC2}{Nur Skalarprodukte}
+Wie schon beim \textbf{dualen Problem} treten die Vektoren auch hier
+ausschließlich über \textbf{Skalarprodukte} $\mathbf{x}_i\!\cdot\mathbf{z}$
+auf.
+\end{blockC2}
+
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Nicht linear separierbare Daten}
+\begin{columns}
+\column{0.60\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatterplot_spritzguss_legende.svg}
+
+\column{0.35\textwidth}
+Sind zwei Klassen \textbf{nicht linear separierbar}, versagt der bisherige
+Ansatz. Es treten zwei Probleme auf:
+\begin{itemize}
+  \item Punkte, die auch bei der besten Ebene auf der \textbf{falschen Seite} liegen (Fehlklassifikation).
+  \item Punkte auf der richtigen Seite, die aber \textbf{zu nah} an der Grenze liegen und die Bedingung verletzen.
+\end{itemize}
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{SVM: Schlupfvariablen}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Wir führen \textbf{Schlupfvariablen} (slack variables) $\xi_i$ ein,
+        die eine \textbf{Abweichung} von der Forderung erlauben.
+  \item Die Bedingung wird gelockert zu:
+        \[
+          y_i \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}_i) \geq 1 - \xi_i
+        \]
+  \item Die $\xi_i$ sollen dabei möglichst \textbf{klein} bleiben.
+  \item   \item Die Schlupfvariablen gehen später als \textbf{Fehlerterm} in die
+        Optimierung ein.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Deutung von $\xi_i$}
+\begin{itemize}
+  \item $0 < \xi_i < 1$: Punkt \textbf{korrekt} klassifiziert.
+  \item $1 \leq \xi_i$: \textbf{Fehlklassifikation}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{SVM: Weicher Fehler und Optimierung}
+\begin{columns}[T]
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Wären alle $\xi_i = 0$, entspräche das dem linear separierbaren
+        Fall.
+  \item Die Summe $\sum_{i=1}^{n}\xi_i$ ist ein Maß für die Abweichung --
+        der \textbf{weiche Fehler}.
+  \item Wir addieren ihn als Optimierungskriterium zur Lagrange-Funktion:
+        \[
+          \begin{aligned}
+          L(\mathbf{w}, w_0, \boldsymbol{\lambda}, \boldsymbol{\xi}) =\;
+          &\tfrac{1}{2}\mathbf{w}\cdot\mathbf{w}\\
+          &+ \sum_{i=1}^{n}\lambda_i\bigl(1 - \xi_i - y_i \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}_i)\bigr)\\
+          &+ C\sum_{i=1}^{n}\xi_i - \sum_{i=1}^{n}\mu_i \xi_i
+          \end{aligned}
+        \]
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{block}{\footnotesize Neue Größen}
+    \footnotesize 
+\begin{itemize}
+  \item $\mu_i$: zusätzliche \textbf{Lagrange-Multiplikatoren} für die neuen
+        Nebenbedingungen.
+  \item $C$: Parameter, der das \textbf{Gewicht} des Strafterms steuert.
+\end{itemize}
+\end{block}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{SVM: Einfluss des Parameters $C$}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Parameter $C$ steuert den \textbf{Trade-off} zwischen:
+  \begin{itemize}
+    \item großer Margin
+    \item geringer Fehlklassifikation
+  \end{itemize}
+  \item Optimierungsproblem:
+  \[
+    \min \;\frac{1}{2}\|\mathbf{w}\|^2 + C \sum_{i=1}^{n}\xi_i
+  \]
+  \item $C$ gewichtet den Einfluss des \textbf{Strafterms}
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{blockC1}{Wirkung von $C$}
+\begin{itemize}
+  \item \textbf{Großes $C$}:
+  \begin{itemize}
+    \item Fehlklassifikationen werden stark bestraft
+    \item kleine Margin
+    \item Gefahr von \textbf{Overfitting}
+  \end{itemize}
+
+  \item \textbf{Kleines $C$}:
+  \begin{itemize}
+    \item Fehlklassifikationen werden toleriert
+    \item größere Margin
+    \item bessere \textbf{Generalisierung}
+  \end{itemize}
+\end{itemize}
+\end{blockC1}
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{SVM: Soft-Margin-Ergebnis}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Analog zum letzten Abschnitt lässt sich auch dies in eine
+        \textbf{duale Formulierung} bringen.
+  \item Auch hier spielen die meisten Trainingsdaten \textbf{keine} aktive
+        Rolle ($\lambda_i = 0$).
+  \item $w_0^{*}$ wird wieder analog berechnet.
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{center}
+\includesvg[width=\linewidth]{figures/scatter_soft_margin.svg}
+\footnotesize
+ Die verwendeten Support Vectors für die Soft Margin im Spritzgieß-Datensatz
+\end{center}
+
+\end{columns}
+\source{\cite{Frochte2020}, SVM\_Linear.ipynb}
+
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+\begin{frame}{SVM in Python: Warum Werte skalieren?}
+\begin{columns}
+\column{0.4\textwidth}
+\centering
+\begin{tikzpicture}[x=0.0045cm,y=3.0cm]
+  \draw[->] (0,0) -- (1050,0) node[right] {\scriptsize $x_1$};
+  \draw[->] (0,0) -- (0,1.15) node[above] {\scriptsize $x_2$};
+
+  \foreach \x in {0,500,1000}
+    \draw (\x,0.02) -- (\x,-0.02) node[below] {\scriptsize \x};
+
+  \foreach \y in {0,0.5,1.0}
+    \draw (10,\y) -- (-10,\y) node[left] {\scriptsize \y};
+
+  \fill (100,0.2) circle (2.2pt) node[above left] {\scriptsize $A$};
+  \fill (700,0.1) circle (2.2pt) node[above right] {\scriptsize $B$};
+  \fill (700,0.6) circle (2.2pt) node[above right] {\scriptsize $B'$};
+
+  \draw[thick] (100,0.2) -- (700,0.1);
+  \draw[thick,dashed] (100,0.2) -- (700,0.6);
+
+  \node[align=center] at (520,1.05)
+    {\scriptsize unterschiedliche Skalen:\\[-1mm]
+     \scriptsize $x_1 \in [0,1000]$, $x_2 \in [0,1]$};
+\end{tikzpicture}
+{\footnotesize
+\(d(A,B) \approx 600 \qquad d(A,B') \approx 600
+\)\par
+Der Abstand bleibt fast gleich, obwohl sich der Wert von $x_2$ versechsfacht hat.
+}
+
+\column{0.55\textwidth}
+\footnotesize
+\begin{itemize}
+  \item SVMs verwenden Abstände, z.~B. zur Trennung durch eine maximale
+        Margin.
+  \item Ohne Skalierung dominieren Merkmale mit großen Zahlenbereichen den
+        euklidischen Abstand.
+  \item Verdoppelt sich der Abstand auf einer kleinen Skala, hat das kaum
+        Einfluss auf den Gesamtabstand.
+  \item Daher werden Merkmale vor dem Training häufig standardisiert:
+        \[
+          z = \frac{x - \mu}{\sigma}
+        \]
+\end{itemize}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{SVM in Python: StandardScaler API-Dokumentation}
+\centering
+\includegraphics[width=0.92\linewidth]{figures/api_doc_scaler.jpg}
+
+\source{\cite{ScikitLearnStandardScaler}}
+\end{frame}
+
+\begin{frame}[fragile]{Standardisierung der Daten}
+\footnotesize
+\begin{columns}
+\column{0.50\textwidth}
+\begin{blockC1}{\footnotesize StandardScaler anwenden}
+\begin{minted}[fontsize=\scriptsize]{python}
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+scaler.fit(X_train)
+
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+\end{minted}
+\end{blockC1}
+
+\begin{itemize}
+  \item Der Skalierer wird nur auf den Trainingsdaten angepasst.
+  \item Trainings- und Testdaten werden anschließend mit derselben Skalierung transformiert.
+\end{itemize}
+
+\column{0.45\textwidth}
+\vspace*{-1cm}\par
+\centering
+\includesvg[width=0.83\linewidth]{figures/scaler_vorher.svg}
+\includesvg[width=.83\linewidth]{figures/scaler_nachher.svg}
+\end{columns}
+
+\source{SVM\_Linear.ipynb}
+\end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
