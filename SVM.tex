@@ -27,60 +27,8 @@ Entscheidungsbaumes -- achsenparallele Stufen.}
 \end{frame}
 
 
-\begin{frame}{Support Vector Machines: Grundidee}
-\begin{columns}
-\column{0.50\textwidth}
-Reale Daten \textbf{streuen} in der Regel.
 
-\vspace{0.4em}
-\begin{itemize}
-  \item Liegt die \textbf{Entscheidungsgrenze} nahe an Datenpunkten, wird
-        sie beim Streuen schnell \textbf{übertreten}.
-  \item Die Folge sind \textbf{Falschklassifikationen}.
-\end{itemize}
 
-\column{0.4\textwidth}
-\centering
-\resizebox{0.9\linewidth}{!}{%
-\begin{tikzpicture}[
-  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
-              very thick, minimum size=6pt, inner sep=0pt},
-  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
-                   very thick, minimum size=6pt, inner sep=0pt},
-  xgut/.style={SecondaryColor, line width=2.5pt},
-  xschlecht/.style={AccentColor, line width=2.5pt}
-]
-% Rahmen
-\draw[thick] (0,0) rectangle (6,7);
-
-% Entscheidungsgrenze (schraeg)
-\draw[AlertTitle, line width=1.5pt] (2.6,0.0) -- (3.2,7.0);
-\node[AlertTitle, font=\footnotesize\itshape, anchor=south west]
-  at (2.2,7.1) {Entscheidungsgrenze};
-
-% blaue Punkte (oben rechts)
-\foreach \x/\y in {3.3/6.0, 3.9/6.4, 4.6/6.6, 4.2/5.4, 3.6/4.9,
-                   4.5/4.7, 3.9/4.2, 5.2/5.0, 4.8/3.6, 5.4/3.0} {
-  \node[gut] at (\x,\y) {};
-}
-% orange Punktwolke (unten links)
-\foreach \x/\y in {1.0/4.2, 1.6/3.4, 2.2/4.2, 1.9/5.0, 0.7/2.0,
-                   1.4/1.4, 2.0/1.8, 1.3/2.6} {
-  \node[schlecht] at (\x,\y) {};
-}
-
-% markierte Punkte nahe der Grenze (X) -- erst ab Overlay 2
-\onslide<2->{
-  \draw[xgut] (2.75,5.4) ++(-0.15,-0.15) -- ++(0.3,0.3);
-  \draw[xgut] (2.75,5.4) ++(-0.15,0.15) -- ++(0.3,-0.3);
-  \draw[xschlecht] (3.0,3.2) ++(-0.15,-0.15) -- ++(0.3,0.3);
-  \draw[xschlecht] (3.0,3.2) ++(-0.15,0.15) -- ++(0.3,-0.3);
-}
-
-\end{tikzpicture}}
-\end{columns}
-\source{\cite{seemann2024mlaz}}
-\end{frame}
 
 \begin{frame}{Support Vector Machines: Large Margin}
 \begin{columns}
@@ -95,6 +43,11 @@ Entscheidungsgrenze und Datenpunkten \textbf{groß} ist.
         Datenpunkten.
   \item Diese Trennebene ist die \textbf{Entscheidungsgrenze}.
 \end{itemize}
+
+\textbf{Der zentrale Unterschied zu anderen Klassifikatoren:} Die Grenze
+entsteht \textbf{nicht zufällig} als Nebenprodukt des Trainings. SVMs legen
+sie \textbf{ganz gezielt} so, dass der \textbf{Abstand} zu den nächsten
+Datenpunkten \textbf{maximal} wird.
 
 \column{0.48\textwidth}
 \centering
@@ -205,19 +158,18 @@ Ebene. Jeder Punkt $P$ liegt in einer Parallelebene zur unseren.
 \begin{frame}{Support Vector Machines: Hyperebene}
 \begin{columns}
 \column{0.60\textwidth}
-Beim maschinellen Lernen arbeiten wir oft in \textbf{hochdimensionalen}
-Datenräumen -- der Iris-Datensatz hat 4 Dimensionen, der Heart-Disease-%
-Datensatz nach Aufbereitung 20.
-
-\vspace{0.4em}
-Die Ebenengleichung ist mathematisch nicht an den 3D-Raum gebunden. Wie
-bereits eingeführt, ist eine \textbf{Hyperebene} die Verallgemeinerung der
-Ebene auf $n$ Dimensionen:
-\[
-  w_1 x_1 + w_2 x_2 + \dots + w_n x_n = d
-\]
-Auch hier bestimmt der Normalenvektor $(w_1, w_2, \dots, w_n)$ die
-\textbf{Orientierung}.
+\begin{itemize}
+  \item Beim maschinellen Lernen arbeiten wir oft in \textbf{hochdimensionalen}
+        Datenräumen: der Iris-Datensatz hat 4 Dimensionen, der
+        Heart-Disease-Datensatz nach Aufbereitung 20.
+  \item Die Ebenengleichung ist nicht an den 3D-Raum gebunden. Eine
+        \textbf{Hyperebene} verallgemeinert die Ebene auf $n$ Dimensionen:
+        \[
+          w_1 x_1 + w_2 x_2 + \dots + w_n x_n = d
+        \]
+  \item Der Normalenvektor $(w_1, w_2, \dots, w_n)^T$ bestimmt die
+        \textbf{Orientierung}.
+\end{itemize}
 
 \column{0.35\textwidth}
 \begin{blockC1}{Anschauung}
@@ -238,7 +190,7 @@ Auch hier bestimmt der Normalenvektor $(w_1, w_2, \dots, w_n)$ die
 Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
 
 \vspace{0.3em}
-\begin{enumerate}
+\begin{itemize}
   \item Setze $w_0 = -d$ und bringe es auf die andere Seite. Für einen Punkt
         $\mathbf{x} = (x_1, \dots, x_n) \in \mathbb{R}^n$:
         \[
@@ -247,9 +199,9 @@ Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
   \item Fasse die $w_i$ im Normalenvektor
         $\mathbf{w} = (w_1, \dots, w_n) \in \mathbb{R}^n$ zusammen:
         \[
-          \boxed{\,g(\mathbf{x}) = w_0 + \mathbf{w} \cdot \mathbf{x}\,}
+          \boxed{\,g(\mathbf{x}) = w_0 + \mathbf{w} \cdot  \mathbf{x}\,}
         \]
-\end{enumerate}
+\end{itemize}
 
 \column{0.45\textwidth}
 \centering
@@ -289,10 +241,12 @@ Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
 \end{frame}
 
 
-\begin{frame}{SVM: Optimale Trennung -- Abstand}
+
+
+\begin{frame}{SVM: Herleitung der Abstandsformel (1)}
 \begin{columns}
 
-\column{0.45\textwidth}
+\column{0.40\textwidth}
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[>=Stealth,
@@ -301,53 +255,686 @@ Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
   schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
                    very thick, minimum size=5pt, inner sep=0pt}
 ]
-% Achsen
 \draw[->, thick] (-0.3,0) -- (6,0) node[right] {$x_1$};
 \draw[->, thick] (0,-0.3) -- (0,5.5) node[above] {$x_2$};
-% Gerade g
 \draw[line width=1.2pt] (-0.3,2.0) -- (5.8,4.6) node[right, font=\bfseries] {$g$};
-% Achsenabschnitt w0
-\draw[very thick, dashed, ->, draw=PrimaryTitle] (0,0) -- (0,2.13);
-\node[anchor=east, font=\footnotesize] at (0,2.3) {$(0,w_0)$};
-% orange Punkte (Klasse 1, oben links)
-\node[schlecht] at (2.85,4.85) {};
-\node[schlecht] at (1.7,4.7) {};
+% Fusspunkt x0 auf der Ebene
+\coordinate (x0) at (3.4,3.55);
+\node[circle, fill=black, minimum size=3pt, inner sep=0pt] at (x0) {};
+\node[font=\footnotesize, anchor=north] at (3.5,3.45) {$\mathbf{x}_0$};
+% Punkt x
+\coordinate (x) at (2.85,4.85);
+\node[schlecht] at (x) {};
+\node[font=\footnotesize, anchor=south] at (2.85,5.0) {$\mathbf{x}$};
+% Abstand r entlang der Normalen
+\draw[thick, dashed, ->, draw=PrimaryTitle] (x0) -- (x);
+\node[font=\footnotesize, draw=PrimaryTitle] at (2.75,4.15) {$r$};
+% weitere Punkte
+\node[schlecht] at (1.5,4.5) {};
 \node[schlecht] at (0.5,3.4) {};
-% blaue Punkte (Klasse 2, unten rechts)
 \node[gut] at (4.3,2.9) {};
 \node[gut] at (4.9,2.4) {};
 \node[gut] at (3.6,1.5) {};
-\node[gut] at (2.2,1.0) {};
-% Normalenvektor w
-\coordinate (fuss) at (3.4,3.55);
-\draw[thick, dashed, ->, draw=PrimaryTitle] (fuss) -- ++(-0.55,1.3);
-\node[font=\footnotesize] at (3.5,4.3) {$\mathbf{w}$};
 \end{tikzpicture}}
 
-\column{0.50\textwidth}
+\column{0.60\textwidth}
+\par\bigskip
 \footnotesize
-Der \textbf{Abstand} eines Punktes $\mathbf{x} \in \mathbb{R}^n$ von der
-Hyperebene entlang der Normalen $\mathbf{w}$ ist:
-\[
-  r = \frac{g(\mathbf{x})}{\lVert \mathbf{w} \rVert}
-    = \frac{\mathbf{w} \cdot \mathbf{x} + w_0}{\lVert \mathbf{w} \rVert}
-\]
-Dabei ist $\lVert \mathbf{w} \rVert$ die Länge des Normalenvektors.
-
-\vspace{0.3em}
-Für die Klassifikation zählt nur das \textbf{Vorzeichen} -- es zeigt die
-Seite der Trennebene. Die Normierung kann daher entfallen:
-\[
-  \begin{aligned}
-    \mathbf{w} \cdot \mathbf{x} + w_0 &> 0 \quad\Rightarrow\quad \text{Klasse A}\\
-    \mathbf{w} \cdot \mathbf{x} + w_0 &< 0 \quad\Rightarrow\quad \text{Klasse B}
-  \end{aligned}
-\]
-
+\textbf{Wie weit ist ein Punkt $\mathbf{x}$ von der Ebene entfernt?}
+\begin{itemize}
+  \item Wir nehmen an, wir kennen Fußpunkt $\mathbf{x}_0$ \textbf{auf} der Hyperebene. Da $\mathbf{x}_0$ auf $g$ liegt, 
+        gilt\ $g(\mathbf{x}_0) = 0$.
+  \item Der kürzeste Weg von $\mathbf{x}$ zur Ebene verläuft entlang der
+        \textbf{Normalen} $\mathbf{w}$, denn sie steht senkrecht auf der
+        Ebene.
+  \item $\mathbf{x}$ erreicht man also von $\mathbf{x}_0$ aus über ein Stück in
+        Normalenrichtung:
+        \begin{equation}
+          \mathbf{x} = \mathbf{x}_0
+                     + r\cdot\frac{\mathbf{w}}{\lVert\mathbf{w}\rVert}
+          \label{eq:svm-abstand}
+        \end{equation}
+        Dabei ist $r$ der gesuchte Abstand und
+        $\frac{\mathbf{w}}{\lVert\mathbf{w}\rVert}$ der \textbf{normierte}
+        Normalenvektor (Länge 1).
+    \item \textbf{Einsetzen} von \eqref{eq:svm-abstand} in $g$ liefert:
+        \[
+          g(\mathbf{x}) = \mathbf{w} \cdot \!\left(\mathbf{x}_0
+                        + r\frac{\mathbf{w}}{\lVert\mathbf{w}\rVert}\right) + w_0
+        \]
+\end{itemize}
 
 \end{columns}
 \source{\cite{Frochte2020}}
 \end{frame}
+
+
+\begin{frame}{SVM: Herleitung der Abstandsformel (2)}
+\begin{columns}
+
+\column{0.47\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Ausmultiplizieren:
+        \[
+          g(\mathbf{x}) = \underbrace{\mathbf{w} \cdot \mathbf{x}_0 + w_0}_{= \, 0}
+                        + \; r\cdot\frac{\mathbf{w} \cdot \mathbf{w}}{\lVert\mathbf{w}\rVert}
+        \]
+  \item Erster Term $= 0$ (Punkt auf Ebene), $\mathbf{w} \cdot \mathbf{w} =
+        \lVert\mathbf{w}\rVert^2$:
+        \[
+          g(\mathbf{x}) = r\cdot\lVert\mathbf{w}\rVert
+        \]
+  \item Nach $r$ auflösen:
+        \[
+          \boxed{\,r = \frac{g(\mathbf{x})}{\lVert\mathbf{w}\rVert}\,}
+        \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\footnotesize
+\begin{itemize}
+  \item $g(\mathbf{x})$ wächst \textbf{proportional} zur Länge von
+        $\mathbf{w}$.
+  \item Division durch $\lVert\mathbf{w}\rVert$ liefert die \textbf{echte}
+        geometrische Distanz.
+  \item \textbf{Klassifikation}: nur Vorzeichen nötig -- Normierung
+        entfällt.
+  \item \textbf{Abstand}: Normierung wird gebraucht.
+\end{itemize}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{SVM: Optimale Trennung -- Klassifikation}
+\begin{columns}
+
+\column{0.47\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=5pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=5pt, inner sep=0pt}
+]
+\draw[->, thick] (-0.3,0) -- (6,0) node[right] {$x_1$};
+\draw[->, thick] (0,-0.3) -- (0,5.5) node[above] {$x_2$};
+\draw[line width=1.2pt] (-0.3,2.0) -- (5.8,4.6) node[right, font=\bfseries] {$g$};
+% Klasse A (orange, oben links)
+\node[schlecht] at (2.85,4.85) {};
+\node[schlecht] at (1.7,4.7) {};
+\node[schlecht] at (0.5,3.4) {};
+\node[schlecht, font=\footnotesize] at (1.3,4.0) {};
+\node[font=\footnotesize, anchor=south] at (1.3,4.15) {A};
+% Klasse B (blau, unten rechts)
+\node[gut] at (4.3,2.9) {};
+\node[gut] at (4.9,2.4) {};
+\node[gut] at (3.6,1.5) {};
+\node[gut] at (2.2,1.0) {};
+\node[font=\footnotesize, anchor=north] at (4.6,2.6) {B};
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\footnotesize
+Für die \textbf{Klassifikation} zählt nur das \textbf{Vorzeichen} von
+$g(\mathbf{x})$ -- es zeigt die Seite der Trennebene an. Die Normierung mit
+$\lVert \mathbf{w} \rVert$ kann daher \textbf{entfallen}:
+\[
+  \begin{aligned}
+    \mathbf{w} \cdot \mathbf{x} + w_0 &> 0 \;\Rightarrow\; \text{Klasse A}\\
+    \mathbf{w} \cdot \mathbf{x} + w_0 &< 0 \;\Rightarrow\; \text{Klasse B}
+  \end{aligned}
+\]
+
+Ein Punkt \textbf{auf} der Ebene ($g(\mathbf{x}) = 0$) liegt genau auf der
+Entscheidungsgrenze.
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{SVM: Optimale Trennung}
+\begin{columns}
+
+\column{0.5\textwidth}
+\footnotesize
+Für einen \textbf{größeren Abstand} der Punkte zur Trennebene fordert man Mindestabstand $1$:
+\[
+  \begin{aligned}
+    \mathbf{w} \cdot\mathbf{x} + w_0 &\geq +1 \;\Rightarrow\; \text{Klasse A}\\
+    \mathbf{w} \cdot\mathbf{x} + w_0 &\leq -1 \;\Rightarrow\; \text{Klasse B}
+  \end{aligned}
+\]
+
+Mit $y = +1$ (Klasse A) und $y = -1$ (Klasse B) schreibt man kompakter:
+\[
+  y\cdot(\mathbf{w} \cdot\mathbf{x} + w_0) \geq +1
+\]
+
+Für die \textbf{Optimierung} maximiert man den Abstand $\rho$ mit:
+\[
+  \frac{y\cdot(\mathbf{w} \cdot\mathbf{x} + w_0)}{\lVert\mathbf{w}\rVert} \geq \rho
+\]
+für alle Trainingspunkte $\mathbf{x}$.
+
+\column{0.45\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=6pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=6pt, inner sep=0pt}
+]
+% Rahmen
+\draw[thick] (0,0) rectangle (7,7);
+
+% Trennebene (fallende Diagonale)
+\draw[AlertTitle, line width=1.5pt] (0,6.6) -- (7,0.4);
+
+% gestrichelte Margin-Linien (parallel)
+\draw[SecondaryTitle, dashed] (0.5,7) -- (7,1.2);
+\draw[SecondaryTitle, dashed] (0,5.8) -- (6.6,0.0);
+
+% blaue Punkte (oben rechts)
+\foreach \x/\y in {4.2/6.2, 3.7/5.2, 4.7/5.0, 4.2/4.4, 5.0/4.0,
+                   5.0/3.0, 5.7/4.6, 6.0/3.4, 4.6/3.5} {
+  \node[gut] at (\x,\y) {};
+}
+% orange Punkte (unten links)
+\foreach \x/\y in {2.6/3.5, 1.8/2.6, 3.0/2.6, 2.4/1.9, 1.4/1.2,
+                   3.0/1.2, 2.2/0.6} {
+  \node[schlecht] at (\x,\y) {};
+}
+
+% Abstandspfeile (Margin) mit rho beschriftet
+\draw[<->, thick] (2.6,3.5) -- (3.0,3.9);
+\node[font=\large] at (2.55,3.95) {$\rho$};
+\draw[<->, thick] (5.0,3.0) -- (4.6,2.6);
+\node[font=\large] at (5.05,2.55) {$\rho$};
+
+\end{tikzpicture}}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{SVM: Eindeutigkeit und Margin}
+\begin{columns}
+
+\column{0.47\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Der Normalenvektor $\mathbf{w}$ ist \textbf{nicht eindeutig}:
+        Vielfache von $\mathbf{w}$ beschreiben dieselbe Trennebene.
+  \item Damit ist auch $\rho$ nicht eindeutig, da es von $\mathbf{w}$
+        abhängt.
+  \item Wir \textbf{fixieren} die Skalierung über
+        $\rho \cdot \lVert \mathbf{w} \rVert = 1$, also:
+        \[
+          \rho = \frac{1}{\lVert \mathbf{w} \rVert}
+        \]
+  \item Eingesetzt ergibt sich für alle Trainingspunkte $\mathbf{x}$:
+        \[
+          \frac{y\cdot(\mathbf{w}\cdot\mathbf{x} + w_0)}{\lVert \mathbf{w} \rVert}
+          \geq \frac{1}{\lVert \mathbf{w} \rVert}
+        \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\footnotesize
+\begin{blockC1}{\footnotesize   Margin}
+\begin{itemize}
+  \item Die rechte Seite ist der \textbf{Margin} -- der Abstand der
+        Trennebene zu den nächstgelegenen Trainingspunkten.
+  \item \textbf{Kernidee:} Margin maximieren bedeutet
+        $\lVert \mathbf{w} \rVert$ \textbf{minimieren}.
+\end{itemize}
+\end{blockC1}
+
+\begin{blockC2}{\footnotesize Support Vectors}
+\begin{itemize}
+  \item Nur wenige Punkte bestimmen die Lage der Ebene: die ihr am nächsten
+        liegenden.
+  \item Diese heißen \textbf{Support Vectors}.
+\end{itemize}
+\end{blockC2}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\note{
+Die Fixierung $\rho \cdot \lVert\mathbf{w}\rVert = 1$ ist keine geometrische
+Umrechnung, sondern eine Eichung: Da jedes Vielfache von $\mathbf{w}$
+dieselbe Ebene beschreibt, waehlt man gezielt das $\mathbf{w}$, bei dem der
+naechstgelegene Punkt genau den Funktionswert $g = 1$ erhaelt. Ohne diese
+Festlegung waere die Maximierung von $\rho = g / \lVert\mathbf{w}\rVert$
+nicht wohldefiniert, da man Zaehler und Nenner beliebig mitskalieren
+koennte. Mit fixiertem Zaehler wird der Margin zu $\rho = 1/\lVert\mathbf{w}
+\rVert$; ihn zu maximieren ist damit gleichbedeutend mit der Minimierung von
+$\lVert\mathbf{w}\rVert$ bzw. $\tfrac{1}{2}\lVert\mathbf{w}\rVert^2$. Das ist
+der Schritt, der die SVM-Optimierung handhabbar macht.
+}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SVM: Das quadratische Optimierungsproblem}
+\begin{columns}
+
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Die Maximierung von $\frac{1}{\lVert\mathbf{w}\rVert}$ ist für
+        Optimierer \textbf{ungünstig} (Wurzel im Nenner).
+  \item Mit \textbf{quadratischen Problemen} kommen sie dagegen gut zurecht.
+  \item $\frac{1}{\lVert\mathbf{w}\rVert}$ maximieren $\Leftrightarrow$
+        $\lVert\mathbf{w}\rVert^2$ \textbf{minimieren}.
+  \item Die Trennung der Klassen wird als \textbf{Nebenbedingung}
+        formuliert:
+        \[
+          \min \tfrac{1}{2}\lVert\mathbf{w}\rVert^2 \quad\text{u.~d.~N.}\quad
+          y \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}) \geq +1
+        \]
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Quadratisches Problem}
+Die Zielfunktion ist \textbf{quadratisch} (Variablen in zweiter Potenz),
+die Nebenbedingungen \textbf{linear}. Solche Probleme sind \textbf{konvex}:
+Es gibt genau ein globales Minimum.
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+
+\note{u.n.N.: Unter der Nebenbedingung}
+
+\end{frame}
+
+\begin{frame}{SVM: Nebenbedingungen und Faktor $\tfrac{1}{2}$}
+\begin{columns}
+
+\column{0.60\textwidth}
+
+\textbf{Was sind Nebenbedingungen?}
+\begin{itemize}
+  \item Bei einer Optimierung minimiert man eine \textbf{Zielfunktion}
+        (hier $\tfrac{1}{2}\lVert\mathbf{w}\rVert^2$).
+  \item \textbf{Nebenbedingungen} schränken die zulässigen Lösungen ein --
+        nur Lösungen, die sie erfüllen, sind erlaubt.
+  \item Hier: $y \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}) \geq +1$ für
+        \textbf{jeden} Trainingspunkt.
+  \item Das erzwingt, dass die Ebene beide Klassen korrekt trennt.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Warum $\tfrac{1}{2}$?}
+Der Faktor $\tfrac{1}{2}$ ist reine Bequemlichkeit. Wir müssen das nachher ableiten. Dann fällt der Faktor $2$ aus $\lVert\mathbf{w}\rVert^2$ weg.
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SVM: Lagrange-Multiplikatoren}
+\begin{columns}
+
+\column{0.60\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Optimierung unter \textbf{Ungleichungs}-Nebenbedingungen erfordert
+        \textbf{Lagrange-Multiplikatoren} und die
+        \textbf{Karush-Kuhn-Tucker}-Bedingungen.
+  \item Man koppelt Zielfunktion und Nebenbedingungen über neue Variablen
+        $\lambda_i$ in einer Funktion:
+        \[
+          L(\mathbf{w}, w_0, \boldsymbol{\lambda}) =
+          \tfrac{1}{2}\mathbf{w}\cdot\mathbf{w}
+          + \sum_{i=1}^{n} \lambda_i\bigl(1 - y_i \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}_{i})\bigr)
+        \]
+  \item $L$ hängt von den zu optimierenden Größen \textbf{$\mathbf{w}$},
+        \textbf{$w_0$} und den Multiplikatoren
+        \textbf{$\boldsymbol{\lambda} = (\lambda_1, \dots, \lambda_n)$} ab.
+  \item Dabei ist $\mathbf{x}_{i}$ der Merkmalsvektor des $i$-ten
+        Trainingsdatensatzes, $y_i \in \{+1, -1\}$ sein Klassenlabel.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{\footnotesize Idee}
+\footnotesize
+Jede Nebenbedingung wird nach Null umgestellt und mit einem eigenen
+$\lambda_i$ gewichtet an die Zielfunktion angehängt.
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{SVM: Karush-Kuhn-Tucker-Bedingungen}
+\begin{columns}
+
+\column{0.35\textwidth}
+\begin{blockC2}{Notwendige Bedingungen}
+
+Die KKT-Bedingungen sind \textbf{notwendige} Bedingungen: Jede optimale
+Lösung erfüllt sie. Sie liefern die Gleichungen, aus denen sich die Lösung
+bestimmen lässt.
+\end{blockC2}
+
+\column{0.60\textwidth}
+
+\begin{itemize}
+  \item Lagrange-Multiplikatoren sind für \textbf{Gleichungs}-Neben\-%
+        bedingungen gedacht.
+  \item Bei der SVM sind die Nebenbedingungen aber \textbf{Ungleichungen}
+        ($y \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}) \geq 1$).
+  \item Dann liefert nicht mehr das Nullsetzen der Ableitung die Lösung.
+  \item Stattdessen muss jede Lösung die \textbf{KKT-Bedingungen} erfüllen
+        -- eine Verallgemeinerung des Lagrange-Ansatzes auf Ungleichungen.
+\end{itemize}
+
+
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Die KKT-Bedingungen}
+\small
+
+\begin{columns}
+
+\column{0.47\textwidth}
+Für unser \textbf{spezifisches Problem} lauten die KKT-Bedingungen ($*$
+markiert das Optimum):
+\[
+  \begin{aligned}
+    \tfrac{\partial L}{\partial \mathbf{w}} = 0,\quad
+    \tfrac{\partial L}{\partial w_0} &= 0\\[4pt]
+    \lambda_i^{*}\bigl(1 - y_i \cdot (\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*})\bigr) &= 0\\[2pt]
+    1 - y_i \cdot (\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*}) &\leq 0\\[2pt]
+    \lambda_i^{*} &\geq 0
+  \end{aligned}
+\]
+
+\column{0.48\textwidth}
+\begin{blockC1}{\small Deutung}
+\begin{itemize}
+  \item Die erste Zeile ist die \textbf{Stationarität}: Im Optimum werden
+        die Ableitungen null.
+  \item Die dritte Zeile ist die umgestellte \textbf{Nebenbedingung}.
+  \item Die zweite Zeile ist ein Produkt: null, wenn $\lambda_i^{*} = 0$
+        \textbf{oder} der Punkt auf der Grenze ($\pm 1$) liegt.
+  \item Letzteres gilt nur für die \textbf{Support Vectors}.
+  \item $\Rightarrow$ Sehr viele $\lambda_i^{*}$ sind \textbf{null}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SVM: Ableiten nach einem Vektor}
+\footnotesize
+\begin{columns}
+\column{0.60\textwidth}
+\par\bigskip
+Wir suchen das Minimum von $L$ $\Rightarrow$ Ableitung $=0$ setzen.\\
+\medskip
+Da $L$ mehrdimensional ist, müssen wir partiell ableiten: nach $w_0$ und $\textbf{w}$.\\
+\medskip
+Die Ableitung nach $\mathbf{w}$ ist der \textbf{Gradient}: man leitet nach
+jeder Komponente $w_1, \dots, w_n$ ab und fasst sie zum Vektor zusammen.\\
+\medskip
+Zwei Regeln genügen für die SVM:
+\begin{itemize}
+  \item $\frac{1}{2}\lVert\mathbf{w}\rVert^2 = \frac{1}{2}\sum_k w_k^2$
+        liefert komponentenweise $w_k$:
+        \[
+          \frac{\partial}{\partial \mathbf{w}}\Bigl(\tfrac{1}{2}\lVert\mathbf{w}\rVert^2\Bigr)
+          = \mathbf{w}
+        \]
+  \item Das Skalarprodukt $\mathbf{w}\cdot\mathbf{x} = \sum_k w_k x_k$ ist
+        linear und liefert:
+        \[
+          \frac{\partial}{\partial \mathbf{w}}(\mathbf{w}\cdot\mathbf{x})
+          = \mathbf{x}
+        \]
+\end{itemize}
+
+\column{0.35\textwidth}
+
+\begin{block}{\footnotesize Analogie zum Skalaren}
+\[
+  \tfrac{d}{dx}\bigl(\tfrac{1}{2}x^2\bigr) = x
+\]
+\[
+  \tfrac{d}{dx}(a\,x) = a
+\]
+
+\vspace{0.3em}
+Der Faktor $\tfrac{1}{2}$ kürzt beim Ableiten die $2$ aus dem Exponenten
+weg.
+\end{block}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+
+\note{
+$ \frac{\partial}{\partial \mathbf{w}}\Bigl(\tfrac{1}{2}\lVert\mathbf{w}\rVert^2\Bigr)$ ist partielle Ableitung des Terms in der Klammer.
+}
+
+\end{frame}
+
+\begin{frame}{SVM: Ableitungen und optimales $\mathbf{w}$}
+\small
+\begin{columns}
+\column{0.60\textwidth}
+Wir leiten die Lagrange-Funktion ab. Konstante Terme und $w_0$ hängen nicht
+von $\mathbf{w}$ ab und fallen weg:
+\[
+  \frac{\partial L}{\partial \mathbf{w}} =
+  \mathbf{w} - \sum_{i=1}^{n} \lambda_i y_i \mathbf{x}_i
+\]
+\[
+  \frac{\partial L}{\partial w_0} =
+  -\sum_{i=1}^{n} \lambda_i y_i
+\]
+
+\vspace{0.3em}
+Im \textbf{Optimum} müssen beide Ableitungen \textbf{null} sein
+(Stationarität). Setzt man sie null, ergeben sich:
+\[
+  \mathbf{w}^{*} = \sum_{i=1}^{n} \lambda_i y_i \mathbf{x}_i
+  \qquad
+  \sum_{i=1}^{n} \lambda_i y_i = 0
+\]
+
+\column{0.35\textwidth}
+\begin{block}{\small Warum null?} 
+    An einem Optimum ist die Steigung waagerecht -- die
+Ableitung wird null. Das ist die \textbf{Stationaritätsbedingung} der KKT.
+\end{block}
+
+\vspace{0.3em}
+\begin{blockC2}{\small Kernaussage} 
+ $\mathbf{w}^{*}$ ist eine \textbf{gewichtete Summe}
+der Trainingsvektoren; nur Support Vectors tragen bei ($\lambda_i \neq 0$).
+\end{blockC2}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+
+\note{
+Als Folge aus $\sum_{i=1}^{n} \lambda_i y_i = 0$ heben sich die mit
+$\lambda_i$ gewichteten Klassenlabels zu null auf. Da $y_i$ nur $+1$
+(Klasse A) und $-1$ (Klasse B) annimmt, gilt:
+\[
+  \sum_{i:\, y_i = +1} \lambda_i = \sum_{i:\, y_i = -1} \lambda_i
+\]
+Die Gewichte der Support Vectors sind also zwischen beiden Klassen
+\textbf{ausbalanciert}. Keine Klasse dominiert die Lage der Trennebene --
+beide Seiten ziehen mit gleichem Gesamtgewicht.
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SVM: Herleitung der dualen Formulierung (1)}
+\begin{columns}
+
+\column{0.60\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Ausgangspunkt ist unsere Lagrange-Funktion:
+        \[
+          L_d = \tfrac{1}{2}\mathbf{w}\cdot\mathbf{w}
+          - \sum_{i=1}^{n}\lambda_i \cdot y_i \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}_i)
+          + \sum_{i=1}^{n}\lambda_i
+        \]
+  \item Wir spalten den mittleren Term auf:
+        \[
+          L_d = \tfrac{1}{2}\mathbf{w}\cdot\mathbf{w}
+          - w_0 \underbrace{\sum_{i=1}^{n}\lambda_i \cdot y_i}_{=\,0}
+          - \mathbf{w}\cdot\sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i
+          + \sum_{i=1}^{n}\lambda_i
+        \]
+  \item Der Term mit $w_0$ \textbf{fällt weg}, da
+        $\sum_{i=1}^{n}\lambda_i \cdot y_i = 0$ gilt.
+\end{itemize}
+
+\column{0.35\textwidth}
+\footnotesize
+\textbf{Was passiert hier?} Das Skalarprodukt im mittleren Term wird
+ausmultipliziert, sodass $w_0$ und $\mathbf{w}$ getrennt vorkommen. So wird
+sichtbar, dass der $w_0$-Term dank der Stationaritätsbedingung
+verschwindet.
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Herleitung der dualen Formulierung (2)}
+\begin{columns}[b]
+
+\column{0.60\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Es bleibt:
+        \[
+          L_d = \tfrac{1}{2}\mathbf{w}\cdot\mathbf{w}
+          - \mathbf{w}\cdot\sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i
+          + \sum_{i=1}^{n}\lambda_i
+        \]
+  \item Einsetzen von
+        $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$
+        in \textbf{beide} $\mathbf{w}$-Terme:
+        \[
+          L_d = \tfrac{1}{2}
+          \Bigl(\sum_{i}\lambda_i \cdot y_i \mathbf{x}_i\Bigr)\!\cdot\!
+          \Bigl(\sum_{j}\lambda_j \cdot y_j \mathbf{x}_j\Bigr)
+          - \Bigl(\sum_{i}\lambda_i \cdot y_i \mathbf{x}_i\Bigr)\!\cdot\!
+          \Bigl(\sum_{j}\lambda_j \cdot y_j \mathbf{x}_j\Bigr)
+          + \sum_{i}\lambda_i
+        \]
+  \item Der erste Term ist die \textbf{Hälfte} des zweiten; zusammengefasst
+        bleibt \textbf{ein negativer} Doppelsummen-Term:
+        \[
+          L_d = -\tfrac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}
+          \lambda_i \lambda_j \cdot y_i \cdot y_j\,(\mathbf{x}_i\!\cdot\mathbf{x}_j)
+          + \sum_{i=1}^{n}\lambda_i
+        \]
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{\footnotesize Duales Problem}
+\footnotesize
+$L_d$ hängt nur noch von $\boldsymbol{\lambda}$ ab und wird bezüglich
+$\boldsymbol{\lambda}$ \textbf{maximiert}. Die Daten treten nur als
+\textbf{Skalarprodukte} $\mathbf{x}_i\!\cdot\mathbf{x}_j$ auf.
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+
+\begin{frame}{SVM: Das duale Problem}
+\begin{columns}
+
+\column{0.47\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Das duale Problem der SVM lautet:
+        \[
+          \max_{\boldsymbol{\lambda}} \; -\tfrac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}
+          \lambda_i \lambda_j \cdot y_i \cdot y_j\,(\mathbf{x}_i\!\cdot\mathbf{x}_j)
+          + \sum_{i=1}^{n}\lambda_i
+        \]
+  \item unter den Nebenbedingungen
+        $\lambda_i \geq 0$ und
+        $\sum_{i=1}^{n}\lambda_i \cdot y_i = 0$.
+  \item Es ist ein \textbf{quadratisches Problem} in den $\lambda_i$.
+  \item Gelöst wird es \textbf{numerisch}, meist mit \textbf{SMO}
+        (Sequential Minimal Optimization).
+  \item Aus $\boldsymbol{\lambda}^{*}$ berechnet man $\mathbf{w}^{*}$ und
+        $w_0^{*}$.
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{blockDef}{\footnotesize Duales Problem}
+\footnotesize
+\begin{itemize}
+  \item Ein \textbf{duales Problem} ist eine alternative Formulierung des
+        ursprünglichen (\textbf{primalen}) Problems.
+  \item \textbf{Primal:} Optimierung über $\mathbf{w}$ und $w_0$ unter den
+        Trennungs-Nebenbedingungen.
+  \item \textbf{Dual:} Über die Lagrange-Funktion werden $\mathbf{w}$ und
+        $w_0$ eliminiert; optimiert wird nur noch über
+        $\boldsymbol{\lambda} = (\lambda_1, \dots, \lambda_n)$.
+  \item Beide führen zur \textbf{selben Lösung} (starke Dualität bei
+        konvexen Problemen).
+\end{itemize}
+\end{blockDef}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\note{Die konkrete Lösung ist uns egal. Wir brauchen für später nur die Duale formulieren. Wegen dem Skalarprodukt}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{SVM: Effizienz durch Support Vectors}
+\begin{columns}
+
+\column{0.47\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/svm_synthetisch_supportvektoren.svg}
+
+\column{0.48\textwidth}
+\footnotesize
+\begin{blockC1}{Effizienz}
+\begin{itemize}
+  \item Nur für \textbf{Support Vectors} ist $\lambda_i \neq 0$.
+  \item Nur ein \textbf{Bruchteil} der Daten geht in die Rechnung ein.
+  \item Der Aufwand hängt an der \textbf{Anzahl der Support Vectors}, nicht
+        an der Gesamtmenge.
+\end{itemize}
+\end{blockC1}
+
+\vspace{0.3em}
+{\footnotesize\itshape Nicht linear trennbare Probleme lösen Soft-Margin
+und Kernel-Ansätze.}
+\end{columns}
+\source{\cite{scholkopf2002learning}, SVM\_Linear\_Synthetisch.ipynb}
+
+\end{frame}
+
+
+
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
