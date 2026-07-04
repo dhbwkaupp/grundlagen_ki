@@ -1248,7 +1248,7 @@ Ansatz. Es treten zwei Probleme auf:
   \draw[->] (0,0) -- (1050,0) node[right] {\scriptsize $x_1$};
   \draw[->] (0,0) -- (0,1.15) node[above] {\scriptsize $x_2$};
 
-  \foreach \x in {0,500,1000}
+  \foreach \x in {0,5000,10000}
     \draw (\x,0.02) -- (\x,-0.02) node[below] {\scriptsize \x};
 
   \foreach \y in {0,0.5,1.0}
@@ -1263,10 +1263,10 @@ Ansatz. Es treten zwei Probleme auf:
 
   \node[align=center] at (520,1.05)
     {\scriptsize unterschiedliche Skalen:\\[-1mm]
-     \scriptsize $x_1 \in [0,1000]$, $x_2 \in [0,1]$};
+     \scriptsize $x_1 \in [0,10000]$, $x_2 \in [0,1]$};
 \end{tikzpicture}
 {\footnotesize
-\(d(A,B) \approx 600 \qquad d(A,B') \approx 600
+\(d(A,B) \approx 6000{,}00 \qquad d(A,B') \approx 6000{,}00
 \)\par
 Der Abstand bleibt fast gleich, obwohl sich der Wert von $x_2$ versechsfacht hat.
 }
@@ -1327,6 +1327,287 @@ X_test = scaler.transform(X_test)
 \end{columns}
 
 \source{SVM\_Linear.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{SVM: Anwendung in Python}
+\small
+\begin{columns}
+\column{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.svm import SVC
+
+model = SVC(kernel="linear")
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\begin{itemize}
+\item Mit \texttt{kernel="linear"} nutzt die SVM eine \textbf{lineare}
+Trennebene -- also genau die Hyperebene aus der Herleitung.
+\item Die Gerade kann die  Daten nicht genau beschreiben, weil unser Datensatz 
+\textbf{nicht linear trennbar} ist. Wir brauchen eine Soft-Margin.
+
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_svm.svg}
+\end{columns}
+\source{SVM\_Linear.ipynb}
+\end{frame}
+
+
+\begin{frame}{SVM: Der Parameter $C$}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\vspace{0.4em}
+\begin{itemize}
+  \item $C$ legt fest, wie hoch die \textbf{Fehler} bei Soft Margins gewichtet werden:
+        \[
+          \min \tfrac{1}{2}\lVert\mathbf{w}\rVert^2
+          + C\cdot\sum_{i=1}^{n}\xi_i
+        \]
+  \item Damit stellt man ein, ob man eine \textbf{saubere Trennlinie} oder
+        eine \textbf{breite Entscheidungsgrenze} bevorzugt.
+  \item \textbf{Beispiel:} Wir betrachten diesen Datensatz und suchen eine
+        passende Entscheidungsgrenze.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=8pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=8pt, inner sep=0pt}
+]
+% Rahmen mit Ticks
+\draw[thick] (0,0) rectangle (7,7);
+\foreach \x in {1,2,3,4,5,6} {
+  \draw[thick] (\x,0) -- (\x,-0.12);
+}
+\foreach \y in {0.8,1.6,2.4,3.2,4.0,4.8,5.6,6.4} {
+  \draw[thick] (0,\y) -- (-0.12,\y);
+}
+
+% blaue Punkte (oben rechts)
+\node[gut] at (5.1,6.7) {};
+\node[gut] at (3.9,6.4) {};
+\node[gut] at (3.8,5.6) {};
+\node[gut] at (4.8,5.7) {};
+\node[gut] at (4.1,5.0) {};
+\node[gut] at (5.1,4.9) {};
+\node[gut] at (6.5,4.6) {};
+\node[gut] at (5.2,4.1) {};
+\node[gut] at (6.0,3.5) {};
+
+% orange Punkte (unten links, einer oben in der blauen Wolke)
+\node[schlecht] at (3.0,6.5) {};
+\node[schlecht] at (2.4,3.8) {};
+\node[schlecht] at (1.2,3.0) {};
+\node[schlecht] at (2.9,3.0) {};
+\node[schlecht] at (1.9,2.5) {};
+\node[schlecht] at (0.7,1.5) {};
+\node[schlecht] at (2.6,1.6) {};
+\node[schlecht] at (1.8,0.8) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{SVM: Der Parameter $C$ -- hoher Wert}
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Hoher Wert für $C$} (z.\,B. $C = 100$):
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \textbf{Fehlklassifikationen} werden vermieden.
+  \item Dafür ergibt sich eine sehr \textbf{schmale}
+        Entscheidungsgrenze.
+  \item Auch der Ausreißer wird korrekt eingeordnet -- die Grenze rückt
+        eng an die Punkte heran.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=8pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=8pt, inner sep=0pt}
+]
+% Rahmen mit Ticks
+\draw[thick] (0,0) rectangle (7,7);
+\foreach \x in {1,2,3,4,5,6} {
+  \draw[thick] (\x,0) -- (\x,-0.12);
+}
+\foreach \y in {0.8,1.6,2.4,3.2,4.0,4.8,5.6,6.4} {
+  \draw[thick] (0,\y) -- (-0.12,\y);
+}
+
+% Trennebene (fast senkrecht, trennt Ausreisser korrekt)
+\draw[AlertTitle, line width=1.5pt] (3.5,7.0) -- (3.15,0.0);
+% Margins (schmal, gestrichelt, parallel)
+\draw[SecondaryTitle, dashed] (3.7,7.0) -- (3.35,0.0);
+\draw[SecondaryTitle, dashed] (3.3,7.0) -- (2.95,0.0);
+
+% blaue Punkte (oben rechts)
+\node[gut] at (5.1,6.7) {};
+\node[gut] at (3.9,6.4) {};
+\node[gut] at (3.8,5.6) {};
+\node[gut] at (4.8,5.7) {};
+\node[gut] at (4.1,5.0) {};
+\node[gut] at (5.1,4.9) {};
+\node[gut] at (6.5,4.6) {};
+\node[gut] at (5.2,4.1) {};
+\node[gut] at (6.0,3.5) {};
+
+% orange Punkte (unten links, Ausreisser oben)
+\node[schlecht] at (3.0,6.5) {};
+\node[schlecht] at (2.4,3.8) {};
+\node[schlecht] at (1.2,3.0) {};
+\node[schlecht] at (2.9,3.0) {};
+\node[schlecht] at (1.9,2.5) {};
+\node[schlecht] at (0.7,1.5) {};
+\node[schlecht] at (2.6,1.6) {};
+\node[schlecht] at (1.8,0.8) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: Der Parameter $C$ -- kleiner Wert}
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Kleiner oder mittlerer Wert für $C$}
+(z.\,B. $0{,}01 < C < 1$):
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Einige \textbf{Fehlklassifikationen} werden erlaubt.
+  \item Dafür ergibt sich eine \textbf{breitere} und \textbf{robustere}
+        Entscheidungsgrenze.
+  \item Der Ausreißer liegt auf der falschen Seite -- er wird als
+        weicher Fehler toleriert.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gut/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=8pt, inner sep=0pt},
+  schlecht/.style={circle, fill=AccentColor, draw=AccentTitle,
+                   very thick, minimum size=8pt, inner sep=0pt}
+]
+% Rahmen mit Ticks
+\draw[thick] (0,0) rectangle (7,7);
+\foreach \x in {1,2,3,4,5,6} {
+  \draw[thick] (\x,0) -- (\x,-0.12);
+}
+\foreach \y in {0.8,1.6,2.4,3.2,4.0,4.8,5.6,6.4} {
+  \draw[thick] (0,\y) -- (-0.12,\y);
+}
+
+% Trennebene (von links oben nach rechts unten fallend, optimal)
+\draw[AlertTitle, line width=1.5pt] (0.3,7.0) -- (7.0,1.1);
+% Margins (breit, gestrichelt, parallel)
+\draw[SecondaryTitle, dashed] (1.5,7.0) -- (7.0,2.2);
+\draw[SecondaryTitle, dashed] (0.0,6.1) -- (7.0,0.0);
+
+% blaue Punkte (oben rechts)
+\node[gut] at (5.1,6.7) {};
+\node[gut] at (3.9,6.4) {};
+\node[gut] at (3.8,5.6) {};
+\node[gut] at (4.8,5.7) {};
+\node[gut] at (4.1,5.0) {};
+\node[gut] at (5.1,4.9) {};
+\node[gut] at (6.5,4.6) {};
+\node[gut] at (5.2,4.1) {};
+\node[gut] at (6.0,3.5) {};
+
+% orange Punkte (unten links, Ausreisser oben -- falsche Seite)
+\node[schlecht] at (3.0,6.5) {};
+\node[schlecht] at (2.4,3.8) {};
+\node[schlecht] at (1.2,3.0) {};
+\node[schlecht] at (2.9,3.0) {};
+\node[schlecht] at (1.9,2.5) {};
+\node[schlecht] at (0.7,1.5) {};
+\node[schlecht] at (2.6,1.6) {};
+\node[schlecht] at (1.8,0.8) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{SVM: Wirkung des Parameters $C$}
+Je \textbf{kleiner} $C$, desto mehr Punkte dürfen auf der \textbf{falschen
+Seite} der Trennebene oder im \textbf{Margin} liegen. Diese Punkte sind dann
+stets auch \textbf{Support-Vektoren}.
+
+
+\vspace{2.0em}
+\begin{columns}
+\column{0.33\textwidth}
+\centering
+\textbf{$C = 100$}\\[2pt]
+\includesvg[width=\linewidth]{figures/svm_margin_ausreisser_unreg_C100.svg}
+
+\column{0.33\textwidth}
+\centering
+\textbf{$C = 1$}\\[2pt]
+\includesvg[width=\linewidth]{figures/svm_margin_ausreisser_reg_C1.svg}
+
+\column{0.33\textwidth}
+\centering
+\textbf{$C = 0{,}05$}\\[2pt]
+\includesvg[width=\linewidth]{figures/svm_margin_ausreisser_reg_C0.05.svg}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Parameter C in Support Vector Machines}
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+  \item Der Parameter $C$ ist ein Tuning-Parameter zur Anpassung des Modells an den Datensatz.
+  \item Der passende Wert hängt von der Verteilung der Daten ab.
+  \item Typische Werte: $0{,}01$ bis $1000$.
+  \item \textbf{Allgemein gilt:}
+  \begin{itemize}
+    \item \textbf{Kleines $C$:}
+    \begin{itemize}
+      \item Ausreißer werden weniger stark gewichtet.
+      \item Trennebene folgt dem allgemeinen Datentrend.
+    \end{itemize}
+    \item \textbf{Großes $C$:}
+    \begin{itemize}
+      \item Alle Punkte werden stark gewichtet.
+      \item Trennebene passt sich stark an die Daten an.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\source{\cite{seemann2024mlaz}}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Regularisierung
+  \item Bias--Varianz Trade-off
+  \item Overfitting bei großem $C$
+  \item Underfitting bei kleinem $C$
+\end{itemize}
+\end{column}
+
+\end{columns}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
