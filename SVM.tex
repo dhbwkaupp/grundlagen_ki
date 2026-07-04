@@ -31,15 +31,13 @@ Entscheidungsbaumes -- achsenparallele Stufen.}
   \footnotesize
 \begin{columns}
 \column{0.55\textwidth}
-Die Klassifikation wird \textbf{robuster}, wenn der Abstand zwischen
-Entscheidungsgrenze und Datenpunkten \textbf{groß} ist.
-
-\vspace{0.4em}
 \begin{itemize}
-  \item SVMs sind \textbf{Large-Margin-Klassifikatoren}.
-  \item Sie platzieren eine Trennebene mit \textbf{maximalem Abstand} zu den
-        Datenpunkten.
-  \item Diese Trennebene ist die \textbf{Entscheidungsgrenze}.
+  \item Reale Datenpunkte haben immer \textbf{Streuung}. 
+  \item Liegt die Grenze \textbf{nahe} an Datenpunkten, wird sie beim
+        Streuen schnell \textbf{übertreten}.
+  \item Die Folge sind \textbf{Falschklassifikationen}.
+  \item Ein \textbf{großer Abstand} zwischen Grenze und Datenpunkten macht
+        die Klassifikation \textbf{robuster}.
 \end{itemize}
 \medskip
 \textbf{Der zentrale Unterschied zu anderen Klassifikatoren:} Die Grenze
@@ -1242,8 +1240,8 @@ Ansatz. Es treten zwei Probleme auf:
 
 \begin{frame}{SVM in Python: Warum Werte skalieren?}
 \begin{columns}
-\column{0.4\textwidth}
-\centering
+\column{0.45\textwidth}
+\begin{center}
 \begin{tikzpicture}[x=0.0045cm,y=3.0cm]
   \draw[->] (0,0) -- (1050,0) node[right] {\scriptsize $x_1$};
   \draw[->] (0,0) -- (0,1.15) node[above] {\scriptsize $x_2$};
@@ -1265,13 +1263,15 @@ Ansatz. Es treten zwei Probleme auf:
     {\scriptsize unterschiedliche Skalen:\\[-1mm]
      \scriptsize $x_1 \in [0,10000]$, $x_2 \in [0,1]$};
 \end{tikzpicture}
+\end{center}
+
 {\footnotesize
-\(d(A,B) \approx 6000{,}00 \qquad d(A,B') \approx 6000{,}00
+\(d(A,B) \approx 6000{,}00 \quad d(A,B') \approx 6000{,}00
 \)\par
 Der Abstand bleibt fast gleich, obwohl sich der Wert von $x_2$ versechsfacht hat.
 }
 
-\column{0.55\textwidth}
+\column{0.5\textwidth}
 \footnotesize
 \begin{itemize}
   \item SVMs verwenden Abstände, z.~B. zur Trennung durch eine maximale
