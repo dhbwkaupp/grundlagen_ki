@@ -190,14 +190,14 @@ Die Ebene trennt Punkte im Raum in \textbf{„vor"} und \textbf{„hinter"} der
 Ebene. Jeder Punkt $P$ liegt in einer Parallelebene zur unseren.
 
 \vspace{0.3em}
-Über den Abstand der Parallelebene durch $P$:
+Über den Abstand der Parallelebene durch $P$\;:
 \begin{itemize}
   \item Abstand $> d$: $P$ liegt \textbf{vor} der Ebene.
   \item Abstand $< d$: $P$ liegt \textbf{dahinter}.
 \end{itemize}
 
 \vspace{0.3em}
-\textbf{Berechnung der Lage von $P$:}
+\textbf{Berechnung der Lage von $P$\;:}
 \[
   g(x_1, x_2, x_3) = a x_1 + b x_2 + c x_3 - d
 \]
@@ -517,7 +517,7 @@ $\Rightarrow$ \textbf{Klasse A}.
 $\Rightarrow$ \textbf{Klasse B}.
 \end{columns}
 
-\vspace{0.4em}
+\vspace{2.4em}
 Die Vorzeichen sind \textbf{unterschiedlich} $\Rightarrow$ die Punkte liegen
 \textbf{nicht} in derselben Klasse.
 }
@@ -1610,5 +1610,945 @@ stets auch \textbf{Support-Vektoren}.
 \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{SVM: Einstellung von $C$ in scikit-learn}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.svm import SVC
+
+model = SVC(kernel="linear", C=0.1)
+model.fit(X_train, y_train)
+\end{minted}
+
+\vspace{0.4em}
+Über \texttt{C} steuert man den \textbf{Strafterm}: kleines \texttt{C}
+erlaubt mehr Fehler, ergibt aber eine \textbf{breitere} Grenze.
+
+\column{0.35\textwidth}
+\begin{blockC1}{\footnotesize Weitere Parameter von \texttt{SVC}}
+\footnotesize 
+  \begin{itemize}
+  \item \texttt{C}: Gewicht des \textbf{Strafterms}.
+  \item \texttt{class\_weight}: Gewichtung \textbf{unbalancierter} Klassen.
+  \item \texttt{tol}: \textbf{Abbruchtoleranz} der Optimierung.
+  \item \texttt{max\_iter}: maximale \textbf{Iterationszahl} bei Optimierung. 
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Übung: Lineare SVM}
+\begin{columns}
+\column{0.60\textwidth}
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils eine
+\textbf{lineare SVM} anwenden:
+
+\begin{itemize}
+  \item auf den \textbf{Iris-Datensatz},
+  \item auf den \textbf{UCI Heart Disease} Datensatz.
+\end{itemize}
+
+\vspace{0.4em}
+Variieren Sie dabei den Parameter \textbf{$C$} und beobachten Sie den
+Einfluss auf die Klassifikationsgüte.
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Lösung: SVM Iris.ipynb, HeartDisease SVM.ipynb}
+\end{frame}
+
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+
+\makesubsubsectionpage{Polynomialer Kernel}
+
+\begin{frame}{Support Vector Machines: Kernel}
+\begin{columns}
+\column{0.60\textwidth}
+Bisher hatten SVMs eine \textbf{lineare} Entscheidungsgrenze. Für
+\textbf{nicht linear trennbare} Daten liefert das nur mittelmäßige
+Ergebnisse.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Ein \textbf{Kernel} transformiert die Daten in einen
+        \textbf{höherdimensionalen} Raum.
+  \item Idealerweise sind die Daten dort \textbf{linear trennbar}.
+  \item Der \textbf{Kerneltrick} bildet so Grenzen ab, die sonst schwer zu
+        greifen sind.
+\end{itemize}
+
+\column{0.35\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/homer.png}
+\includegraphics[width=\linewidth]{figures/frink.png}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}, Bildquelle: Die Simpsons. Homer in der 3D-Welt (\cite{simpsons_homer3_1995}) }
+\end{frame}
+
+
+\begin{frame}{Support Vector Machines: Polynomialer Kernel}
+\begin{columns}
+\column{0.40\textwidth}
+\textbf{Beispiel:} Auf einer Linie liegen mehrere Punkte, die wir
+\textbf{separieren} möchten.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \onslide<1->{Die Punkte sind \textbf{nicht linear} trennbar.}
+  \item \onslide<2->{\textbf{Idee:} Wir geben jedem Punkt einen $y$-Wert und
+        setzen diesen auf $x^2$.}
+\end{itemize}
+
+\column{0.55\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=7pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=7pt, inner sep=0pt}
+]
+% Achsen
+\draw[->, thick] (-3.8,0) -- (3.8,0) node[right] {$x$};
+\draw[->, thick] (0,-0.5) -- (0,4.2) node[above] {$y$};
+% x-Ticks
+\foreach \x in {-3,-2,-1,1,2,3} {
+  \draw (\x,0.1) -- (\x,-0.1) node[below, font=\scriptsize] {$\x$};
+}
+
+% Overlay 1: Punkte auf der Linie
+\onslide<1>{
+  % blaue Punkte (aussen)
+  \foreach \x in {-3,-2.5,-2,2,2.5,3} { \node[blau] at (\x,0) {}; }
+  % pinke Punkte (innen)
+  \foreach \x in {-1,0,1} { \node[pink] at (\x,0) {}; }
+  \node[font=\footnotesize] at (0,2.2) {Entscheidungsgrenze nicht linear};
+}
+
+% Overlay 2: Punkte auf Parabel y = x^2
+\onslide<2->{
+  % blaue Punkte (aussen, hoch)
+  \foreach \x in {-3,-2.5,-2,2,2.5,3} {
+    \node[blau] at (\x,{0.4*\x*\x}) {};
+  }
+  % pinke Punkte (innen, niedrig)
+  \foreach \x in {-1,0,1} {
+    \node[pink] at (\x,{0.4*\x*\x}) {};
+  }
+  % Trennlinie im transformierten Raum
+  \draw[AlertTitle, line width=1.2pt] (-3.8,1.0) -- (3.8,1.0);
+}
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+
+
+\begin{frame}{SVM: Polynomialer Kernel in höheren Dimensionen}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\textbf{Graph eines Polynoms in $\mathbb{R}^2$}\\[4pt]
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+  view={40}{25},
+  domain=-2:2, y domain=-2:2,
+  samples=20,
+  xlabel={$x$}, ylabel={$y$}, zlabel={$z$},
+  z buffer=sort
+]
+% Paraboloid z = x^2 + y^2
+\addplot3[surf, opacity=0.6, faceted color=SecondaryColor!50]
+  {x^2 + y^2};
+% innere Punkte (pink, niedrig)
+\addplot3[only marks, mark=*, mark options={fill=AccentColor,
+  draw=AccentTitle}, mark size=2pt]
+  coordinates {(0,0,0) (0.6,0.3,0.45) (-0.5,0.4,0.41)
+               (0.3,-0.6,0.45) (0.7,-0.2,0.53)};
+% aeussere Punkte (blau, hoch)
+\addplot3[only marks, mark=*, mark options={fill=SecondaryColor,
+  draw=SecondaryTitle}, mark size=2pt]
+  coordinates {(1.7,1.2,4.33) (-1.6,1.4,4.52) (1.5,-1.5,4.5)
+               (-1.7,-1.3,4.58)};
+\end{axis}
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\centering
+\textbf{Graph mit Trennebene}\\[4pt]
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+    view={40}{25},
+    domain=-2:2,
+    y domain=-2:2,
+    samples=20,
+    xlabel={$x$},
+    ylabel={$y$},
+    zlabel={$z$},
+    z buffer=sort
+]
+
+% Paraboloid
+\addplot3[
+    surf,
+    opacity=0.5,
+    faceted color=SecondaryColor!50
+]
+{x^2+y^2};
+
+% innere Punkte (unter der Ebene)
+\addplot3[
+    only marks,
+    mark=*,
+    mark size=2pt,
+    mark options={
+  fill=AccentColor,
+  draw=AccentTitle,
+  fill opacity=0.4,
+  draw opacity=0.4
+}
+]
+coordinates {
+    (0,0,0)
+    (0.6,0.3,0.45)
+    (-0.5,0.4,0.41)
+    (0.3,-0.6,0.45)
+    (0.7,-0.2,0.53)
+};
+
+% Trennebene
+\addplot3[
+    surf,
+    shader=flat,
+    draw=ThirdColor,
+    fill=ThirdColor,
+    opacity=0.6,
+    domain=-2:2,
+    y domain=-2:2,
+    samples=2,
+]
+{2.5};
+
+% äußere Punkte (über der Ebene)
+\addplot3[
+    only marks,
+    mark=*,
+    mark size=2pt,
+    mark options={
+        fill=SecondaryColor,
+        draw=SecondaryTitle
+    }
+]
+coordinates {
+    (1.7,1.2,4.33)
+    (-1.6,1.4,4.52)
+    (1.5,-1.5,4.5)
+    (-1.7,-1.3,4.58)
+};
+
+\end{axis}
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: Der Kernel-Trick}
+\begin{columns}
+\column{0.35\textwidth}
+Angenommen, wir hätten eine Abbildung
+$\Phi: \mathbb{R}^n \to \mathbb{R}^m$, die alle Punkte \textbf{explizit} in
+einen höherdimensionalen Raum $\mathbb{R}^m$ überführt.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Das wäre rechnerisch \textbf{aufwändig}.
+  \item Es drohen Probleme wie der \textbf{Curse of Dimensionality}.
+\end{itemize}
+
+\column{0.60\textwidth}
+\begin{block}{Beobachtung}
+Wir haben bereits gesehen, dass die Datenpunkte \textbf{nie direkt} auftreten, sondern stets
+als \textbf{Skalarprodukt} mit einem anderen Vektor:
+\[
+  \max_{\boldsymbol{\lambda}} \; -\tfrac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}
+  \lambda_i \lambda_j \cdot y_i \cdot y_j\,(\mathbf{x}_i\!\cdot\mathbf{x}_j)
+  + \sum_{i=1}^{n}\lambda_i
+\]
+bei der Optimierung, und
+\[
+  \mathbf{w}^{*}\!\cdot\mathbf{z} + w_0^{*}
+\]
+bei der Klassifikation.
+\end{block}
+
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Der Kernel-Trick}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Die hochdimensionalen Datenpunkte treten nur als 
+\textbf{Skalarprodukt} $\mathbf{x}_i\!\cdot\mathbf{x}_j$ auf. 
+  \item Hier setzt der Kerneltrick an:  
+   \begin{itemize}
+    \footnotesize
+\item Man bildet die Punkte \textbf{nicht} erst mit $\Phi$ ab
+        und berechnet dann das Skalarprodukt,
+        \item sondern man definiert eine Kernelfunktion $K:\mathbb{R^n}\times \mathbb{R^n}\to \mathbb{R}$, 
+        die beides in einem Schritt macht. 
+        \item Es gilt dann:  
+        \[
+          K(\mathbf{x}_i, \mathbf{x}_j) = \Phi(\mathbf{x}_i)\cdot\Phi(\mathbf{x}_j)
+        \]
+        \end{itemize}
+  \item Im dualen Problem und bei der Klassifikation ersetzt man jedes
+        $\mathbf{x}_i\!\cdot\mathbf{x}_j$ durch
+        $K(\mathbf{x}_i, \mathbf{x}_j)$.
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{blockC1}{\footnotesize Warum das genial ist}
+\begin{itemize}
+  \item $\Phi$ muss \textbf{nie explizit} berechnet werden -- man kennt nur
+        das Ergebnis des Skalarprodukts.
+  \item So sind selbst \textbf{unendlichdimensionale} Zielräume möglich
+        (z.\,B. beim RBF-Kernel).
+  \item Der \textbf{Curse of Dimensionality} wird vermieden, da die
+        Rechnung im ursprünglichen Raum bleibt.
+  \item Ergebnis: \textbf{komplexe, nichtlineare} Entscheidungsgrenzen bei
+        geringem Aufwand.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Polynomialer Kernel}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Der \textbf{polynomiale Kernel} ersetzt das Skalarprodukt durch:
+        \[
+          K(\mathbf{x}_i, \mathbf{x}_j) =
+          (\mathbf{x}_i\!\cdot\mathbf{x}_j + c)^d
+        \]
+  \item $d$: \textbf{Grad} des Polynoms -- steuert die Komplexität der
+        Grenze.
+  \item $c \geq 0$: gewichtet höhere gegen niedrigere Terme.
+  \item Er entspricht einer Abbildung $\Phi$ in einen Raum, der \textbf{alle
+        Produkte} der Merkmale bis Grad $d$ enthält.
+\end{itemize}
+
+\vspace{0.3em}
+Beispiel $d = 2$, $c = 0$ im $\mathbb{R}^2$:
+\[
+  \Phi(x_1, x_2) = (x_1^2,\; x_2^2,\; \sqrt{2}\,x_1 x_2)
+\]
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt}
+]
+\draw[->, thick] (-3,0) -- (3,0) node[right] {$x_1$};
+\draw[->, thick] (0,-3) -- (0,3) node[above] {$x_2$};
+% innerer Kreis: pinke Punkte
+\foreach \a in {0,60,...,300} {
+  \node[pink] at ({0.9*cos(\a)},{0.9*sin(\a)}) {};
+}
+% aeusserer Kreis: blaue Punkte
+\foreach \a in {30,90,...,330} {
+  \node[blau] at ({2.3*cos(\a)},{2.3*sin(\a)}) {};
+}
+% nichtlineare (kreisfoermige) Grenze
+\draw[AlertTitle, line width=1.2pt, dashed] (0,0) circle (1.6);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}{SVM: Wirkung des Polynomgrads $d$}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item $d = 1$: entspricht der \textbf{linearen} SVM -- gerade Grenze.
+  \item $d = 2$: \textbf{quadratische} Grenzen (Kreise, Ellipsen,
+        Parabeln).
+  \item Höheres $d$: zunehmend \textbf{gewundene} Grenzen.
+  \item \textbf{Achtung:} zu großes $d$ führt schnell zu
+        \textbf{Overfitting}.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_svm_poly_10_train.svg}
+\footnotesize $d=10$
+
+\end{columns}
+\source{\cite{scholkopf2002learning}}
+\end{frame}
+
+\begin{frame}[fragile]{SVM: Polynomialer Kernel in Python}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.svm import SVC
+
+model = SVC(
+  kernel="poly", degree=2, coef0=1
+  )
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\vspace{0.4em}
+\footnotesize
+Die Polynome haben die Form $(a\cdot x - \texttt{coef0})^{\texttt{degree}}$.
+
+\vspace{0.2em}
+\textbf{Achtung:} \texttt{coef0} darf nicht $0$ sein, sonst entartet der
+Ausdruck zu $(a\cdot x)^{\texttt{degree}}$.
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_svm_poly_2_train.svg}
+\footnotesize $d=2$
+\end{columns}
+\source{\cite{seemann2024mlaz}, SVM Poly.ipynb}
+\end{frame}
+
+\begin{frame}{SVM: Polynomialer Kernel -- Überanpassung}
+  \par\medskip
+\footnotesize
+Hohe Polynomgrade führen tendenziell zu \textbf{Überanpassung} an die
+Trainingsdaten.
+
+\begin{itemize}
+  \item Beispiel: polynomialer Kernel vom \textbf{Grad 10}.
+  \item Das Modell hat sich stark an die \textbf{Trainingsdaten} angepasst.
+  \item Die komplexe Entscheidungsgrenze deckt sich \textbf{nicht} mit den
+        \textbf{Testdaten}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\textbf{Trainingsdaten}\\[2pt]
+\includesvg[width=0.9\linewidth]{figures/scatter_svm_poly_10_train.svg}
+
+\column{0.48\textwidth}
+\centering
+\textbf{Testdaten}\\[2pt]
+\includesvg[width=0.9\linewidth]{figures/scatter_svm_poly_10_test.svg}
+\end{columns}
+\source{\cite{seemann2024mlaz}, SVM Poly.ipynb}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+\begin{frame}{Übung: Polynomiale SVM für Iris und Heart Disease}
+\begin{columns}
+\column{0.60\textwidth}
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils eine \textbf{SVM mit
+polynomialem Kernel} anwenden:
+
+\begin{itemize}
+  \item auf den \textbf{Iris-Datensatz},
+  \item auf den \textbf{UCI Heart Disease} Datensatz.
+\end{itemize}
+
+\vspace{0.4em}
+Variieren Sie dabei den Parameter \textbf{$C$} und den \textbf{Grad} des
+Polynoms im Kernel und vergleichen Sie die Ergebnisse.
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Lösung: SVM Poly Iris.ipynb, HeartDisease SVM Poly.ipynb}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
+
+
+\makesubsubsectionpage{RBF-Kernel}
+
+
+\begin{frame}{SVM: Radial Basis Function Kernel (RBF)}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Der am häufigsten verwendete Kernel ist der \textbf{Gauß'sche
+        RBF-Kernel}.
+  \item Seine Entscheidungsgrenzen unterscheiden sich stark von anderen
+        Modellen. Wir bekommen dadurch ein \textbf{komplett alternatives} Modell.
+  \item \textbf{Grundproblem:} Die Datenpunkte sind \textbf{nicht linear}
+        trennbar.
+  \item \textbf{Idee:} Eine Funktion bildet die Punkte der einen Klasse auf
+        \textbf{Hochpunkte}, die der anderen auf \textbf{Tiefpunkte} ab.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  declare function={
+    rbf(\x) = 2.7
+    + 1.5*exp(-((\x-0.6)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-1.4)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-4.7)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-5.5)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-8.7)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-9.5)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-2.7)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-3.5)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-6.7)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-7.5)^2)/(2*0.7^2));
+  },
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  xblau/.style={SecondaryColor, line width=2pt},
+  xpink/.style={AccentColor, line width=2pt}
+]
+% x-Achse (unterhalb der Tiefpunkte)
+\draw[->, thick] (-0.3,0) -- (10.5,0);
+% RBF-ueberlagerte Kurve
+\draw[SecondaryTitle, line width=1pt, smooth, samples=160, domain=0:10]
+  plot (\x, {rbf(\x)});
+% blaue Punkte (Hochpunkte)
+\foreach \x in {0.6,1.4,4.7,5.5,8.7,9.5} {
+  \node[blau] at (\x,0) {};
+  \draw[dashed, ->] (\x,0.15) -- (\x,{rbf(\x)-0.25});
+  \node[xblau] at (\x,{rbf(\x)}) {\bfseries $\times$};
+}
+% orange Punkte (Tiefpunkte)
+\foreach \x in {2.7,3.5,6.7,7.5} {
+  \node[pink] at (\x,0) {};
+  \draw[dashed, ->] (\x,0.15) -- (\x,{rbf(\x)-0.25});
+  \node[xpink] at (\x,{rbf(\x)}) {\bfseries $\times$};
+}
+\end{tikzpicture}}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: Radial Basis Function Kernel (RBF)}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Die Kernel-Funktion \textbf{spreizt} die Datenpunkte auseinander.
+  \item Dadurch bekommt man tendenziell \textbf{breite}
+        Entscheidungsgrenzen.
+  \item Im transformierten Raum lassen sich Hoch- und Tiefpunkte durch eine
+        \textbf{Ebene} trennen.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  declare function={
+    rbf(\x) = 2.7
+    + 1.5*exp(-((\x-0.6)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-1.4)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-4.7)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-5.5)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-8.7)^2)/(2*0.7^2))
+    + 1.5*exp(-((\x-9.5)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-2.7)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-3.5)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-6.7)^2)/(2*0.7^2))
+    - 1.3*exp(-((\x-7.5)^2)/(2*0.7^2));
+  },
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  xblau/.style={SecondaryColor, line width=2pt},
+  xpink/.style={AccentColor, line width=2pt}
+]
+% x-Achse (unterhalb der Tiefpunkte)
+\draw[->, thick] (-0.3,0) -- (10.5,0);
+% Trennebene mittig zwischen Hoch- und Tiefpunkten
+\draw[AlertTitle, line width=1.2pt] (-0.3,2.88) -- (10.5,2.88);
+\node[AlertTitle, font=\footnotesize\itshape, anchor=south east]
+  at (10.5,2.9) {Trennebene};
+% RBF-ueberlagerte Kurve
+\draw[SecondaryTitle, line width=1pt, smooth, samples=160, domain=0:10]
+  plot (\x, {rbf(\x)});
+% blaue Punkte (Hochpunkte)
+\foreach \x in {0.6,1.4,4.7,5.5,8.7,9.5} {
+  \node[blau] at (\x,0) {};
+  \draw[dashed, ->] (\x,0.15) -- (\x,{rbf(\x)-0.25});
+  \node[xblau] at (\x,{rbf(\x)}) {\footnotesize $\times$};
+}
+% orange Punkte (Tiefpunkte)
+\foreach \x in {2.7,3.5,6.7,7.5} {
+  \node[pink] at (\x,0) {};
+  \draw[dashed, ->] (\x,0.15) -- (\x,{rbf(\x)-0.25});
+  \node[xpink] at (\x,{rbf(\x)}) {\footnotesize $\times$};
+}
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{SVM: RBF-Kernel -- Konstruktion (1)}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Schritt 1:} Man nimmt eine Funktion, die einen \textbf{Hügel}
+bildet (z.\,B. eine RBF).
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Über \textbf{jedem} Datenpunkt wird ein solcher Hügel platziert.
+  \item Jeder Hügel ist am zugehörigen Punkt am höchsten und fällt zu den
+        Seiten ab.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  declare function={
+    g(\x,\c) = 2.0*exp(-((\x-\c)^2)/(2*0.7^2));
+  },
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt}
+]
+\draw[->, thick] (-0.3,0) -- (6.0,0) node[right] {};
+% einzelne Huegel (alle positiv)
+\foreach \c in {1.5,4.5} {
+  \draw[SecondaryTitle, line width=0.8pt, smooth, samples=80, domain=0:5.5]
+    plot (\x, {1.3*g(\x,\c)});
+}
+\draw[AccentTitle, line width=0.8pt, smooth, samples=80, domain=0:5.5]
+  plot (\x, {1.3*g(\x,3.0)});
+% Punkte
+\node[blau] at (1.5,0) {};
+\node[blau] at (4.5,0) {};
+\node[pink] at (3.0,0) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: RBF-Kernel -- Konstruktion (2)}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Schritt 2:} Die Hügel der \textbf{einen Klasse} werden
+\textbf{invertiert}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Eine Klasse behält ihre \textbf{Hügel} (nach oben).
+  \item Die andere Klasse erhält \textbf{Täler} (nach unten).
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  declare function={
+    g(\x,\c) = 2.0*exp(-((\x-\c)^2)/(2*0.7^2));
+  },
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt}
+]
+\draw[->, thick] (-0.3,0) -- (6.0,0) node[right] {};
+% blaue Huegel positiv
+\foreach \c in {1.5,4.5} {
+  \draw[SecondaryTitle, line width=0.8pt, smooth, samples=80, domain=0:5.5]
+    plot (\x, {1.3*g(\x,\c)});
+}
+% oranger Huegel invertiert (nach unten)
+\draw[AccentTitle, line width=0.8pt, smooth, samples=80, domain=0:5.5]
+  plot (\x, {-1.2*g(\x,3.0)});
+% Punkte
+\node[blau] at (1.5,0) {};
+\node[blau] at (4.5,0) {};
+\node[pink] at (3.0,0) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: RBF-Kernel -- Konstruktion (3)}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Ergebnis:} Man \textbf{addiert} die einzelnen Funktionen auf.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Es entsteht eine Funktion mit dem \textbf{gewünschten Verlauf}.
+  \item \textbf{Hochpunkte} bei der einen, \textbf{Tiefpunkte} bei der
+        anderen Klasse.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  declare function={
+    summe(\x) = 0
+    + 2.0*exp(-((\x-1.5)^2)/(2*0.7^2))
+    + 2.0*exp(-((\x-4.5)^2)/(2*0.7^2))
+    - 2.0*exp(-((\x-3.0)^2)/(2*0.7^2));
+  },
+  blau/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  pink/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=6pt, inner sep=0pt},
+  xblau/.style={SecondaryColor, line width=2pt},
+  xpink/.style={AccentColor, line width=2pt}
+]
+\draw[->, thick] (-0.3,0) -- (6.0,0) node[right] {};
+% aufsummierte Kurve
+\draw[SecondaryTitle, line width=1pt, smooth, samples=120, domain=0:5.5]
+  plot (\x, {summe(\x)});
+% Punkte mit Projektion
+\foreach \x in {1.5,4.5} {
+  \node[blau] at (\x,0) {};
+  \draw[dashed, ->] (\x,0.15) -- (\x,{summe(\x)-0.1});
+  \node[xblau] at (\x,{summe(\x)}) {\footnotesize $\times$};
+}
+\node[pink] at (3.0,0) {};
+\draw[dashed, ->] (3.0,-0.15) -- (3.0,{summe(3.0)+0.1});
+\node[xpink] at (3.0,{summe(3.0)}) {\footnotesize $\times$};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{SVM: Radial Basis Function Kernel (RBF)}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/rbf_huegel_breit.png}
+
+\column{0.48\textwidth}
+Die \textbf{Gauß'sche radiale Basisfunktion} $f: \mathbb{R}^n \to \mathbb{R}$
+erzeugt die einzelnen Hügel.
+
+\vspace{0.4em}
+Für einen \textbf{Mittelpunkt} $\mathbf{x}' \in \mathbb{R}^n$ und einen
+\textbf{Parameter} $\sigma$ ist sie definiert durch:
+\[
+  f(\mathbf{x}) := e^{-\frac{\lVert \mathbf{x} - \mathbf{x}' \rVert^2}{2\sigma^2}}
+\]
+für alle $\mathbf{x} \in \mathbb{R}^n$.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Am Mittelpunkt $\mathbf{x}'$ ist $f$ \textbf{maximal}.
+  \item $\sigma$ steuert die \textbf{Breite} des Hügels.
+\end{itemize}
+\end{columns}
+\source{\cite{seemann2024mlaz}, rbf-kernel3D.ggb}
+\end{frame}
+
+
+\begin{frame}{SVM: Radial Basis Function Kernel (RBF)}
+\begin{columns}
+\column{0.47\textwidth}
+\footnotesize
+\centering
+\includegraphics[width=\linewidth]{figures/rbf_2_huegel.png}
+Zwei einzelne RBF-Hügel \par \bigskip
+
+\includegraphics[width=\linewidth]{figures/rbf_summe_huegel.png}
+Die addierten Hügel
+
+
+\column{0.48\textwidth}
+Ein \textbf{Gebirge} aus zwei aufsummierten RBF-Hügeln.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Durch dieses Gebirge lässt sich nun die \textbf{Trennebene} legen.
+  \item Sie separiert die \textbf{Hochpunkte} von den \textbf{Tiefpunkten}.
+\end{itemize}
+\end{columns}
+\source{\cite{seemann2024mlaz}, rbf-kernel3D.ggb}
+\end{frame}
+
+
+\begin{frame}{SVM: RBF-Kernel -- Der Parameter $\gamma$}
+Um in der RBF-Formel den \textbf{Bruch} im Exponenten zu vermeiden, nutzt
+man statt $\sigma$ oft den Parameter $\gamma := \frac{1}{2\sigma^2}$, sodass
+$f(\mathbf{x}) = e^{-\gamma\,\lVert \mathbf{x} - \mathbf{x}' \rVert^2}$.
+
+\vspace{2.6em}
+\begin{columns}[T]
+\column{0.47\textwidth}
+\centering
+
+\includegraphics[width=\linewidth]{figures/rbf_kleines_gamma.png}
+Kleines $\gamma$: flacher Anstieg
+
+\column{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/rbf_grosses_gamma.png}
+Großes $\gamma$: spitzer Hügel
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{SVM: Definition des RBF-Kernels}
+\begin{columns}
+\column{0.60\textwidth}
+Der \textbf{RBF-Kernel} $K: \mathbb{R}^n \times \mathbb{R}^n \to \mathbb{R}$
+ist definiert durch:
+\[
+  K(\mathbf{x}, \mathbf{y}) := e^{-\gamma\,\lVert \mathbf{x} - \mathbf{y} \rVert^2}
+\]
+
+Er misst die \textbf{Ähnlichkeit} zweier Punkte: 
+\begin{itemize}
+\item nahe beieinander liegende
+\item Punkte ergeben einen Wert nahe $1$, weit entfernte einen Wert nahe $0$.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Parameter}
+$\gamma$: positiver Parameter, der die \textbf{Breite} des RBF-Kernels
+steuert.
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}[fragile]{SVM: RBF-Kernel in Python}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.svm import SVC
+
+model = SVC(kernel="rbf")
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\vspace{0.4em}
+\footnotesize
+Ohne Angabe nutzt scikit-learn per Default \texttt{gamma="scale"}.
+
+\vspace{0.2em}
+Dabei wird $\gamma$ automatisch aus der \textbf{Anzahl der Merkmale} und
+der \textbf{Varianz} der Daten bestimmt:
+$\gamma = \frac{1}{n_{\text{features}} \cdot \text{Var}(X)}$.
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_svm_rbf_gamma_default.svg}
+\end{columns}
+\source{SVM RBF.ipynb}
+\end{frame}
+
+\begin{frame}{SVM: RBF-Kernel -- Überanpassung durch großes $\gamma$}
+  \par\medskip
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\textbf{$\gamma = 10$, Training (oben) und Test}\\
+\includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_10_train.svg}\\[1pt]
+\includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_10_test.svg}\\[1pt]
+
+\column{0.48\textwidth}
+\centering
+\textbf{$\gamma = 10$, Training (oben) und Test}\\
+\includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_train.svg}\\[1pt]
+\includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_test.svg}\\[1pt]
+\end{columns}
+\source{SVM RBF.ipynb}
+\end{frame}
+
+\begin{frame}{SVM: RBF-Kernel -- Parameter $C$ und $\gamma$}
+Bei RBF-SVMs müssen \textbf{beide} Parameter optimiert werden. Sie wirken an
+\textbf{unterschiedlichen} Stellen:
+
+\vspace{0.6em}
+\begin{columns}[T]
+\column{0.47\textwidth}
+\begin{blockC1}{$C$ -- Erstellung der Trennebene}
+\begin{itemize}
+  \item \textbf{Kleines $C$:} mehr Punkte berücksichtigt, Trend wichtiger
+        als einzelne Punkte (\textbf{Underfitting}).
+  \item \textbf{Großes $C$:} einzelne Punkte wichtiger als der Trend
+        (\textbf{Overfitting}).
+\end{itemize}
+\end{blockC1}
+
+\column{0.48\textwidth}
+\begin{blockC2}{$\gamma$ -- Anstieg der RBF-Hügel}
+\begin{itemize}
+  \item \textbf{Großes $\gamma$:} steile Hügel, einzelne Punkte wichtiger
+        (\textbf{Overfitting}).
+  \item \textbf{Kleines $\gamma$:} flache Hügel, Trend wichtiger
+        (\textbf{Underfitting}).
+\end{itemize}
+\end{blockC2}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+\begin{frame}{SVM: RBF-Kernel -- Übung}
+\begin{columns}
+\column{0.60\textwidth}
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils eine \textbf{SVM mit
+RBF-Kernel} anwenden:
+
+\begin{itemize}
+  \item auf den \textbf{Iris-Datensatz},
+  \item auf den \textbf{UCI Heart Disease} Datensatz.
+\end{itemize}
+
+\vspace{0.4em}
+Variieren Sie dabei die Parameter \textbf{$C$} und \textbf{$\gamma$} und
+vergleichen Sie die Ergebnisse.
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Lösung: SVM RBF Iris.ipynb, HeartDisease SVM RBF.ipynb}
+\end{frame}
+
 \makequestionspage{\FRAGENIMAGE}
