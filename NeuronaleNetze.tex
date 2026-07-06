@@ -1,0 +1,698 @@
+\makesubsectionpage{Neuronale Netze}
+
+\makesubsectionpage{Einlagiges Perzeptron}
+
+
+\begin{frame}{Neuronale Netze: Einführung}
+\begin{columns}
+\column{0.60\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/neuronen.jpg}
+\footnotesize Skizze vernetzter Neuronen
+
+\column{0.35\textwidth}
+\footnotesize
+\begin{itemize}
+  \item \textbf{Neuronale Netze} sind außerhalb der Fachwelt die
+        bekanntesten Lernverfahren.
+  \item Lange wurden sie kaum verwendet wegen ihrer starken Tendenz zur
+        \textbf{Überanpassung}.
+  \item Neuere Entwicklungen und aktuelle \textbf{Hardware} erlauben heute
+        sehr komplexe, leistungsfähige Netze.
+  \item Vorbild ist das \textbf{menschliche Gehirn} aus vernetzten
+        \textbf{Neuronen}.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Neuronale Netze: Ursprung}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Die Anfänge liegen bei \textbf{McCulloch und Pitts} in den 1940er
+        Jahren.
+  \item Ziel: einfaches \textbf{mathematisches Modell} für das
+        Verhalten der Neuronen im Gehirn.
+  \item In Medien werden Netze oft mit einem \textbf{künstlichen Gehirn} gleichgesetzt --
+        das ist irreführend.
+  \item Das Gehirn ist als Ganzes \textbf{nicht verstanden}; Netze lassen
+        sich daher nicht über das Gehirn erklären.
+  \item Hilfreicher ist der Blick auf die \textbf{Verkettung von
+        Funktionen}.
+\end{itemize}
+
+\column{0.35\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  neuron/.style={circle, draw=PrimaryColor, very thick,
+                 minimum size=14pt, inner sep=0pt},
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=14pt, inner sep=0pt},
+  output/.style={circle, fill=AccentColor, draw=AccentTitle,
+                 very thick, minimum size=14pt, inner sep=0pt}
+]
+% Input-Schicht
+\node[input] (i1) at (0,2.4) {};
+\node[input] (i2) at (0,1.2) {};
+\node[input] (i3) at (0,0) {};
+% Hidden-Schicht
+\node[neuron] (h1) at (2,3.0) {};
+\node[neuron] (h2) at (2,1.8) {};
+\node[neuron] (h3) at (2,0.6) {};
+\node[neuron] (h4) at (2,-0.6) {};
+% Output-Schicht
+\node[output] (o1) at (4,1.8) {};
+\node[output] (o2) at (4,0.6) {};
+% Kanten Input -> Hidden
+\foreach \i in {1,2,3}
+  \foreach \h in {1,2,3,4}
+    \draw[->, gray] (i\i) -- (h\h);
+% Kanten Hidden -> Output
+\foreach \h in {1,2,3,4}
+  \foreach \o in {1,2}
+    \draw[->, gray] (h\h) -- (o\o);
+% Beschriftung
+\node[font=\scriptsize] at (0,-1.0) {Eingabe};
+\node[font=\scriptsize] at (2,-1.4) {verdeckte Schicht};
+\node[font=\scriptsize] at (4,-1.0) {Ausgabe};
+\end{tikzpicture}}
+
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Einlagiges Perzeptron: Das künstliche Neuron}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=10pt, inner sep=0pt},
+  sum/.style={circle, draw=PrimaryColor, very thick, minimum size=20pt},
+  act/.style={rectangle, draw=PrimaryColor, very thick, minimum size=18pt},
+  ausgabe/.style={circle, fill=AccentColor, draw=AccentTitle,
+                  very thick, minimum size=10pt, inner sep=0pt}
+]
+% Inputs
+\node[input] (x0) at (0,3.0) {};
+\node[input] (x1) at (0,2.0) {};
+\node[input] (x2) at (0,1.0) {};
+\node[font=\scriptsize] at (0,0.2) {$\vdots$};
+\node[input] (xn) at (0,-0.6) {};
+\node[font=\scriptsize, left] at (-0.2,3.0) {$x_0$};
+\node[font=\scriptsize, left] at (-0.2,2.0) {$x_1$};
+\node[font=\scriptsize, left] at (-0.2,1.0) {$x_2$};
+\node[font=\scriptsize, left] at (-0.2,-0.6) {$x_n$};
+% Summation
+\node[sum] (h) at (2.6,1.2) {$\sum$};
+% Aktivierung
+\node[act] (g) at (4.2,1.2) {$g$};
+% Output
+\node[ausgabe] (y) at (5.6,1.2) {};
+\node[font=\scriptsize, right] at (5.8,1.2) {$y$};
+% Kanten mit Gewichten
+\draw[->] (x0) -- (h) node[midway, above, font=\scriptsize] {$w_0$};
+\draw[->] (x1) -- (h) node[midway, above, font=\scriptsize] {$w_1$};
+\draw[->] (x2) -- (h) node[midway, below, font=\scriptsize] {$w_2$};
+\draw[->] (xn) -- (h) node[midway, below, font=\scriptsize] {$w_n$};
+\draw[->] (h) -- (g) node[midway, above, font=\scriptsize] {$h$};
+\draw[->] (g) -- (y);
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\begin{itemize}
+  \item Elementarer Baustein ist das \textbf{künstliche Neuron}.
+  \item Links stehen die Einträge $x_0, x_1, \dots, x_n$ des
+        \textbf{Merkmalsvektors} $\mathbf{x}$.
+  \item Sie werden mit \textbf{Gewichten} $w_i \in \mathbb{R}$ multipliziert
+        und aufsummiert.
+  \item Das Ergebnis $h$ geht in die \textbf{Aktivierungsfunktion} $g$, die
+        die Ausgabe $y$ liefert.
+\end{itemize}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Einlagiges Perzeptron: Summation und Analogie}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Die gewichtete Summe ergibt die Funktion
+        $h: \mathbb{R}^n \to \mathbb{R}$:
+        \[
+          h(\mathbf{x}) = \sum_{i=0}^{n} w_i x_i
+        \]
+  \item $h(\mathbf{x})$ ist der Eingangswert der \textbf{Aktivierungs\-%
+        funktion} $g$.
+  \item \textbf{Biologische Analogie:} Eine Nervenzelle summiert die
+        Anregungen anderer Zellen.
+  \item Übersteigt die Summe ein \textbf{Schwellenpotential}, \textbf{feuert}
+        die Zelle.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Vereinfachung}
+Das Modell ist stark vereinfacht -- es ist nur eine \textbf{Anlehnung} an
+die echte Nervenzelle.
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Einlagiges Perzeptron: Schwellwertfunktion}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Die mathematische Nachbildung \textbf{feuert} ab Überschreitung
+        eines \textbf{Schwellenwertes} $\theta$.
+  \item Sie springt dabei von $0$ auf $1$ (\textbf{Sprungfunktion}).
+  \item Unterhalb von $\theta$ ist das Neuron \textbf{inaktiv}:
+        \[
+          y = g(h) =
+          \begin{cases}
+            1 & \text{für } h > \theta\\
+            0 & \text{für } h \leq \theta
+          \end{cases}
+        \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth]
+% Achsen
+\draw[->, thick] (-2.5,0) -- (2.8,0) node[right] {$h$};
+\draw[->, thick] (0,-0.4) -- (0,2.2) node[above] {$g(h)$};
+% Ticks
+\draw (0.08,1.6) -- (-0.08,1.6) node[left, font=\footnotesize] {$1$};
+\draw (0.8,0.08) -- (0.8,-0.08) node[below, font=\footnotesize] {$\theta$};
+% Schwellwertfunktion mit Schwelle theta
+\draw[PrimaryColor, line width=1.2pt] (-2.5,0) -- (0.8,0);
+\draw[PrimaryColor, line width=1.2pt] (0.8,1.6) -- (2.8,1.6);
+\draw[PrimaryColor, line width=1.2pt, dashed] (0.8,0) -- (0.8,1.6);
+\fill[PrimaryColor] (0.8,1.6) circle (2.5pt);
+\draw[PrimaryColor, fill=white, line width=1.2pt] (0.8,0) circle (2.5pt);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Einlagiges Perzeptron: Kompaktere Darstellung}
+    \small
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Das Neuron lässt sich \textbf{mathematisch kompakt} darstellen.
+  \item Jeder Eintrag $x_i$ wird mit dem Gewicht $w_i$ multipliziert und
+        aufsummiert:
+        \[
+          h(\mathbf{x}) = \sum_{i=0}^{n} w_i x_i
+        \]
+  \item Fasst man Gewichte und Eingabe als \textbf{Vektoren}
+        $\mathbf{w} = (w_0, \dots, w_n)^T$ und
+        $\mathbf{x} = (x_0, \dots, x_n)^T$ auf, wird daraus ein
+        \textbf{Skalarprodukt}:
+        \[
+          h(\mathbf{x}) = \mathbf{w}\cdot\mathbf{x}
+        \]
+  \item Die Ausgabe ist dann $y = g(h(\mathbf{x})) = g(\mathbf{w}\cdot\mathbf{x})$.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{\small Ziel}
+Eine \textbf{knappe Notation}, die Gewichtung, Summation und Aktivierung in
+einem Ausdruck zusammenfasst.
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Perzeptron: Schwellwert als Trenngerade}
+\small
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Wir nehmen jetzt noch den den Schwellwert $\theta$ hinzu und stellen um:
+        \[
+          h(\mathbf{x}) - \theta = \mathbf{w}\cdot\mathbf{x} - \theta = 0
+        \]
+  \item Das ist eine \textbf{Hyperebenen-Gleichung}, wie wir sie von den
+        \textbf{SVMs} kennen.
+  \item $\theta$ verschiebt die Hyperebene aus dem \textbf{Ursprung}
+        heraus.
+  \item Im 2D-Fall ist die Hyperebene eine \textbf{Gerade}:
+        \[
+          w_0 x_0 + w_1 x_1 - \theta = 0
+        \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth]
+% Achsen
+\draw[->, thick] (-0.5,0) -- (4.5,0) node[right] {$x$};
+\draw[->, thick] (0,-0.5) -- (0,4.5) node[above] {$y$};
+% Trenngerade h - theta = 0
+\draw[AlertTitle, line width=1.2pt] (-0.3,4.2) -- (4.2,0.3);
+\node[AlertTitle, font=\footnotesize, anchor=south west]
+  at (2.3,1.9) {$0 = h - \theta$};
+% Bereiche beschriften
+\node[font=\footnotesize, align=center] at (1.0,1.0)
+  {$h - \theta < 0$\\$g(h) = 0$};
+\node[font=\footnotesize, align=center] at (3.3,3.3)
+  {$h - \theta > 0$\\$g(h) = 1$};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Perzeptron: Schema mit Bias-Neuron}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Die Trennebene ist ja beschrieben durch $w ⋅ x - 𝜃 = 0$.
+  \item Das \textbf{Aktivierungspotenzial} $\theta$ ist dabei \textbf{konstant}. 
+  \item Mit fixiertem $\theta$ könnte die Hyperebene nur ihre
+        \textbf{Steigung} ändern, nicht ihre \textbf{Verschiebung}.
+  \item Lösung: ein zusätzlicher, konstant $1$-wertiger Input, das
+        \textbf{Bias-Neuron}.
+  \item Ergebnis ist das \textbf{einlagige Perzeptron}.
+  \item \textbf{Hinweis:} $y_2$ zeigt den allgemeinen \textbf{Mehr-Output}-Fall.
+        Für zwei Klassen genügt \textbf{ein} Output-Neuron.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=16pt, inner sep=0pt},
+  bias/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=16pt, inner sep=0pt},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=16pt, inner sep=0pt}
+]
+% Beschriftung Schichten
+\node[font=\footnotesize\bfseries, align=center] at (0,4.6) {Input\\layer};
+\node[font=\footnotesize\bfseries, align=center] at (4,4.6) {Output-\\Layer};
+% Input-Neuronen
+\node[input] (x1) at (0,3.6) {};
+\node[input] (x2) at (0,2.0) {};
+\node[bias]  (b)  at (0,0.4) {$1$};
+\node[font=\footnotesize, left] at (-0.6,3.6) {$x_1$};
+\node[font=\footnotesize, left] at (-0.6,2.0) {$x_2$};
+\draw[->] (-0.5,3.6) -- (x1);
+\draw[->] (-0.5,2.0) -- (x2);
+% Output-Neuronen
+\node[outp] (y1) at (4,3.0) {};
+\node[outp] (y2) at (4,1.2) {};
+\node[font=\footnotesize, right] at (4.6,3.0) {$y_1$};
+\node[font=\footnotesize, right] at (4.6,1.2) {$y_2$};
+\draw[->] (y1) -- (4.5,3.0);
+\draw[->] (y2) -- (4.5,1.2);
+% Kanten mit Gewichten
+\draw[->] (x1) -- (y1) node[fill=white, inner sep=1pt, pos=0.22, font=\scriptsize] {$w_{1,1}$};
+\draw[->] (x1) -- (y2) node[fill=white, inner sep=1pt, pos=0.22, font=\scriptsize] {$w_{2,1}$};
+\draw[->] (x2) -- (y1) node[fill=white, inner sep=1pt, pos=0.28,  font=\scriptsize] {$w_{1,2}$};
+\draw[->] (x2) -- (y2) node[fill=white, inner sep=1pt, pos=0.28,  font=\scriptsize] {$w_{2,2}$};
+\draw[->] (b)  -- (y1) node[fill=white, inner sep=1pt, pos=0.22,  font=\scriptsize] {$w_{1,3}$};
+\draw[->] (b)  -- (y2) node[fill=white, inner sep=1pt, pos=0.28,  font=\scriptsize] {$w_{2,3}$};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Perzeptron: Matrix-Vektor-Darstellung}
+\footnotesize
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Die Gewichte werden so nummeriert, dass die Summation eine
+        \textbf{Matrix-Vektor-Multiplikation} wird. Mit
+        \[
+          W = \begin{pmatrix*}[r]
+            w_{1,1} & w_{1,2} & w_{1,3}\\
+            w_{2,1} & w_{2,2} & w_{2,3}
+          \end{pmatrix*}
+        \]
+        gilt $\mathbf{h} = W\cdot\mathbf{x}$ und
+        $\mathbf{y} = g(\mathbf{h}(\mathbf{x}))$.
+  \item $g$ wird \textbf{komponentenweise} angewandt (Schwellwert-/%
+        Heaviside-Funktion).
+  \item Am Beispiel $y_1$ zeigt sich die Rolle des Bias-Neurons:
+        \[
+          h(\mathbf{x}) = w_{1,1}\cdot x_1 + w_{1,2}\cdot x_2 + w_{1,3}\cdot 1
+        \]
+  \item $w_{1,3}$ übernimmt die Rolle von $-\theta$.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{\footnotesize Ein Output-Neuron}
+Beim Startbeispiel genügt \textbf{ein} Output. $W$ wird einzeilig und lässt
+sich als \textbf{Zeilen-Vektor} schreiben:
+\[
+  \mathbf{w} = \begin{pmatrix} w_1 & w_2 & w_3 \end{pmatrix}
+\]
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Perzeptron: Hebbsche Lernregel}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Neuronale Netze werden trainiert, indem man die \textbf{Gewichte} $w_i$ anpasst.
+  \item Grundlage ist der \textbf{Fehler} zwischen gewünschtem $\hat{y}$ und
+        beobachtetem $y$:
+        \[
+          \text{error} = \hat{y} - y
+        \]
+  \item Ist $\hat{y} > y$, werden die Gewichte \textbf{vergrößert}, sonst
+        \textbf{verkleinert}:
+        \[
+          \Delta w_j = \text{error}\cdot x_j, \qquad w_j = w_j + \Delta w_j
+        \]
+  \item Eine \textbf{Lernrate} $\eta \in\, ]0,1]$ \textbf{dämpft} die
+        Änderung und sichert die Konvergenz.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Grundidee}
+Gewichte mit \textbf{großem Einfluss} werden stärker verändert als solche
+mit kleinem Einfluss.
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Perzeptron: Algorithmus der Hebbschen Lernregel}
+\footnotesize
+\begin{columns}
+\SetAlgoCaptionLayout{footnotesize}      
+\column{0.60\textwidth}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Beispielmenge $D = \{(X, Y)\}$}
+\KwOut{Gewichtsvektor $\mathbf{w}$}
+$\mathbf{w}$ mit Zufallszahlen in $[-0.5, 0.5]$ initialisieren\;
+$t = 0$\;
+\Repeat{$\lVert Y - \text{heaviside}(WX)\rVert < \varepsilon$ \textbf{oder} $t > t_{\max}$}{
+  $t = t + 1$\;
+  $(\hat{x}, \hat{y}) = \text{RandomSelect}(D)$\;
+  $\text{error} = \hat{y} - \text{heaviside}(W \cdot \hat{x})$\;
+  \For{$j = 0$ \KwTo $p$}{
+    $\Delta w_j = \eta\cdot\text{error}\cdot\hat{x}_j$\;
+    $w_j = w_j + \Delta w_j$\;
+  }
+}
+\caption{Hebbsche Lernregel}
+\end{algorithm}
+
+\column{0.35\textwidth}
+\begin{blockC1}{\footnotesize Ablauf}
+\begin{itemize}
+  \item Zufälliges Beispiel $(\hat{x}, \hat{y})$ wählen.
+  \item \textbf{Fehler} bestimmen:
+        $\text{error} = \hat{y} - \text{heaviside}(W \cdot \hat{x})$.
+  \item Pro Gewicht die Änderung berechnen:
+        $\Delta w_j = \eta\cdot\text{error}\cdot\hat{x}_j$.
+  \item Gewicht anpassen: $w_j = w_j + \Delta w_j$.
+  \item Wiederholen, bis der Fehler $< \varepsilon$ ist oder $t_{\max}$
+        erreicht ist.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Hebbsche Lernregel -- Eigenschaften}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Der Lernalgorithmus verwendet \textbf{Zufallszahlen} $\Rightarrow$ seed beeinflußt Ergebnis.
+    \item Er liefert eine \textbf{Trennebene}, aber \textbf{keine optimale} im geometrischen Sinn.
+    \item Qualität der Lösung variiert.
+    \item Weitere Verfeinerungen möglich und notwendig.
+    \item Dennoch bemerkenswert: funktionierender Lernalgorithmus \textbf{seit 1947}.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+      \centering
+      \scriptsize 
+\includesvg[width=0.8\linewidth]{figures/perceptron_trenngerade_42.svg}
+Trenngerade mit seed=42
+\vspace{0.5em}
+
+\includesvg[width=0.8\linewidth]{figures/perceptron_trenngerade_100.svg}
+Trenngerade mit seed=100
+\end{column}
+
+\end{columns}
+\source{Perceptron\_Hebb.ipynb}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+
+\makesubsectionpage{Multilayer Perceptron}
+
+\begin{frame}{Was kann ein einlagiges Perzeptron wirklich?}
+
+\begin{columns}
+
+\column{0.55\textwidth}
+\small
+\begin{itemize}
+    \item Ein einlagiges Perzeptron trennt Klassen exakt, wenn die Daten \textbf{linear separierbar} sind.
+    \item Genau diese \textbf{Problemklasse} kann das Netzwerk lernen.
+    \item Die logischen Verknüpfungen \textbf{OR} und \textbf{AND} sind daher lernbar.
+    \item \textbf{XOR} ist \textbf{nicht linear separierbar} und kann mit nur \textbf{einer Schicht} nicht dargestellt werden.
+    \item Für \textbf{komplexere Zusammenhänge} benötigen wir leistungsfähigere Netze.
+\end{itemize}
+
+\column{0.40\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[line cap=round, line join=round]
+    \def\Axis{2.50}
+    \def\Pos{2.00}
+    \def\Rad{4pt}
+
+    \pgfmathsetmacro{\SepOR}{0.5*\Pos}
+    \pgfmathsetmacro{\SepAND}{1.5*\Pos}
+
+    \tikzset{
+        axis/.style={->, draw=black, line width=0.5pt},
+        helper/.style={draw=black!28, line width=0.4pt},
+        sep/.style={draw=AlertColor, line width=1.2pt},
+        one/.style={circle, minimum size=2*\Rad, inner sep=0pt, draw=PrimaryTitle, fill=PrimaryColor, line width=1.0pt},
+        zero/.style={circle, minimum size=2*\Rad, inner sep=0pt, draw=AccentTitle, fill=AccentColor, line width=1.0pt},
+        lab/.style={font=\scriptsize, text=black},
+        title/.style={font=\small\bfseries, text=SecondaryTitle}
+    }
+
+    % OR
+    \begin{scope}[xshift=0cm, yshift=3.10cm]
+        \draw[axis] (0,0) -- (\Axis,0) node[right, black] {$x_1$};
+        \draw[axis] (0,0) -- (0,\Axis) node[above, black] {$x_2$};
+
+        \draw[helper] (0,\Pos) -- (\Pos,\Pos) -- (\Pos,0);
+
+        \node[lab, below left] at (0,0) {$0$};
+        \node[lab] at (\Pos,-0.32) {$1$};
+        \node[lab] at (-0.32,\Pos) {$1$};
+
+        \node[zero] at (0,0) {};
+        \node[one] at (\Pos,0) {};
+        \node[one] at (0,\Pos) {};
+        \node[one] at (\Pos,\Pos) {};
+
+        \draw[sep] (-0.15,\SepOR+0.15) -- (\SepOR+0.15,-0.15);
+
+        \node[title] at (1.00,-0.70) {OR};
+    \end{scope}
+
+    % AND
+    \begin{scope}[xshift=4.35cm, yshift=3.10cm]
+        \draw[axis] (0,0) -- (\Axis,0) node[right, black] {$x_1$};
+        \draw[axis] (0,0) -- (0,\Axis) node[above, black] {$x_2$};
+
+        \draw[helper] (0,\Pos) -- (\Pos,\Pos) -- (\Pos,0);
+
+        \node[lab, below left] at (0,0) {$0$};
+        \node[lab] at (\Pos,-0.32) {$1$};
+        \node[lab] at (-0.32,\Pos) {$1$};
+
+        \node[zero] at (0,0) {};
+        \node[zero] at (\Pos,0) {};
+        \node[zero] at (0,\Pos) {};
+        \node[one] at (\Pos,\Pos) {};
+
+        \draw[sep] (-0.15,\SepAND+0.15) -- (\SepAND+0.15,-0.15);
+
+        \node[title] at (1.00,-0.70) {AND};
+    \end{scope}
+
+    % XOR
+    \begin{scope}[xshift=2.18cm, yshift=-1.cm]
+        \draw[axis] (0,0) -- (\Axis,0) node[right, black] {$x_1$};
+        \draw[axis] (0,0) -- (0,\Axis) node[above, black] {$x_2$};
+
+        \draw[helper] (0,\Pos) -- (\Pos,\Pos) -- (\Pos,0);
+
+        \node[lab, below left] at (0,0) {$0$};
+        \node[lab] at (\Pos,-0.32) {$1$};
+        \node[lab] at (-0.32,\Pos) {$1$};
+
+        \node[zero] at (0,0) {};
+        \node[one] at (\Pos,0) {};
+        \node[one] at (0,\Pos) {};
+        \node[zero] at (\Pos,\Pos) {};
+
+        \node[title] at (1.00,-0.70) {XOR};
+    \end{scope}
+\end{tikzpicture}}
+
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Einlagiges Perzeptron für OR}
+\footnotesize
+\begin{columns}
+
+\column{0.47\textwidth}
+\begin{itemize}
+    \item Das \textbf{Perzeptron} kann \textbf{analytisch} bestimmt werden.
+    \item Für die Eingänge gelten die Gewichte
+    \[
+        w_1 = 1,\qquad w_2 = 1.
+    \]
+    \item Das \textbf{Bias-Gewicht} lautet
+    \[
+        w_3 = -0.5.
+    \]
+    \item Im \textbf{Output-Neuron} wird die \textbf{Heaviside-Funktion} verwendet:
+    \[
+        y = H(x_1 + x_2 - 0.5).
+    \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=16pt, inner sep=0pt},
+  bias/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=16pt, inner sep=0pt},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=16pt, inner sep=0pt}
+]
+\node[font=\footnotesize\bfseries] at (2,4.6) {OR-Funktion};
+
+\node[font=\footnotesize\bfseries, align=center] at (0,4.0) {Input\\layer};
+\node[font=\footnotesize\bfseries, align=center] at (4,4.0) {Output-\\Layer};
+
+\node[input] (x1) at (0,3.0) {};
+\node[input] (x2) at (0,1.6) {};
+\node[bias]  (b)  at (0,0.2) {$1$};
+
+\node[font=\footnotesize, left] at (-0.6,3.0) {$x_1$};
+\node[font=\footnotesize, left] at (-0.6,1.6) {$x_2$};
+
+\draw[->] (-0.45,3.0) -- (x1);
+\draw[->] (-0.45,1.6) -- (x2);
+
+\node[outp] (y) at (4,1.6) {};
+\node[font=\footnotesize, right] at (4.6,1.6) {$y$};
+\draw[->] (y) -- (4.5,1.6);
+
+\draw[->] (x1) -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$1$};
+\draw[->] (x2) -- (y) node[fill=white, inner sep=1pt, pos=0.50, font=\scriptsize] {$1$};
+\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-0.5$};
+\end{tikzpicture}%
+}
+
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Einlagiges Perzeptron für AND}
+\footnotesize
+\begin{columns}
+
+\column{0.47\textwidth}
+\begin{itemize}
+    \item Auch dieses \textbf{Perzeptron} lässt sich \textbf{analytisch} angeben.
+    \item Für die Eingänge gelten wieder die Gewichte
+    \[
+        w_1 = 1,\qquad w_2 = 1.
+    \]
+    \item Das \textbf{Bias-Gewicht} ist nun
+    \[
+        w_3 = -1.5.
+    \]
+    \item Im \textbf{Output-Neuron} wird die \textbf{Heaviside-Funktion} verwendet:
+    \[
+        y = H(x_1 + x_2 - 1.5).
+    \]
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=16pt, inner sep=0pt},
+  bias/.style={circle, fill=AccentColor, draw=AccentTitle,
+               very thick, minimum size=16pt, inner sep=0pt},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=16pt, inner sep=0pt}
+]
+\node[font=\footnotesize\bfseries] at (2,4.6) {AND-Funktion};
+
+\node[font=\footnotesize\bfseries, align=center] at (0,4.0) {Input\\layer};
+\node[font=\footnotesize\bfseries, align=center] at (4,4.0) {Output-\\Layer};
+
+\node[input] (x1) at (0,3.0) {};
+\node[input] (x2) at (0,1.6) {};
+\node[bias]  (b)  at (0,0.2) {$1$};
+
+\node[font=\footnotesize, left] at (-0.6,3.0) {$x_1$};
+\node[font=\footnotesize, left] at (-0.6,1.6) {$x_2$};
+
+\draw[->] (-0.45,3.0) -- (x1);
+\draw[->] (-0.45,1.6) -- (x2);
+
+\node[outp] (y) at (4,1.6) {};
+\node[font=\footnotesize, right] at (4.6,1.6) {$y$};
+\draw[->] (y) -- (4.5,1.6);
+
+\draw[->] (x1) -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$1$};
+\draw[->] (x2) -- (y) node[fill=white, inner sep=1pt, pos=0.50, font=\scriptsize] {$1$};
+\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-1.5$};
+\end{tikzpicture}%
+}
+
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
