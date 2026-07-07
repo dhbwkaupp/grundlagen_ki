@@ -370,12 +370,12 @@ sich als \textbf{Zeilen-Vektor} schreiben:
 \column{0.60\textwidth}
 \begin{itemize}
   \item Neuronale Netze werden trainiert, indem man die \textbf{Gewichte} $w_i$ anpasst.
-  \item Grundlage ist der \textbf{Fehler} zwischen gewünschtem $\hat{y}$ und
-        beobachtetem $y$:
+  \item Grundlage ist der \textbf{Fehler} zwischen gewünschtem $y$ und
+        beobachtetem $\hat{y}$:
         \[
-          \text{error} = \hat{y} - y
+          \text{error} = y - \hat{y}
         \]
-  \item Ist $\hat{y} > y$, werden die Gewichte \textbf{vergrößert}, sonst
+  \item Ist $y > \hat{y}$, werden die Gewichte \textbf{vergrößert}, sonst
         \textbf{verkleinert}:
         \[
           \Delta w_j = \text{error}\cdot x_j, \qquad w_j = w_j + \Delta w_j
@@ -396,20 +396,21 @@ mit kleinem Einfluss.
 \begin{frame}{Perzeptron: Algorithmus der Hebbschen Lernregel}
 \footnotesize
 \begin{columns}
-\SetAlgoCaptionLayout{footnotesize}      
+\SetAlgoCaptionLayout{footnotesize}
 \column{0.60\textwidth}
 \begin{algorithm}[H]
 \SetAlgoLined
-\KwIn{Beispielmenge $D = \{(X, Y)\}$}
+\KwIn{Beispielmenge $D = \{(x, y)\}$}
 \KwOut{Gewichtsvektor $\mathbf{w}$}
 $\mathbf{w}$ mit Zufallszahlen in $[-0.5, 0.5]$ initialisieren\;
 $t = 0$\;
 \Repeat{$\lVert Y - \text{heaviside}(WX)\rVert < \varepsilon$ \textbf{oder} $t > t_{\max}$}{
   $t = t + 1$\;
-  $(\hat{x}, \hat{y}) = \text{RandomSelect}(D)$\;
-  $\text{error} = \hat{y} - \text{heaviside}(W \cdot \hat{x})$\;
+  $(x, y) = \text{RandomSelect}(D)$\;
+  $\hat{y} = \text{heaviside}(W \cdot x)$\;
+  $\text{error} = y - \hat{y}$\;
   \For{$j = 0$ \KwTo $p$}{
-    $\Delta w_j = \eta\cdot\text{error}\cdot\hat{x}_j$\;
+    $\Delta w_j = \eta\cdot\text{error}\cdot x_j$\;
     $w_j = w_j + \Delta w_j$\;
   }
 }
@@ -419,11 +420,13 @@ $t = 0$\;
 \column{0.35\textwidth}
 \begin{blockC1}{\footnotesize Ablauf}
 \begin{itemize}
-  \item Zufälliges Beispiel $(\hat{x}, \hat{y})$ wählen.
+  \item Zufälliges Beispiel $(x, y)$ wählen.
+  \item Ausgabe berechnen:
+        $\hat{y} = \text{heaviside}(W \cdot x)$.
   \item \textbf{Fehler} bestimmen:
-        $\text{error} = \hat{y} - \text{heaviside}(W \cdot \hat{x})$.
+        $\text{error} = y - \hat{y}$.
   \item Pro Gewicht die Änderung berechnen:
-        $\Delta w_j = \eta\cdot\text{error}\cdot\hat{x}_j$.
+        $\Delta w_j = \eta\cdot\text{error}\cdot x_j$.
   \item Gewicht anpassen: $w_j = w_j + \Delta w_j$.
   \item Wiederholen, bis der Fehler $< \varepsilon$ ist oder $t_{\max}$
         erreicht ist.
@@ -1211,7 +1214,1274 @@ ist die \textbf{lineare} Aktivierung:
 \end{frame}
 
 
+\begin{frame}{Multilayer Perceptron (MLP)}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Mehrlagige Perzeptrone heißen \textbf{Multilayer Perceptrons} (MLP).
+  \item Sie bestehen aus \textbf{mindestens drei} Schichten von Knoten.
+  \item Oft sind sie \textbf{fully connected}:
+        jedes Neuron einer Schicht ist mit allen Neuronen der nächsten
+        verbunden.
+  \item MLP sind \textbf{grundlegend} und für viele Anwendungen
+        \textbf{leistungsstark}.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockDef}{Feedforward-Netze}
+Ein MLP gehört zur Klasse der \textbf{Feedforward}-Netze: Jede Schicht ist
+nur mit der \textbf{nächsthöheren} verbunden.
+\end{blockDef}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{MLP: Gestaltung des Netzes}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item Die \textbf{Output-Schicht} kann beliebig viele Neuronen haben --
+        im Beispiel nur eines zur Vereinfachung.
+  \item Zur einfacheren Rechnung fehlen im Beispiel die \textbf{Bias-Neuronen}
+        der Hidden-Layer.
+  \item Die Funktionsgestalt lässt sich über \textbf{mehr Layer}
+        (tiefer) oder \textbf{mehr Neuronen} pro Layer (breiter) steuern.
+  \item Was besser ist, hängt vom \textbf{Anwendungsfall} ab.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{block}{Historisches Problem}
+Mehr als zwei Hidden-Layer waren lange selten wegen der größeren
+\textbf{Herausforderung beim Training}.
+\end{block}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{MLP: Vorwärtsberechnung -- erste Schicht}
+\begin{columns}
+\column{0.60\textwidth}
+Angenommen, das Netz ist \textbf{trainiert}, mit \textbf{Sigmoid} in den
+Hidden-Layern und \textbf{linearer} Aktivierung im Output.
+
+\vspace{0.4em}
+Die erste Schicht berechnet:
+\[
+  O^{(1)} = \text{sig}(\underbrace{W^{(1)}\mathbf{x}}_{\mathbf{b}})
+\]
+mit der Gewichtsmatrix
+\[
+  W^{(1)} =
+  \begin{pmatrix*}[r]
+    w^{(1)}_{1,1} & w^{(1)}_{1,2} & w^{(1)}_{1,3}\\
+    w^{(1)}_{2,1} & w^{(1)}_{2,2} & w^{(1)}_{2,3}\\
+    w^{(1)}_{3,1} & w^{(1)}_{3,2} & w^{(1)}_{3,3}
+  \end{pmatrix*} \in \mathbb{R}^{3\times 3}
+\]
+
+\column{0.35\textwidth}
+\begin{blockC2}{Komponentenweise}
+Die Sigmoid-Funktion wird pro Eintrag von $\mathbf{b}$ angewandt:
+\[
+  \begin{pmatrix} \text{sig}(b_1)\\ \vdots\\ \text{sig}(b_n) \end{pmatrix}
+  = \text{sig}(\mathbf{b})
+\]
+\end{blockC2}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{MLP: Vorwärtsberechnung -- zweite Schicht}
+\begin{columns}
+\column{0.60\textwidth}
+Der Output $O^{(1)}$ ist der \textbf{Input} der nächsten Schicht. Er wird
+mit der Matrix $W^{(2)}$ multipliziert:
+\[
+  O^{(2)} = \text{sig}(W^{(2)} O^{(1)})
+\]
+mit
+\[
+  W^{(2)} =
+  \begin{pmatrix*}[r]
+    w^{(2)}_{1,1} & w^{(2)}_{1,2} & w^{(2)}_{1,3}\\
+    w^{(2)}_{2,1} & w^{(2)}_{2,2} & w^{(2)}_{2,3}\\
+    w^{(2)}_{3,1} & w^{(2)}_{3,2} & w^{(2)}_{3,3}\\
+    w^{(2)}_{4,1} & w^{(2)}_{4,2} & w^{(2)}_{4,3}
+  \end{pmatrix*} \in \mathbb{R}^{4\times 3}
+\]
+
+\column{0.35\textwidth}
+\begin{blockC1}{Prinzip}
+Jede Schicht besteht aus einer \textbf{Matrix-Vektor-Multiplikation}
+gefolgt von einer \textbf{komponentenweisen} Aktivierung.
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{MLP: Vorwärtsberechnung -- Gesamtformel}
+\begin{columns}
+\column{0.60\textwidth}
+Die Output-Schicht nutzt eine \textbf{lineare} Aktivierung:
+\[
+  y = W^{(3)} O^{(2)}
+\]
+Setzt man alle Schichten ineinander ein, ergibt sich:
+\[
+  y = W^{(3)}\,\text{sig}\bigl(W^{(2)}\,\text{sig}(W^{(1)}\mathbf{x})\bigr)
+\]
+
+\column{0.35\textwidth}
+\begin{blockC1}{Kernaussage}
+Die Vorhersage $y_p$ ist eine \textbf{Verkettung} von
+Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
+\end{blockC1}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Neuronale Netze: Grundidee des Trainings}
+
+\begin{columns}
+\column{0.68\textwidth}
+
+\begin{itemize}
+    \item Zunächst wird die \textbf{Struktur} des Netzes festgelegt
+          (verdeckte Schichten und Neuronen).
+
+    \item \textbf{Gewichte} werden zufällig initialisiert und beim Training so \textbf{angepasst},
+          sodass das Netz die gewünschte Ausgabe liefert.
+
+    \item Das Training ähnelt dem Einstellen eines Mischpults mit
+          vielen Reglern: Die Gewichte werden \textbf{schrittweise über
+          viele Iterationen optimiert}.
+    \item \textbf{Grundproblem: }  Woher wissen wir, wie genau wir die einzelnen Regeler verstellen sollen? 
+\end{itemize}
+
+\column{0.28\textwidth}
+
+\centering
+\twemoji[width=\linewidth]{control knobs}
+
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Neuronale Netze: Training des Netzes}
+\begin{columns}
+\column{0.55\textwidth}
+\small
+\begin{itemize}
+  \item Gewichte können nicht \textbf{isoliert} angepasst werden, da Neuronen miteinander verknüpft sind.
+  \item Deshalb werden \textbf{alle Gewichte gemeinsam} optimiert.
+  \item Für jede Element des Trainingsdatensatzes $D$ wird die Netzausgabe $\hat{y}$ mit dem \textbf{Soll-Wert} $y_i$ verglichen.
+  \item Über alle Trainingsbeispiele werden die Fehler \textbf{quadriert und aufsummiert}.
+  \item Das Ergebnis ist die \textbf{quadratische Fehlersumme} $C$.
+\end{itemize}
+
+
+\column{0.40\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=16pt, inner sep=1pt, text=white},
+  hidden/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+                 very thick, minimum size=16pt, inner sep=1pt, text=white},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=16pt, inner sep=1pt, text=white}
+]
+% Formel oben rechts
+\node[font=\small] at (5.0,5.4)
+  {$C = \sum_{y_i \in D} (\hat{y}_i - y_i)^2$};
+% Input
+\node[input] (x1) at (0,4.2) {};
+\node[input] (x2) at (0,2.6) {};
+\node[input] (x3) at (0,1.0) {};
+% Hidden (4 Neuronen, ohne Bezeichnung)
+\node[hidden] (h1) at (2.6,4.8) {};
+\node[hidden] (h2) at (2.6,3.5) {};
+\node[hidden] (h3) at (2.6,2.2) {};
+\node[hidden] (h4) at (2.6,0.9) {};
+% Output-Neuron
+\node[outp] (y) at (5.2,2.6) {$\hat{y}$};
+% Kanten Input -> Hidden
+\foreach \i in {x1,x2,x3}
+  \foreach \h in {h1,h2,h3,h4}
+    \draw[->] (\i) -- (\h);
+% Kanten Hidden -> Output
+\foreach \h in {h1,h2,h3,h4}
+  \draw[->] (\h) -- (y);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Gradientenabstieg}
+
+\begin{columns}
+\column{0.45\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/gradient_2D.svg}
+
+\vspace{0.2cm}
+{\scriptsize Beispielhafte Funktion des Gesamtfehlers $C$ in Abhängigkeit von einem einzigen Gewicht.}
+
+\column{0.55\textwidth}
+\footnotesize
+\begin{itemize}
+    \item Der \textbf{Gradientenabstieg} ist ein Optimierungsverfahren.
+    
+    \item Ziel ist es, die Gewichte so zu bestimmen, dass der \textbf{Gesamtfehler} minimal wird:
+    \[
+      C = \sum_{(x_i,y_i)\in D}
+      (\hat{y}_i-y_i)^2
+    \]
+
+    \item Dazu wird die Steigung der Fehlerfunktion ausgewertet.
+
+    \item Die Gewichte werden schrittweise in Richtung des \textbf{stärksten Fehlerabfalls} verändert.
+
+    \item Durch viele kleine Anpassungen nähert man sich einem \textbf{Minimum der Fehlerfunktion}.
+\end{itemize}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Gradient und partielle Ableitungen}
+
+\begin{columns}
+\column{0.65\textwidth}
+
+\begin{itemize}
+    \item Der \textbf{Gradient} $\nabla f$ gibt die Richtung des
+          \textbf{steilsten Anstiegs} einer Funktion $f$ an.
+
+    \item Für eine Funktion
+          $f(x_1,x_2,\dots,x_n)$ ist der Gradient der Vektor aller
+          partiellen Ableitungen:
+          \[
+          \nabla f =
+          \begin{pmatrix}
+          \frac{\partial f}{\partial x_1}\\
+          \vdots\\
+          \frac{\partial f}{\partial x_n}
+          \end{pmatrix}
+          \]
+
+    \item An Extremstellen gilt $\nabla f = \mathbf{0}$.
+\end{itemize}
+
+\column{0.35\textwidth}
+
+\centering
+\vspace{-1.5cm}
+\includesvg[width=\linewidth]{figures/gradient_3D.svg}
+
+\includesvg[width=\linewidth]{figures/gradient_vektoren.svg}
+
+\end{columns}
+
+\source{Gradientenabstieg Backpropagation.ipynb}
+\end{frame}
+
+\begin{frame}{Gradientenabstieg}
+\footnotesize
+\begin{columns}
+\column{0.65\textwidth}
+
+\begin{itemize}
+    \item Der \textbf{Gradientenabstieg} (\textit{Gradient Descent}) ist ein Verfahren zur Minimierung einer Zielfunktion.
+
+    \item Ziel ist es, einen Parametervektor $\theta$ zu finden, für den die Fehlerfunktion minimal wird.
+
+    \item Vorgehen:
+    \begin{enumerate}
+      \footnotesize
+        \item Startpunkt $\theta_0$ wählen.
+        \item Gradienten $\nabla f(\theta_i)$ berechnen.
+        \item Schritt entgegen der Gradientenrichtung ausführen:
+        \[
+            \theta_{i+1}
+            =
+            \theta_i
+            -
+            \alpha \cdot \nabla f(\theta_i)
+        \]
+        \item Wiederholen, bis ein Minimum erreicht ist.
+    \end{enumerate}
+
+    \item Die \textbf{Lernrate} $\alpha$ bestimmt die Schrittweite.
+\end{itemize}
+
+\column{0.35\textwidth}
+
+\centering
+\includesvg[width=\linewidth]{figures/gradient_3D_pfad.svg}
+
+{\scriptsize Gradientenabstieg auf einer Fehlerfunktion. Der Algorithmus folgt schrittweise dem Weg des stärksten Abstiegs zum Minimum.}
+
+\end{columns}
+\source{Gradientenabstieg Backpropagation.ipynb}
+\end{frame}
+
+\begin{frame}{Stochastic Gradient Descent}
+
+\begin{columns}
+\column{0.55\textwidth}
+
+\begin{itemize}
+    \item Beim Training sucht man Gewichte, die den \textbf{Gesamtfehler}
+          minimieren:
+          \[
+              C =
+              \sum_{(x_i,y_i)\in D}
+              \left(\hat{y}_i - y_i\right)^2
+          \]
+
+    \item Bei großen Trainingsdatenmengen ist die Berechnung über alle
+          Beispiele in $D$ \textbf{zeitaufwendig}.
+
+    \item Daher wird der Gradient oft nur auf Basis eines Teils der
+          Trainingsdaten berechnet.
+\end{itemize}
+
+\column{0.40\textwidth}
+
+\begin{blockC1}{Grundidee}
+\textbf{Stochastic Gradient Descent} verwendet pro Optimierungsschritt nur
+einzelne Beispiele oder kleine Teilmengen der Trainingsdaten.
+
+\vspace{0.3cm}
+
+Dadurch wird das Training schneller, der Gradient aber nur
+\textbf{angenähert}.
+\end{blockC1}
+
+\end{columns}
+
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Stochastic Gradient Descent: Batches und Epochen}
+
+\begin{columns}
+\footnotesize
+\column{0.40\textwidth}
+
+\begin{itemize}
+    \item Die Trainingsdatenmenge $D$ wird in kleinere Teilmengen zerlegt:
+          \[
+              D = B_1 \cup B_2 \cup \dots \cup B_n
+          \]
+
+    \item Diese Teilmengen heißen \textbf{Batches}.
+
+    \item Pro Iterationsschritt wird die Kostensumme nur für einen Batch berechnet.
+
+    \item Eine \textbf{Epoche} ist abgeschlossen, wenn alle Batches einmal
+          durchlaufen wurden.
+\end{itemize}
+
+\column{0.60\textwidth}
+
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    batch/.style={
+        draw=PrimaryColor,
+        line width=0.8pt,
+        minimum width=2.7cm,
+        minimum height=0.95cm,
+    },
+    calc/.style={
+        font=\scriptsize,
+        align=left,
+        text width=4.1cm
+    },
+    arrow/.style={
+        -{Latex[length=2mm]},
+        line width=0.8pt,
+        draw=PrimaryColor
+    }
+]
+
+% Batches
+\node[batch, fill=SecondaryColor!25, text=black] (b1) at (0,0) {Batch 1};
+\node[batch, fill=ThirdColor!25, text=black] (b2) at (0,0.95) {Batch 2};
+\node[batch, fill=SecondaryColor!50, text=black] (dots) at (0,1.90) {$\dots$};
+\node[batch, fill=ThirdColor!50, text=black] (bn) at (0,2.85) {Batch $n$};
+
+% Rahmen
+\draw[PrimaryColor, line width=1pt]
+    (-1.35,-0.475) rectangle (1.35,3.325);
+
+% Berechnungen rechts
+\node[calc, right=0.75cm of b1] (c1) {
+    $C_{B_1}
+    =
+    \displaystyle\sum_{(x_i,y_i)\in B_1}
+    \left(\hat{y}_i-y_i\right)^2$
+};
+
+\node[calc, right=0.75cm of b2] (c2) {
+    $C_{B_2}
+    =
+    \displaystyle\sum_{(x_i,y_i)\in B_2}
+    \left(\hat{y}_i-y_i\right)^2$
+};
+
+\node[calc, right=0.75cm of dots] (cdots) {
+    $\dots$
+};
+
+\node[calc, right=0.75cm of bn] (cn) {
+    $C_{B_n}
+    =
+    \displaystyle\sum_{(x_i,y_i)\in B_n}
+    \left(\hat{y}_i-y_i\right)^2$
+};
+
+% Pfeile
+\draw[arrow] (b1.east) -- (c1.west);
+\draw[arrow] (b2.east) -- (c2.west);
+\draw[arrow] (dots.east) -- (cdots.west);
+\draw[arrow] (bn.east) -- (cn.west);
+
+\draw[PrimaryColor, line width=1pt, decorate,
+      decoration={brace, amplitude=5pt}]
+      (-1.55,-0.45) -- (-1.55,3.30)
+      node[midway, xshift=-5mm, rotate=90, anchor=center, font=\scriptsize]
+      {eine Epoche};
+
+\end{tikzpicture}%
+}
+
+\vspace{0.2cm}
+
+{\scriptsize Pro Batch wird eine eigene Kostensumme berechnet.}
+
+\end{columns}
+
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Motivation: Warum Backpropagation?}
+
+\begin{columns}
+\column{0.55\textwidth}
+
+\begin{itemize}
+    \item Beim Training werden die \textbf{Gewichte} so verändert, dass der
+          Gesamtfehler kleiner wird.
+
+    \item Für den Gradientenabstieg benötigt man den Gradienten der
+          Fehlerfunktion:
+          \[
+              \nabla C
+          \]
+
+    \item Dazu muss die Fehlerfunktion nach \textbf{allen Gewichten}
+          abgeleitet werden.
+
+    \item Jede Ableitung beschreibt, wie stark ein Gewicht zum Fehler beiträgt.
+\end{itemize}
+
+\column{0.40\textwidth}
+
+\begin{blockC1}{Ziel}
+Für jedes Gewicht wird benötigt:
+\[
+    \frac{\partial C}{\partial w}
+\]
+
+\vspace{0.3cm}
+
+Diese Werte bestimmen die Richtung der Gewichtsänderung.
+\[
+    w \leftarrow w - \alpha \frac{\partial C}{\partial w}
+\]
+\end{blockC1}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Fehlerfunktion als Funktion der Gewichte}
+
+\begin{columns}
+\column{0.52\textwidth}
+
+\begin{itemize}
+    \item Für ein Trainingsbeispiel $(x_i,y_i)\in D$ erzeugt das Netz eine
+          Ausgabe $\hat{y}_i$.
+
+    \item Die Fehlerfunktion summiert die Abweichungen über alle
+          Trainingsbeispiele.
+
+    \item Da $\hat{y}_i$ von den Gewichten abhängt, ist auch $C$ eine Funktion
+          aller Gewichte.
+
+    \item Gesucht sind Gewichte, für die $C$ minimal wird.
+\end{itemize}
+
+\column{0.45\textwidth}
+
+\begin{block}{Gesamtfehler}
+\[
+    C =
+    \sum_{(x_i,y_i)\in D}
+    \left(\hat{y}_i-y_i\right)^2
+\]
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{blockC2}{Netzausgabe (mit 2 Hidden Layer)}
+\[
+  \hat{y}
+  =
+  W^{(3)}\,\operatorname{sig}\Bigl(
+  W^{(2)}\,\operatorname{sig}
+  \bigl(W^{(1)}\mathbf{x}\bigr)
+  \Bigr)
+\]
+\end{blockC2}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Naiver Ansatz: Direkt ableiten}
+\small
+\begin{columns}
+\column{0.47\textwidth}
+
+\begin{itemize}
+    \item Für jedes Trainingsbeispiel müsste man $x_i$ in \textbf{die Netzfunktion
+          einsetzen}.
+
+    \item Anschließend würde man die Netzfunktion in die Fehlerfunktion
+          einsetzen.
+
+    \item Danach müssten die Richtungsableitungen bzw. \textbf{partiellen Ableitungen
+          nach allen Gewichten} gebildet werden.
+
+    \item Bei vielen Schichten und Gewichten wird dieser Weg schnell
+          \textbf{unübersichtlich}.
+\end{itemize}
+
+\column{0.48\textwidth}
+\footnotesize
+\begin{blockC3}{\footnotesize Einsetzen in die Fehlerfunktion}
+\[
+\begin{aligned}
+C
+&=
+\sum_{(x_i,y_i)\in D}
+\Bigl(
+W^{(3)}
+\operatorname{sig}\bigl(
+W^{(2)}
+\operatorname{sig}(W^{(1)}x_i)
+\bigr)
+\\
+&\hspace{2.2cm}
+- y_i
+\Bigr)^2
+\end{aligned}
+\]
+\end{blockC3}
+
+\vspace{0.3cm}
+
+\begin{blockC4}{\footnotesize Gesuchte Ableitungen}
+\[
+    \frac{\partial C}{\partial w_{1,1}^{(1)}},
+    \frac{\partial C}{\partial w_{1,2}^{(1)}},
+    \dots,
+    \frac{\partial C}{\partial w_{1,4}^{(3)}},
+\]
+\end{blockC4}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Problem: Verkettete Funktionen}
+
+\begin{columns}
+\column{0.5\textwidth}
+
+\begin{itemize}
+    \item Die Netzfunktion besteht aus vielen \textbf{verketteten Funktionen}.
+
+    \item Jede Schicht nutzt die Ausgabe der vorherigen Schicht als Eingabe.
+
+    \item Deshalb reicht eine einfache Ableitung nicht aus.
+
+    \item Stattdessen muss die \textbf{Kettenregel} mehrfach angewendet werden.
+
+    \item Dabei unterscheidet man jeweils zwischen äußerer und innerer
+          Ableitung.
+\end{itemize}
+
+\column{0.45\textwidth}
+
+\begin{blockC1}{Verkettung im Netz}
+\[
+\mathbf{x}
+\rightarrow
+W^{(1)}\mathbf{x}
+\rightarrow
+\operatorname{sig}(W^{(1)}\mathbf{x})
+\]
+\[
+\rightarrow W^{(2)}(\cdot)\mathbf{x}
+\rightarrow
+\dots
+\rightarrow
+\hat{y}
+\]
+\end{blockC1}
+
+\vspace{0.3cm}
+
+\begin{blockC1}{Kettenregel}
+\[
+    \frac{\partial C}{\partial w}
+    =
+    \frac{\partial C}{\partial \hat{y}}
+    \cdot
+    \frac{\partial \hat{y}}{\partial w}
+\]
+\[
+\text{äußere Ableitung}
+\cdot
+\text{innere Ableitung}
+\]
+\end{blockC1}
+
+\end{columns}
+
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Idee der Backpropagation}
+\footnotesize
+\begin{columns}
+\column{0.52\textwidth}
+
+\begin{itemize}
+    \item \textbf{Backpropagation} berechnet die vielen Anwendungen der
+          Kettenregel systematisch.
+
+    \item Zuerst wird die Eingabe vorwärts durch das Netz geleitet.
+
+    \item Danach wird der Fehler \textbf{rückwärts durch das Netz propagiert}.
+
+    \item Für jede Schicht wird bestimmt, welchen \textbf{Anteil ihre Gewichte} am
+          \textbf{Gesamtfehler} haben.
+
+    \item Dadurch erhält man effizient alle Ableitungen für den
+          Gradientenabstieg.
+\end{itemize}
+
+\column{0.45\textwidth}
+
+\begin{block}{\footnotesize Vorwärtsrechnung}
+\[
+    \mathbf{x}
+    \longrightarrow
+    \hat{y}
+    \longrightarrow
+    C
+\]
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{blockC2}{\footnotesize Rückwärtsrechnung}
+\[
+    C
+    \longrightarrow
+    W^{(3)}
+    \longrightarrow
+    W^{(2)}
+    \longrightarrow
+    W^{(1)}
+\]
+\end{blockC2}
+
+\vspace{0.3cm}
+
+\begin{block}{\footnotesize Ergebnis}
+\[
+    \frac{\partial C}{\partial W^{(1)}},
+    \quad
+    \frac{\partial C}{\partial W^{(2)}},
+    \quad
+    \frac{\partial C}{\partial W^{(3)}}
+\]
+\end{block}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Backpropagation als effiziente Kettenregel}
+\footnotesize
+\begin{columns}
+\column{0.6\textwidth}
+
+\begin{itemize}
+      
+    \item Der direkte Weg wäre:
+          \textbf{einsetzen, ausmultiplizieren, nach allen Gewichten ableiten}.
+
+    \item Das ist bei tiefen Netzen sehr aufwendig.
+
+    \item Backpropagation nutzt die Struktur des Netzes aus.
+
+    \item \textbf{Zwischenergebnisse} aus der Vorwärtsrechnung werden gespeichert.
+
+    \item In der \textbf{Rückwärtsrechnung} werden daraus \textbf{effizient die Ableitungen
+          berechnet}.
+\end{itemize}
+
+\column{0.35\textwidth}
+
+\begin{blockC1}{\footnotesize Kernidee}
+Nicht jede Ableitung wird vollständig neu berechnet.
+
+\vspace{0.3cm}
+
+Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
+\end{blockC1}
+
+\vspace{0.3cm}
+
+\begin{block}{\footnotesize Für den Gradientenabstieg}
+\[
+    W^{(k)}
+    \leftarrow
+    W^{(k)}
+    -
+    \alpha
+    \frac{\partial C}{\partial W^{(k)}}
+\]
+\end{block}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Wie funktioniert Backpropagation konkret?}
+
+\begin{columns}
+
+\column{0.50\textwidth}
+
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=gray!20, draw=gray!55,
+                very thick, minimum size=14pt, inner sep=0pt, text=gray!70},
+  bias/.style={circle, fill=gray!15, draw=gray!50,
+               very thick, minimum size=14pt, inner sep=0pt, text=gray!70},
+  hidden/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+                 very thick, minimum size=17pt, inner sep=0pt,
+                 text=white, font=\scriptsize\bfseries},
+  outp/.style={circle, fill=gray!20, draw=gray!55,
+               very thick, minimum size=14pt, inner sep=0pt, text=gray!70},
+  inactive/.style={->, draw=gray!45, line width=0.6pt},
+  active/.style={->, draw=PrimaryColor, line width=0.9pt},
+  focus/.style={->, draw=AccentColor, very thick},
+  lab/.style={font=\scriptsize},
+  smalllab/.style={font=\tiny, fill=white, inner sep=1pt}
+]
+
+% Schichttitel
+\node[font=\scriptsize\bfseries, align=center, text=gray!70] at (0,6.0) {Input\\Layer};
+\node[font=\scriptsize\bfseries, align=center] at (2.6,6.0) {Hidden\\Layer 1};
+\node[font=\scriptsize\bfseries, align=center] at (5.2,6.0) {Hidden\\Layer 2};
+\node[font=\scriptsize\bfseries, align=center, text=gray!70] at (7.8,6.0) {Output\\Layer};
+
+% Input Layer ausgegraut
+\node[input] (x1) at (0,4.6) {};
+\node[input] (x2) at (0,2.8) {};
+\node[bias]  (b1) at (0,1.0) {$1$};
+
+\node[font=\scriptsize, left, text=gray!70] at (-0.45,4.6) {$x_1$};
+\node[font=\scriptsize, left, text=gray!70] at (-0.45,2.8) {$x_2$};
+
+% Hidden Layer 1 nummeriert
+\node[hidden] (a1) at (2.6,4.6) {$1$};
+\node[hidden] (a2) at (2.6,2.8) {$2$};
+\node[hidden] (a3) at (2.6,1.0) {$3$};
+
+% Hidden Layer 2 nummeriert
+\node[hidden] (c1) at (5.2,5.2) {$1$};
+\node[hidden] (c2) at (5.2,3.6) {$2$};
+\node[hidden] (c3) at (5.2,2.0) {$3$};
+\node[hidden] (c4) at (5.2,0.4) {$4$};
+
+% Output Layer ausgegraut
+\node[outp] (y) at (7.8,2.8) {};
+\node[font=\scriptsize, right, text=gray!70] at (8.25,2.8) {$\hat{y}$};
+
+% Ausgegraute Kanten Input -> Hidden 1 ohne Gewichtsbeschriftung
+\foreach \i in {x1,x2,b1}{
+  \foreach \j in {a1,a2,a3}{
+    \draw[inactive] (\i) -- (\j);
+  }
+}
+
+% Aktive Kanten Hidden 1 -> Hidden 2
+\foreach \i in {a1,a2,a3}{
+  \foreach \j in {c1,c2,c3,c4}{
+    \draw[active] (\i) -- (\j);
+  }
+}
+
+% Beispielhaft fokussierte Kante:
+% w_{i,j}: Gewicht von Knoten j zu Knoten i
+\draw[focus] (a2) -- (c2)
+  node[smalllab, pos=0.55, above] {$w_{i,j}$};
+
+% Beschriftung der beiden beteiligten Neuronen
+\node[lab, left=0.08cm of a2] {$o_j$};
+\node[lab, right=0.08cm of c2] {$\delta_i$};
+
+% Ausgegraute Kanten Hidden 2 -> Output ohne Gewichtsbeschriftung
+\foreach \i in {c1,c2,c3,c4}{
+  \draw[inactive] (\i) -- (y);
+}
+
+% Rücklauf des Fehlersignals andeuten
+\draw[<-, draw=AccentColor, very thick, dashed]
+  (c2.east) -- ++(1.05,0)
+  node[midway, above, font=\tiny] {Fehlersignal};
+
+\end{tikzpicture}%
+}
+
+\vspace{0.15cm}
+{\scriptsize Beispiel: $w_{i,j}$ ist das Gewicht von Knoten $j$ zu Knoten $i$.}
+
+\column{0.50\textwidth}
+\footnotesize
+\begin{itemize}
+    \item Backpropagation berechnet den \textbf{Einfluss jedes Neurons}
+          auf den Gesamtfehler.
+
+    \item Dazu werden Zwischenergebnisse der nächsten Schicht als
+          \textbf{Fehlersignal} zurückgegeben.
+
+    \item Die Veränderung des Gewichts von Neuron $j$ zu Neuron $i$ lautet:
+          \[
+              \Delta w_{i,j}
+              =
+              -\alpha
+              \frac{\partial C}{\partial w_{i,j}}
+              =
+              -\alpha\,\delta_i\cdot o_j
+          \]
+
+    \item $\delta_i$ ist das \textbf{Fehlersignal} des Neurons $i$.
+
+    \item $o_j$ ist die \textbf{Ist-Ausgabe} des Neurons $j$.
+
+    \item $\alpha$ ist die \textbf{Lernrate} des Gradientenabstiegs.
+\end{itemize}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{Backpropagation: Berechnung der Fehlersignale}
+\footnotesize
+\begin{columns}
+
+\column{0.4\textwidth}
+
+\begin{itemize}
+    \item Bei der Berechnung des Fehlersignals $\delta_j$ unterscheidet man,
+          ob $j$ ein \textbf{Neuron der Ausgabeschicht} ist oder nicht.
+
+    \item Für ein Ausgabeneuron kann der Fehler direkt mit dem Soll-Wert $y$
+          verglichen werden.
+
+    \item Für ein verstecktes Neuron wird das Fehlersignal aus der
+          \textbf{nachfolgenden Schicht} zurückgerechnet.
+
+    \item Genau diese rückwärts gerichtete Berechnung ist die Grundidee der
+          \textbf{Backpropagation}.
+\end{itemize}
+
+\column{0.60\textwidth}
+
+\begin{block}{\footnotesize Fehlersignal}
+
+\noindent\makebox[\linewidth][c]{%
+$\displaystyle
+\delta_j =
+\begin{cases}
+\varphi'(\mathrm{net}_j)\,(o_j-y),
+& \text{falls } j \text{ Ausgabeneuron ist}, \\[0.4cm]
+\varphi'(\mathrm{net}_j)
+\displaystyle\sum_k \delta_k\,w_{k,j},
+& \text{sonst.}
+\end{cases}
+$%
+}
+
+\end{block}
+
+\begin{blockC2}{\footnotesize Bedeutung}
+\begin{itemize}
+    \item $\delta_j$: Fehlersignal von Neuron $j$
+    \item $o_j$: Ausgabe von Neuron $j$
+    \item $y$: gewünschte Ausgabe
+    \item $\mathrm{net}_j$: gewichtete Summe der Eingänge von Neuron $j$: $\mathrm{net}_j = \sum_i w_{j,i}\,o_i$
+              
+    \item $\varphi'(\mathrm{net}_j)$: Ableitung der Aktivierungsfunktion
+    \item $w_{k,j}$: Gewicht von Neuron $j$ zu Neuron $k$
+\end{itemize}
+\end{blockC2}
+\end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+\setbeamertemplate{background canvas}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[step=0.5cm,gray!35,very thin]
+      (current page.south west) grid (current page.north east);
+  \end{tikzpicture}
+}
+
+%=======================================================================
+% Frame 1: Aufgabe
+%=======================================================================
+\begin{frame}{Backpropagation: Übung}
+\footnotesize
+
+%================= Overlay 1: Aufgabe =================
+\only<1>{
+\begin{columns}
+
+\column{0.48\textwidth}
+
+Gegeben ist ein kleines neuronales Netz mit der
+\textbf{Identitätsfunktion} als Aktivierung:
+\[
+  \varphi(x)=x
+  \qquad\Rightarrow\qquad
+  \varphi'(x)=1.
+\]
+
+Für das Trainingsbeispiel gilt:
+\[
+  x_1=1,\qquad x_2=2,\qquad y=1.
+\]
+
+Die Lernrate sei:
+\[
+  \alpha=0{,}1.
+\]
+
+Berechnen Sie:
+
+\begin{enumerate}
+  \item die Forward Propagation,
+  \item die Fehlersignale $\delta$,
+  \item die Gewichtsänderungen $\Delta w$.
+\end{enumerate}
+
+\column{0.48\textwidth}
+
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  inp/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+              very thick, minimum size=18pt, inner sep=0pt, text=white},
+  hid/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+              very thick, minimum size=20pt, inner sep=0pt, text=white},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=20pt, inner sep=0pt, text=white},
+  wlab/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+
+% Knoten
+\node[inp] (x1) at (0,2.0) {$x_1$};
+\node[inp] (x2) at (0,0.0) {$x_2$};
+
+\node[hid] (h) at (3.0,1.0) {$h$};
+
+\node[outp] (o) at (6.0,1.0) {$\hat{y}$};
+
+% Kanten
+\draw[->, very thick] (x1) -- (h)
+  node[wlab, above, pos=0.55] {$w_{h,1}=0{,}5$};
+
+\draw[->, very thick] (x2) -- (h)
+  node[wlab, below, pos=0.55] {$w_{h,2}=-0{,}5$};
+
+\draw[->, very thick] (h) -- (o)
+  node[wlab, above, pos=0.55] {$w_{o,h}=2$};
+
+% Werte
+\node[font=\scriptsize, left=0.2cm of x1] {$1$};
+\node[font=\scriptsize, left=0.2cm of x2] {$2$};
+
+\node[font=\scriptsize, below=0.35cm of h] {$o_h=\varphi(\mathrm{net}_h)$};
+\node[font=\scriptsize, below=0.35cm of o] {$o_o=\hat{y}$};
+
+\end{tikzpicture}%
+}
+
+\vspace{0.3cm}
+
+{\scriptsize
+Hinweis:
+\[
+  \Delta w_{i,j}
+  =
+  -\alpha\,\delta_i\,o_j
+\]
+}
+
+\end{columns}
+}
+
+%================= Overlay 2: leer (Karo) =================
+\only<2>{}
+
+\end{frame}
+
+
+%=======================================================================
+% Frame 2: Lösung 1 - Forward Propagation
+%=======================================================================
+\begin{frame}{Backpropagation: Lösung 1 -- Forward Propagation}
+\footnotesize
+
+\begin{columns}
+
+\column{0.48\textwidth}
+
+\textbf{Verstecktes Neuron}
+
+\[
+\begin{aligned}
+\mathrm{net}_h
+&=
+w_{h,1}x_1+w_{h,2}x_2 \\[0.1cm]
+&=
+0{,}5\cdot 1 + (-0{,}5)\cdot 2 \\[0.1cm]
+&=
+0{,}5 - 1 \\[0.1cm]
+&=
+-0{,}5
+\end{aligned}
+\]
+
+Da $\varphi(x)=x$ gilt:
+\[
+  o_h=\varphi(\mathrm{net}_h)=-0{,}5.
+\]
+
+\column{0.48\textwidth}
+
+\textbf{Ausgabeneuron}
+
+\[
+\begin{aligned}
+\mathrm{net}_o
+&=
+w_{o,h}o_h \\[0.1cm]
+&=
+2\cdot(-0{,}5) \\[0.1cm]
+&=
+-1
+\end{aligned}
+\]
+
+Damit ist:
+\[
+  \hat{y}=o_o=-1.
+\]
+
+Der quadratische Fehler beträgt:
+\[
+  C=(\hat{y}-y)^2=(-1-1)^2=4.
+\]
+
+\end{columns}
+
+\end{frame}
+
+
+%=======================================================================
+% Frame 3: Lösung 2 - Backpropagation / Fehlersignale
+%=======================================================================
+\begin{frame}{Backpropagation: Lösung 2 -- Fehlersignale}
+\footnotesize
+
+\begin{columns}
+
+\column{0.48\textwidth}
+
+\textbf{Ausgabeneuron}
+
+Für das Ausgabeneuron gilt:
+\[
+  \delta_o
+  =
+  \varphi'(\mathrm{net}_o)(o_o-y)
+\]
+
+Einsetzen liefert:
+\[
+\begin{aligned}
+\delta_o
+&=
+1\cdot(-1-1) \\[0.1cm]
+&=
+-2.
+\end{aligned}
+\]
+
+Das Ausgabeneuron trägt also mit dem Fehlersignal
+\[
+  \delta_o=-2
+\]
+zum Gesamtfehler bei.
+
+\column{0.48\textwidth}
+
+\textbf{Verstecktes Neuron}
+
+Für ein verstecktes Neuron wird das Fehlersignal aus der nächsten Schicht
+zurückgerechnet:
+\[
+  \delta_h
+  =
+  \varphi'(\mathrm{net}_h)
+  \sum_k \delta_k w_{k,h}.
+\]
+
+Da es hier nur ein Ausgabeneuron gibt:
+\[
+\begin{aligned}
+\delta_h
+&=
+1\cdot \delta_o w_{o,h} \\[0.1cm]
+&=
+(-2)\cdot 2 \\[0.1cm]
+&=
+-4.
+\end{aligned}
+\]
+
+Also:
+\[
+  \delta_h=-4.
+\]
+
+\end{columns}
+
+\end{frame}
+
+
+%=======================================================================
+% Frame 4: Lösung 3 - Gewichtsänderungen
+%=======================================================================
+\begin{frame}{Backpropagation: Lösung 3 -- Gewichtsänderungen}
+\footnotesize
+
+\begin{columns}
+
+\column{0.48\textwidth}
+
+\textbf{Regel}
+
+Die Gewichtsänderung lautet:
+\[
+  \Delta w_{i,j}
+  =
+  -\alpha\,\delta_i\,o_j.
+\]
+
+Für das Gewicht vom versteckten Neuron zum Ausgabeneuron:
+\[
+\begin{aligned}
+\Delta w_{o,h}
+&=
+-\alpha\delta_o o_h \\[0.1cm]
+&=
+-0{,}1\cdot(-2)\cdot(-0{,}5) \\[0.1cm]
+&=
+-0{,}1.
+\end{aligned}
+\]
+
+Damit:
+\[
+  w_{o,h}^{\,neu}
+  =
+  2 + (-0{,}1)
+  =
+  1{,}9.
+\]
+
+\column{0.48\textwidth}
+
+\textbf{Gewichte zur versteckten Schicht}
+
+Für $w_{h,1}$:
+\[
+\begin{aligned}
+\Delta w_{h,1}
+&=
+-\alpha\delta_h x_1 \\[0.1cm]
+&=
+-0{,}1\cdot(-4)\cdot 1 \\[0.1cm]
+&=
+0{,}4.
+\end{aligned}
+\]
+
+Für $w_{h,2}$:
+\[
+\begin{aligned}
+\Delta w_{h,2}
+&=
+-\alpha\delta_h x_2 \\[0.1cm]
+&=
+-0{,}1\cdot(-4)\cdot 2 \\[0.1cm]
+&=
+0{,}8.
+\end{aligned}
+\]
+
+Damit:
+\[
+  w_{h,1}^{\,neu}=0{,}5+0{,}4=0{,}9
+\]
+\[
+  w_{h,2}^{\,neu}=-0{,}5+0{,}8=0{,}3
+\]
+
+\end{columns}
+
+\end{frame}
+
+}
 
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
+
