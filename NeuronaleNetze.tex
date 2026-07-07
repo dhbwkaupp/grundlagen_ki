@@ -2153,6 +2153,34 @@ $%
 \end{frame}
 
 
+\begin{frame}{Zusammenspiel: Backpropagation \& Gradient Descent}
+\par\medskip
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Backpropagation}
+\begin{itemize}
+\item Effiziente Berechnung der Gradienten
+\item Nutzung der Kettenregel
+\item Rückwärts durch das Netzwerk
+\item Liefert: $\frac{\partial C}{\partial w}$
+\end{itemize}
+
+\column{0.48\textwidth}
+\textbf{Gradient Descent}
+\begin{itemize}
+\item Verwendet Gradienten zur Optimierung
+\item Aktualisiert Gewichte iterativ
+\item Ziel: Minimierung der Loss-Funktion
+\item Update: $w := w - \alpha \cdot \nabla C$
+\end{itemize}
+\end{columns}
+
+\vspace{1em}
+\begin{block}{Merksatz}
+Backpropagation liefert die Gradienten. Gradient Descent nutzt sie, um das Netz zu trainieren.
+\end{block}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 {
 \setbeamertemplate{background canvas}{
@@ -2481,7 +2509,136 @@ Damit:
 
 }
 
-
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
+
+
+\begin{frame}[fragile]{MLP: Daten skalieren}
+\begin{columns}
+\column{0.55\textwidth}
+Ein \textbf{MLP} arbeitet mit \textbf{skalierten} Daten besser. Der
+\texttt{StandardScaler} normiert die Merkmale auf Mittelwert $0$ und
+Varianz $1$:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+\end{minted}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Erinnerung: Warum skalieren?}
+\begin{itemize}
+  \item Merkmale mit großen Werten würden das Training sonst
+        \textbf{dominieren}.
+  \item Der Scaler wird nur auf den \textbf{Trainingsdaten} gefittet.
+  \item Test- und Trainingsdaten werden \textbf{gleich} transformiert.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{Multilayer-Perceptron.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{MLP: Netz aufsetzen und trainieren}
+\begin{columns}
+\column{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.neural_network import MLPClassifier
+model = MLPClassifier(
+      solver='lbfgs',
+      max_iter=20000, alpha=1,
+      hidden_layer_sizes=(30,20,10),
+      random_state=0)
+model.fit(X_train, y_train)
+print(model.score(X_test, y_test))
+\end{minted}
+
+\column{0.4\textwidth}
+\footnotesize
+\begin{blockC1}{\footnotesize Parameter des MLP}
+\begin{itemize}
+  \item \texttt{solver}: \textbf{Optimierungsverfahren} für die Gewichte.
+  \item \texttt{max\_iter}: maximale \textbf{Iterationszahl}.
+  \item \texttt{alpha}: Stärke der \textbf{Regularisierung}.
+  \item \texttt{hidden\_layer\_sizes}: \textbf{Größe} der Hidden-Layer, hier
+        $30$, $20$, $10$.
+  \item \texttt{random\_state}: feste \textbf{Initialisierung}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{Multilayer-Perceptron.ipynb}
+\end{frame}
+
+\begin{frame}{MLP: Wirkung des Parameters $\alpha$}
+\footnotesize
+Je \textbf{größer} $\alpha$, desto stärker passt sich das Netz dem
+\textbf{allgemeinen Trend} an (stärkere Regularisierung). Ein kleines
+$\alpha$ erlaubt eine \textbf{komplexere} Entscheidungsgrenze.
+
+\vspace{0.6em}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\textbf{$\alpha = 1$}\\[2pt]
+\includesvg[width=\linewidth]{figures/scatter_MLP_train_alpha_1.svg}
+
+\column{0.48\textwidth}
+\centering
+\textbf{$\alpha = 0{,}003$}\\[2pt]
+\includesvg[width=\linewidth]{figures/scatter_MLP_train_alpha_0003.svg}
+\end{columns}
+\source{Multilayer-Perceptron.ipynb}
+\end{frame}
+
+  \begin{frame}{Neuronale Netze: Toolkits für neuronale Netze}
+\begin{columns}
+\column{0.25\textwidth}
+\centering
+\includesvg[width=0.75\linewidth]{figures/Tensorflow_logo.svg}
+
+\vspace{1.2em}
+\includesvg[width=0.75\linewidth]{figures/Keras_logo.svg}
+
+\column{0.75\textwidth}
+\begin{itemize}
+  \item Die Implementierung neuronaler Netze in \textbf{scikit-learn} ist
+        relativ einfach.
+  \item Für komplexere Netze gibt es die High-Level-Bibliotheken
+        \textbf{TensorFlow} und \textbf{Keras}.
+  \item \textbf{Keras} ist inzwischen \textbf{Teil von TensorFlow}.
+  \item Diese Bibliotheken sind speziell für das Training \textbf{komplexer}
+        Netze optimiert.
+  \item Sie nutzen ausgiebig die Rechenleistung spezieller Grafikkarten
+        (\textbf{GPUs}).
+\end{itemize}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Übung: Multi-Layer Perceptron für Iris und Heart Disease}
+\begin{columns}
+\column{0.60\textwidth}
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils ein \textbf{Multi-Layer
+Perceptron} anwenden:
+
+\begin{itemize}
+  \item auf den \textbf{Iris-Datensatz},
+  \item auf den \textbf{UCI Heart Disease} Datensatz.
+\end{itemize}
+
+\vspace{0.4em}
+Variieren Sie dabei die \textbf{Netzstruktur} (Anzahl und Größe der
+Hidden-Layer) und vergleichen Sie die Ergebnisse.
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Lösung: MLP Iris.ipynb, HeartDisease MLP.ipynb}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
+
+
 
