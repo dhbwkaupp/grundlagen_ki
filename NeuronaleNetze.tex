@@ -1378,7 +1378,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
   \item Deshalb werden \textbf{alle Gewichte gemeinsam} optimiert.
   \item Für jede Element des Trainingsdatensatzes $D$ wird die Netzausgabe $\hat{y}$ mit dem \textbf{Soll-Wert} $y_i$ verglichen.
   \item Über alle Trainingsbeispiele werden die Fehler \textbf{quadriert und aufsummiert}.
-  \item Das Ergebnis ist die \textbf{quadratische Fehlersumme} $C$.
+  \item Das Ergebnis ist die \textbf{Loss Function} (\emph{Verlustfunktion} $L$).
 \end{itemize}
 
 
@@ -1395,7 +1395,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 ]
 % Formel oben rechts
 \node[font=\small] at (5.0,5.4)
-  {$C = \sum_{y_i \in D} (\hat{y}_i - y_i)^2$};
+  {$L = \sum_{y_i \in D} (\hat{y}_i - y_i)^2$};
 % Input
 \node[input] (x1) at (0,4.2) {};
 \node[input] (x2) at (0,2.6) {};
@@ -1428,7 +1428,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \includesvg[width=\linewidth]{figures/gradient_2D.svg}
 
 \vspace{0.2cm}
-{\scriptsize Beispielhafte Funktion des Gesamtfehlers $C$ in Abhängigkeit von einem einzigen Gewicht.}
+{\scriptsize Beispielhafte Funktion der Loss Function $L$ in Abhängigkeit von einem einzigen Gewicht.}
 
 \column{0.55\textwidth}
 \footnotesize
@@ -1437,11 +1437,11 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
     
     \item Ziel ist es, die Gewichte so zu bestimmen, dass der \textbf{Gesamtfehler} minimal wird:
     \[
-      C = \sum_{(x_i,y_i)\in D}
+      L = \sum_{(x_i,y_i)\in D}
       (\hat{y}_i-y_i)^2
     \]
 
-    \item Dazu wird die Steigung der Fehlerfunktion ausgewertet.
+    \item Dazu wird die Steigung der Loss Function ausgewertet.
 
     \item Die Gewichte werden schrittweise in Richtung des \textbf{stärksten Fehlerabfalls} verändert.
 
@@ -1537,7 +1537,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
     \item Beim Training sucht man Gewichte, die den \textbf{Gesamtfehler}
           minimieren:
           \[
-              C =
+              L =
               \sum_{(x_i,y_i)\in D}
               \left(\hat{y}_i - y_i\right)^2
           \]
@@ -1621,14 +1621,14 @@ Dadurch wird das Training schneller, der Gradient aber nur
 
 % Berechnungen rechts
 \node[calc, right=0.75cm of b1] (c1) {
-    $C_{B_1}
+    $L_{B_1}
     =
     \displaystyle\sum_{(x_i,y_i)\in B_1}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
 \node[calc, right=0.75cm of b2] (c2) {
-    $C_{B_2}
+    $L_{B_2}
     =
     \displaystyle\sum_{(x_i,y_i)\in B_2}
     \left(\hat{y}_i-y_i\right)^2$
@@ -1639,7 +1639,7 @@ Dadurch wird das Training schneller, der Gradient aber nur
 };
 
 \node[calc, right=0.75cm of bn] (cn) {
-    $C_{B_n}
+    $L_{B_n}
     =
     \displaystyle\sum_{(x_i,y_i)\in B_n}
     \left(\hat{y}_i-y_i\right)^2$
@@ -1680,15 +1680,15 @@ Dadurch wird das Training schneller, der Gradient aber nur
           Gesamtfehler kleiner wird.
 
     \item Für den Gradientenabstieg benötigt man den Gradienten der
-          Fehlerfunktion:
+          loss function:
           \[
-              \nabla C
+              \nabla L
           \]
 
-    \item Dazu muss die Fehlerfunktion nach \textbf{allen Gewichten}
+    \item Dazu muss die Loss Function nach \textbf{allen Gewichten}
           abgeleitet werden.
 
-    \item Jede Ableitung beschreibt, wie stark ein Gewicht zum Fehler beiträgt.
+    \item Jede Ableitung beschreibt, wie stark ein Gewicht zum Verlust beiträgt.
 \end{itemize}
 
 \column{0.40\textwidth}
@@ -1696,14 +1696,14 @@ Dadurch wird das Training schneller, der Gradient aber nur
 \begin{blockC1}{Ziel}
 Für jedes Gewicht wird benötigt:
 \[
-    \frac{\partial C}{\partial w}
+    \frac{\partial L}{\partial w}
 \]
 
 \vspace{0.3cm}
 
 Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \[
-    w \leftarrow w - \alpha \frac{\partial C}{\partial w}
+    w \leftarrow w - \alpha \frac{\partial L}{\partial w}
 \]
 \end{blockC1}
 
@@ -1719,20 +1719,20 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
     \item Für ein Trainingsbeispiel $(x_i,y_i)\in D$ erzeugt das Netz eine
           Ausgabe $\hat{y}_i$.
 
-    \item Die Fehlerfunktion summiert die Abweichungen über alle
+    \item Die Loss Function summiert die Abweichungen über alle
           Trainingsbeispiele.
 
-    \item Da $\hat{y}_i$ von den Gewichten abhängt, ist auch $C$ eine Funktion
+    \item Da $\hat{y}_i$ von den Gewichten abhängt, ist auch $L$ eine Funktion
           aller Gewichte.
 
-    \item Gesucht sind Gewichte, für die $C$ minimal wird.
+    \item Gesucht sind Gewichte, für die $L$ minimal wird.
 \end{itemize}
 
 \column{0.45\textwidth}
 
 \begin{block}{Gesamtfehler}
 \[
-    C =
+    L =
     \sum_{(x_i,y_i)\in D}
     \left(\hat{y}_i-y_i\right)^2
 \]
@@ -1775,10 +1775,10 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 
 \column{0.48\textwidth}
 \footnotesize
-\begin{blockC3}{\footnotesize Einsetzen in die Fehlerfunktion}
+\begin{blockC3}{\footnotesize Einsetzen in die Loss Function}
 \[
 \begin{aligned}
-C
+L
 &=
 \sum_{(x_i,y_i)\in D}
 \Bigl(
@@ -1799,10 +1799,10 @@ W^{(2)}
 
 \begin{blockC4}{\footnotesize Gesuchte Ableitungen}
 \[
-    \frac{\partial C}{\partial w_{1,1}^{(1)}},
-    \frac{\partial C}{\partial w_{1,2}^{(1)}},
+    \frac{\partial L}{\partial w_{1,1}^{(1)}},
+    \frac{\partial L}{\partial w_{1,2}^{(1)}},
     \dots,
-    \frac{\partial C}{\partial w_{1,4}^{(3)}},
+    \frac{\partial L}{\partial w_{1,4}^{(3)}},
 \]
 \end{blockC4}
 
@@ -1851,9 +1851,9 @@ W^{(1)}\mathbf{x}
 
 \begin{blockC1}{Kettenregel}
 \[
-    \frac{\partial C}{\partial w}
+    \frac{\partial L}{\partial w}
     =
-    \frac{\partial C}{\partial \hat{y}}
+    \frac{\partial L}{\partial \hat{y}}
     \cdot
     \frac{\partial \hat{y}}{\partial w}
 \]
@@ -1897,7 +1897,7 @@ W^{(1)}\mathbf{x}
     \longrightarrow
     \hat{y}
     \longrightarrow
-    C
+    L
 \]
 \end{block}
 
@@ -1905,7 +1905,7 @@ W^{(1)}\mathbf{x}
 
 \begin{blockC2}{\footnotesize Rückwärtsrechnung}
 \[
-    C
+    L
     \longrightarrow
     W^{(3)}
     \longrightarrow
@@ -1919,11 +1919,11 @@ W^{(1)}\mathbf{x}
 
 \begin{block}{\footnotesize Ergebnis}
 \[
-    \frac{\partial C}{\partial W^{(1)}},
+    \frac{\partial L}{\partial W^{(1)}},
     \quad
-    \frac{\partial C}{\partial W^{(2)}},
+    \frac{\partial L}{\partial W^{(2)}},
     \quad
-    \frac{\partial C}{\partial W^{(3)}}
+    \frac{\partial L}{\partial W^{(3)}}
 \]
 \end{block}
 
@@ -1970,7 +1970,7 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
     W^{(k)}
     -
     \alpha
-    \frac{\partial C}{\partial W^{(k)}}
+    \frac{\partial L}{\partial W^{(k)}}
 \]
 \end{block}
 \end{columns}
@@ -2084,7 +2084,7 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
               \Delta w_{i,j}
               =
               -\alpha
-              \frac{\partial C}{\partial w_{i,j}}
+              \frac{\partial L}{\partial w_{i,j}}
               =
               -\alpha\,\delta_i\cdot o_j
           \]
@@ -2162,7 +2162,7 @@ $%
 \item Effiziente Berechnung der Gradienten
 \item Nutzung der Kettenregel
 \item Rückwärts durch das Netzwerk
-\item Liefert: $\frac{\partial C}{\partial w}$
+\item Liefert: $\frac{\partial L}{\partial w}$
 \end{itemize}
 
 \column{0.48\textwidth}
@@ -2170,8 +2170,8 @@ $%
 \begin{itemize}
 \item Verwendet Gradienten zur Optimierung
 \item Aktualisiert Gewichte iterativ
-\item Ziel: Minimierung der Loss-Funktion
-\item Update: $w := w - \alpha \cdot \nabla C$
+\item Ziel: Minimierung der Loss Function
+\item Update: $w := w - \alpha \cdot \nabla L$
 \end{itemize}
 \end{columns}
 
@@ -2344,7 +2344,7 @@ Damit ist:
 
 Der quadratische Fehler beträgt:
 \[
-  C=(\hat{y}-y)^2=(-1-1)^2=4.
+  L=(\hat{y}-y)^2=(-1-1)^2=4.
 \]
 
 \end{columns}
