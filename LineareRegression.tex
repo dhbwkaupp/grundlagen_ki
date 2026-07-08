@@ -1,5 +1,3 @@
-
-
 \makesectionpage[figures/quiz.png]{Lineare Regression}
 
 \begin{frame}{Lineare Regression}
@@ -929,6 +927,189 @@ A \mathbf{u} = \mathbf{y}
 \end{frame}
 
 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+\setbeamercolor{background canvas}{bg=AlertColor!10}
+
+% Exkurs: Differentialrechnung in mehreren Variablen
+% Hilfsmakros fuer die Grafiken (kollisionssicher benannt)
+\definecolor{SliceY}{HTML}{27AE60}
+\tikzset{pdproj/.style={x={(0.92cm,-0.16cm)},y={(0.5cm,0.34cm)},z={(0cm,0.82cm)}}}
+\newcommand{\pdbowlmesh}{%
+  \foreach \Y in {-2,-1.5,...,2}{\draw[DarkGrey!80,line width=0.25pt]
+    plot[domain=-2:2,samples=26,variable=\x](\x,\Y,{0.5*(\x*\x+\Y*\Y)});}%
+  \foreach \X in {-2,-1.5,...,2}{\draw[DarkGrey!80,line width=0.25pt]
+    plot[domain=-2:2,samples=26,variable=\y](\X,\y,{0.5*(\X*\X+\y*\y)});}}
+\newcommand{\pdbowlaxes}{%
+  \draw[TextColor,->,line width=0.8pt](-2.5,0,0)--(2.8,0,0)node[below=-1pt]{\scriptsize$x_1$};%
+  \draw[TextColor,->,line width=0.8pt](0,-2.5,0)--(0,2.8,0)node[right=-1pt]{\scriptsize$x_2$};%
+  \draw[TextColor,->,line width=0.8pt](0,0,0)--(0,0,4.4)node[above=-2pt]{\scriptsize$f(x_1,x_2)$};}
+
+
+  
+\definecolor{ududff}{rgb}{0.30196078431372547,0.30196078431372547,1.}
+  \begin{frame}{Einschub: Differentialrechnung in $\mathbb{R}^n$}
+\begin{columns}
+
+\column{0.55\textwidth}
+\begin{itemize}
+\item Eine reellwertige Funktion mehrerer Variablen ist eine Abbildung
+\[
+f: D \subseteq \mathbb{R}^n \to \mathbb{R}, \quad (x_1, \dots, x_n) \mapsto f(x_1, \dots, x_n)
+\]
+\item Definitionsbereich: $D \subseteq \mathbb{R}^n$
+\item Zielraum: $\mathbb{R}$
+\item Vektorschreibweise:
+\[
+\mathbf{x} = (x_1, \dots, x_n)^T
+\]
+\item Kurznotation:
+\[
+f(\mathbf{x}) \text{ statt } f(x_1, \dots, x_n)
+\]
+\end{itemize}
+
+\column{0.45\textwidth}
+\centering 
+\includegraphics[width=\linewidth]{figures/parabel_3D.png}
+
+\source{Gradienten.ggb}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Von einer zu mehreren Variablen}
+\begin{columns}
+\column{0.47\textwidth}
+\centering
+\textbf{Eine Variable:} $f(x)$
+
+\medskip
+
+\begin{tikzpicture}[>=latex,line cap=round,scale=0.9]
+  \draw[TextColor,->,line width=0.8pt](-0.3,0)--(4.0,0)node[below]{\scriptsize$x$};
+  \draw[TextColor,->,line width=0.8pt](0,-0.3)--(0,3.3)node[left]{\scriptsize$f(x)$};
+  \draw[PrimaryColor,line width=1.6pt]plot[domain=0.1:3.3,samples=50,variable=\x](\x,{0.35*\x*\x+0.3});
+  \filldraw[fill=AccentColor,draw=AccentTitle,line width=0.6pt](2,{0.35*4+0.3})circle(2.2pt);
+  \draw[ExampleColor,line width=1.3pt](0.7,{1.7-1.4*1.3})--(3.3,{1.7+1.4*1.3});
+\end{tikzpicture}
+
+\smallskip
+Ableitung = \textbf{Steigung der Tangente}
+
+\column{0.48\textwidth}
+\centering
+\textbf{Mehrere Variablen:} $f(x_1,x_2)$
+
+\medskip
+
+\begin{tikzpicture}[pdproj,>=latex,line cap=round,scale=0.72]
+  \pdbowlmesh \pdbowlaxes
+\end{tikzpicture}
+
+\smallskip
+Der Graph ist eine \textbf{Fläche} -- in welche Richtung ableiten?
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Partielle Ableitung: Grundidee}
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Idee:} Nur \textbf{eine} Variable verändern, die andere \textbf{festhalten}.
+
+\medskip
+
+\begin{itemize}
+\item Schnitt der Fläche in $x_1$-Richtung ($x_2$ fest)
+\item Es entsteht eine gewöhnliche Kurve
+\item Deren Steigung ist die \textbf{partielle Ableitung}
+\end{itemize}
+
+\medskip
+
+\[\frac{\partial f}{\partial x_1}\]
+
+\column{0.48\textwidth}
+\centering
+\begin{tikzpicture}[pdproj,>=latex,line cap=round,scale=0.9]
+  \pdbowlmesh
+  \fill[PrimaryColor!12](-2,1,0)--(2,1,0)--(2,1,{0.5*5})--(-2,1,{0.5*5})--cycle;
+  \draw[PrimaryColor!45,line width=0.3pt](-2,1,0)--(2,1,0)--(2,1,{0.5*5})--(-2,1,{0.5*5})--cycle;
+  \pdbowlaxes
+  \draw[PrimaryColor,line width=1.6pt]plot[domain=-2:2,samples=40,variable=\x](\x,1,{0.5*(\x*\x+1)});
+  \filldraw[fill=AccentColor,draw=AccentTitle,line width=0.6pt](1,1,{0.5*2})circle(2.4pt);
+  \draw[ExampleColor,line width=1.5pt](0.1,1,{1-0.9})--(1.9,1,{1+0.9});
+\end{tikzpicture}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Partielle Ableitung: Berechnung}
+    \small
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Regel:} Andere Variablen als \textbf{Konstante} behandeln, dann normal ableiten.
+
+\medskip
+
+\textbf{Beispiel:}
+\[f(x_1,x_2)=x_1^2+x_2^2\]
+Nach $x_1$ ableiten ($x_2$ konstant):
+\[\frac{\partial f}{\partial x_1}=2x_1\]
+Nach $x_2$ ableiten ($x_1$ konstant):
+\[\frac{\partial f}{\partial x_2}=2x_2\]
+
+\column{0.48\textwidth}
+\centering
+\begin{tikzpicture}[pdproj,>=latex,line cap=round,scale=0.8]
+  \pdbowlmesh \pdbowlaxes
+  \draw[PrimaryColor,line width=1.5pt]plot[domain=-2:2,samples=40,variable=\x](\x,1,{0.5*(\x*\x+1)});
+  \draw[ExampleColor,line width=1.4pt](0.1,1,{1-0.9})--(1.9,1,{1+0.9});
+  \draw[SliceY,line width=1.5pt]plot[domain=-2:2,samples=40,variable=\y](1,\y,{0.5*(1+\y*\y)});
+  \draw[ExampleColor,line width=1.4pt](1,0.1,{1-0.9})--(1,1.9,{1+0.9});
+  \filldraw[fill=AccentColor,draw=AccentTitle,line width=0.6pt](1,1,{0.5*2})circle(2.6pt);
+\end{tikzpicture}
+
+\smallskip
+{\footnotesize \textcolor{PrimaryColor}{$\frac{\partial f}{\partial x_1}$} und \textcolor{SliceY}{$\frac{\partial f}{\partial x_2}$} als zwei Steigungen}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Der Gradient}
+\small
+\begin{columns}
+\column{0.55\textwidth}
+Alle partiellen Ableitungen zusammen bilden den \textbf{Gradienten}:
+\[
+\nabla f = \begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\*[3pt]
+\frac{\partial f}{\partial x_2}
+\end{pmatrix}
+\]
+
+\medskip
+
+\begin{itemize}
+\item Der Gradient ist ein Vektor von Funktionen. In unserem Beispiel:
+$\nabla f = (2x_1, 2x_2)^T$
+\item Zeigt in Richtung des \textbf{steilsten Anstiegs}: In welche Richtung muss ich mich von einem Punkt $(x_1,x_2)\in \mathbb{R}^2$ bewegen, um den höchsten Zuwachs im Funktionswert zu haben?
+\item An \textbf{Extremstellen} gilt $\nabla f=\mathbf{0}$
+\end{itemize}
+
+\column{0.4\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/gradient_parabel}
+\footnotesize Gradienten von $f$ an verschiedenen Punkten
+
+\end{columns}
+\end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Minimierung der Fehlerfunktion}
 
 \begin{columns}
@@ -959,7 +1140,7 @@ E(\mathbf{u}) = \|A\mathbf{u} - \mathbf{y}\|^2
 
 \begin{block}{Gradient}
 \[
-\nabla_{\mathbf{u}} E(\mathbf{u}) = \frac{\partial E}{\partial \mathbf{u}} = 0
+\nabla E(\mathbf{u}) = \frac{\partial E}{\partial \mathbf{u}} = 0
 \]
 
 \medskip
@@ -1026,7 +1207,7 @@ E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
 
 \textbf{Ableitung:}
 \[
-\nabla_{\mathbf{u}} E(\mathbf{u}) 
+\nabla E(\mathbf{u}) 
 = 2 A^T (A\mathbf{u} - \mathbf{y})
 \]
 
@@ -1034,7 +1215,7 @@ E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
 
 \textbf{Null setzen:}
 \[
-\nabla_{\mathbf{u}} E(\mathbf{u}) = 0
+\nabla E(\mathbf{u}) = 0
 \quad \Rightarrow \quad
 2 A^T (A\mathbf{u} - \mathbf{y}) = 0
 \]
