@@ -1,0 +1,1254 @@
+\makesectionpage{Unüberwachtes Lernen}
+
+\makesubsectionpage{Abstandserhaltende Projektionen}
+
+\begin{frame}{Abstandserhaltende Projektionen}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item Oft möchte man \textbf{hochdimensionale} Daten visuell analysieren.
+  \item Interessant ist vor allem die \textbf{Verteilung} der Datenpunkte im
+        Raum.
+  \item Eine \textbf{abstandserhaltende Projektion} bildet Punkte aus einem
+        Ausgangsraum in einen Zielraum \textbf{geringerer Dimension} ab.
+  \item Dabei bleiben die \textbf{Abstände} in etwa erhalten: nahe Punkte
+        bleiben nah, ferne bleiben fern.
+\end{itemize}
+
+\column{0.35\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  pa/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=5pt, inner sep=0pt},
+  pb/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=5pt, inner sep=0pt}
+]
+% Ausgangsraum (3D angedeutet)
+\draw[gray!50] (0,2.6) -- (3,2.6) -- (3.8,3.3) -- (0.8,3.3) -- cycle;
+\draw[gray!50] (0,2.6) -- (0,4.0) -- (0.8,4.7) -- (0.8,3.3);
+\draw[gray!50] (3,2.6) -- (3,4.0) -- (3.8,4.7) -- (3.8,3.3);
+% Cluster A (blau, eng)
+\node[pa] at (0.8,3.6) {};
+\node[pa] at (1.2,3.8) {};
+\node[pa] at (1.2,3.3) {};
+% Cluster B (orange, entfernt)
+\node[pb] at (2.8,3.9) {};
+\node[pb] at (2.6,3.6) {};
+\node[pb] at (2.9,4.1) {};
+\node[pb] at (2.4,4.0) {};
+\node[font=\scriptsize\bfseries] at (1.5,4.5) {Ausgangsraum};
+
+% Projektionspfeil
+\draw[->, thick] (1.9,2.4) -- (1.9,1.7);
+\node[font=\scriptsize, right] at (2.0,2.05) {Projektion};
+
+% Zielraum (2D)
+\node[font=\scriptsize\bfseries] at (1.5,1.4) {Zielraum};
+\draw[thick] (0.2,-0.2) rectangle (3.4,1.2);
+% Cluster A (blau, eng)
+\node[pa] at (0.8,0.4) {};
+\node[pa] at (1.1,0.6) {};
+\node[pa] at (0.9,0.2) {};
+% Cluster B (orange, entfernt)
+\node[pb] at (2.7,0.7) {};
+\node[pb] at (3.0,0.4) {};
+\node[pb] at (2.8,0.9) {};
+\node[pb] at (2.5,0.5) {};
+\end{tikzpicture}}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Abstandserhaltende Projektionen: Beispiel}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Daten sollen aus der \textbf{Ebene} auf eine \textbf{Gerade}
+        projiziert werden.
+  \item Das ist eine \textbf{Dimensionsreduktion} von \textbf{2 auf 1}.
+  \item Ziel ist es, die \textbf{Nachbarschaftsbeziehungen} der Punkte zu
+        erhalten.
+  \item Getrennte Cluster bleiben auch nach der Projektion \textbf{getrennt}.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen (Ebene)
+\draw[thick, SecondaryTitle] (0,5.5) -- (0,2.0) -- (6.5,2.0);
+
+% gruenes Cluster (oben links)
+\node[gr] at (1.55,4.75) {};
+\node[gr] at (1.25,4.35) {};
+\node[gr] at (1.8,4.45) {};
+\node[gr] at (1.5,4.0) {};
+% magenta Cluster (mitte, unterhalb gruen)
+\node[ma] at (1.9,3.1) {};
+\node[ma] at (1.6,2.7) {};
+\node[ma] at (2.2,2.6) {};
+\node[ma] at (2.0,2.3) {};
+% blaues Cluster (oben rechts)
+\node[bl] at (4.65,4.95) {};
+\node[bl] at (4.3,4.5) {};
+\node[bl] at (4.95,4.5) {};
+\node[bl] at (4.6,4.1) {};
+
+% Zielgerade (1D)
+\draw[thick] (0,0) -- (6.5,0);
+% projizierte Cluster: alle drei getrennt
+\foreach \x in {0.6,1.0,1.3,1.7 } \node[gr] at (\x,0.25) {};
+\foreach \x in {2.5,2.8,3.2,3.6} \node[ma] at (\x,0.25) {};
+\foreach \x in {4.8, 5.1,5.6, 6.0} \node[bl] at (\x,0.25) {};
+
+% Projektionspfeile
+\draw[->, line width=1pt] (1.3,3.9) to[bend right=20] (1.2,0.55);
+\draw[->, line width=1pt] (2.5,2.4) to[bend left=15] (3.2,0.55);
+\draw[->, line width=1pt] (5.0,3.9) -- (5.2,0.55);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Abstandserhaltende Projektionen: Problem}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Eine \textbf{einfache Projektion} auf eine der Koordinatenachsen ist
+        nicht abstandserhaltend.
+  \item Cluster, die in der Ebene \textbf{getrennt} sind, können dabei
+        \textbf{überlappen}.
+  \item Die \textbf{Nachbarschaftsinformation} geht so verloren.
+  \item Hier fallen zwei Cluster
+        zusammen.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+   gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen (Ebene)
+\draw[thick, SecondaryTitle] (0,5.5) -- (0,2.0) -- (6.5,2.0);
+
+% gruenes Cluster (oben links)
+% gruenes Cluster (oben links)
+\node[gr] at (1.55,4.75) {};
+\node[gr] at (1.25,4.35) {};
+\node[gr] at (1.8,4.45) {};
+\node[gr] at (1.5,4.0) {};
+% magenta Cluster (mitte, unterhalb gruen)
+\node[ma] at (1.9,3.1) {};
+\node[ma] at (1.6,2.7) {};
+\node[ma] at (2.2,2.6) {};
+\node[ma] at (2.0,2.3) {};
+% blaues Cluster (oben rechts)
+\node[bl] at (4.65,4.95) {};
+\node[bl] at (4.3,4.5) {};
+\node[bl] at (4.95,4.5) {};
+\node[bl] at (4.6,4.1) {};
+
+% Zielgerade (1D)
+\draw[thick] (0,0) -- (6.5,0);
+% projizierte Cluster: gruen und magenta ueberlappen
+\foreach \x in {1.25,1.55,1.8, 1.5} \node[gr] at (\x,0.25) {};
+\foreach \x in {1.6,1.9,2.2, 2.0} \node[ma] at (\x,0.25) {};
+\foreach \x in {4.3,4.65,4.95, 4.6} \node[bl] at (\x,0.25) {};
+
+% Projektionspfeile (senkrecht)
+\draw[->, line width=1pt] (1.8,2.3) -- (1.8,0.55);
+\draw[->, line width=1pt] (4.6,3.8) -- (4.6,0.55);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{MDS: Grundidee}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item \textbf{MDS} (Multidimensional Scaling) ist eine
+        \textbf{abstandserhaltende} Projektion.
+  \item \textbf{Eingabe:} paarweise \textbf{Unähnlichkeiten} $\delta_{ij}$
+        zwischen $n$ Objekten.
+  \item \textbf{Ziel:} eine Konfiguration $\mathbf{x}_1, \dots, \mathbf{x}_n$
+        in \textbf{niedriger} Dimension (meist $\mathbb{R}^2$).
+  \item Die Abstände $d_{ij}(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert$
+        sollen die $\delta_{ij}$ möglichst gut \textbf{annähern}.
+\end{itemize}
+
+\begin{blockC1}{\footnotesize Kernidee}
+Statt der \textbf{Koordinaten} der Ausgangspunkte werden nur ihre
+\textbf{Abstände} zueinander benötigt.
+\end{blockC1}
+
+\column{0.40\textwidth}
+\begin{blockC2}{\footnotesize Konfiguration}
+Die Konfiguration $X$ wird als \textbf{Matrix} dargestellt:
+\[
+X=
+\begin{pmatrix}
+\mathbf{x}_1^T\\
+\mathbf{x}_2^T\\
+\vdots\\
+\mathbf{x}_n^T
+\end{pmatrix}
+\in \mathbb{R}^{n\times p}.
+\]
+
+\medskip
+
+\textbf{Jede Zeile} entspricht einem der projizierten Punkte $\mathbf{x}_1, \dots, \mathbf{x}_n \in \mathbb{R}^p$.
+
+\medskip
+
+Wollen wir $n$ Punkte in einen 2D-Zielraum projizieren, dass ist $X$ ein $n\times 2$-Matrix
+\end{blockC2}
+
+
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{MDS: Die Stress-Funktion}
+  \small
+\begin{columns}
+\column{0.55\textwidth}
+Die Güte einer Konfiguration $X$ misst man über die \textbf{Stress}-Funktion $\sigma: \mathbb{R}^{n\times p} \to \mathbb{R}$, definiert durch 
+\[
+  \sigma(X) = \sum_{i<j} w_{ij}\bigl(\delta_{ij} - d_{ij}(X)\bigr)^2
+\]
+für alle $X\in \mathbb{R}^{n\times p}$. 
+
+\begin{itemize}
+  \item $\delta_{ij}$: gewünschte \textbf{Zielabstände}. Werden initial berechnet und sind dann fix.
+  \item $d_{ij}(X)$: tatsächliche \textbf{Abstände} in der Projektion. Ändern sich, wenn die Zielpunkte während der Optimierung verschoben werden. 
+  \item $w_{ij} \geq 0$: optionale \textbf{Gewichte}.
+\end{itemize}
+
+\column{0.40\textwidth}
+
+
+\begin{blockDef}{\small Ziel}
+  Gesucht ist das $X$, das den Stress \textbf{minimiert}:
+\[ \min_X \; \sigma(X)\]
+
+\medskip
+Kleiner Stress bedeutet: Die \textbf{Abstände} in der Projektion passen gut
+zu den \textbf{Zielabständen}.
+
+\medskip
+$\Rightarrow$ Wir haben wieder ein \textbf{Optimierungsproblem}.
+\end{blockDef}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{MDS: Warum ist das schwierig?}
+  \footnotesize
+\begin{columns}
+\column{0.60\textwidth}
+Ein Optimierungsproblem heißt \textbf{konvex}, wenn die Funktion nur
+\textbf{ein einziges} und damit globales  Minimum besitzt. Solche Probleme lassen sich zuverlässig lösen.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Die Stress-Funktion ist \textbf{nicht konvex}: Sie hat \textbf{viele
+        lokale Minima}.
+  \item Der Grund: $d_{ij}(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert
+  = \sqrt{\sum_{a=1}^{p} (x_{ia} - x_{ja})^2}$
+        enthält eine \textbf{Wurzel} und ist selbst nicht konvex.
+  \item Der \textbf{Gradientenabstieg} läuft in das \textbf{nächstgelegene}
+        lokale Minimum, je nach Startpunkt ein anderes.
+  \item Das globale Minimum wird so \textbf{nicht garantiert} gefunden.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC2}{\footnotesize Konsequenz}
+Statt reinem Gradientenabstieg nutzt man \textbf{SMACOF}, das den Stress in
+jedem Schritt garantiert \textbf{senkt}.
+\end{blockC2}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\note{Eine Funktion heißt \textbf{konvex}, wenn zwischen zwei beliebigen Punkten auf ihrem Graphen die Verbindungslinie \textbf{oberhalb} des Graphen verläuft.\\
+Konvexe Funktionen haben die Form einer Schüssel. Sie haben ein eindeutiges Minimum.
+}
+\end{frame}
+
+\begin{frame}{SMACOF: Majorisierung}
+\begin{columns}
+\column{0.60\textwidth}
+\textbf{SMACOF} steht für \emph{Scaling by MAjorizing a COmplicated
+Function}.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Statt den Stress $\sigma(X)$ direkt zu minimieren, sucht man eine
+        \textbf{einfachere} Hilfsfunktion, die \textbf{Majorante}.
+  \item Dabei ist $Z = X^{(k)}$ die \textbf{aktuelle} Konfiguration des
+        letzten Schritts.
+  \item Die Majorante liegt \textbf{überall oberhalb} von $\sigma$ und
+        \textbf{berührt} es im aktuellen Punkt $Z$.
+  \item Sie ist \textbf{quadratisch} und daher leicht zu minimieren.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Prinzip}
+Minimiert man die Majorante und setzt das Ergebnis als neues $Z$ ein,
+\textbf{sinkt} der Stress garantiert.
+\end{blockC1}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SMACOF: Die Spur als Werkzeug}
+\begin{columns}
+\column{0.55\textwidth}
+Die \textbf{Spur} $\operatorname{tr}(A)$ einer quadratischen Matrix ist die
+Summe ihrer \textbf{Diagonalelemente}:
+\[
+  \operatorname{tr}(A) = \sum_{i} a_{ii}
+\]
+
+\begin{itemize}
+  \item Sie erlaubt es, \textbf{Summen von Quadraten} kompakt als
+        Matrixausdruck zu schreiben.
+  \item Die Abstände lassen sich damit darstellen als
+        $\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^T V X)$.
+  \item So werden die vielen \textbf{paarweisen} Terme in \textbf{eine}
+        Matrixformel gebündelt.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC2}{Matrix $V$}
+\[
+  v_{ij} =
+  \begin{cases}
+    -w_{ij} & i \neq j\\[2pt]
+    \sum_{k \neq i} w_{ik} & i = j
+  \end{cases}
+\]
+\end{blockC2}
+
+\begin{blockC1}{Nutzen}
+Die Spur-Schreibweise macht den Stress \textbf{ableitbar} und offenbart
+seine \textbf{quadratische} Struktur in $X$.
+\end{blockC1}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{SMACOF: Herleitung der Spur-Identität}
+\begin{columns}
+\column{0.60\textwidth}
+Wir zeigen
+$\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^T V X)$.
+
+\vspace{0.3em}
+Mit $d_{ij}^2(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert^2$ und der
+Definition von $V$ rechnet man:
+\[
+  \begin{aligned}
+    \operatorname{tr}(X^T V X)
+      &= \sum_{i,j} v_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_j\\
+      &= \sum_{i} \Bigl(\sum_{k\neq i} w_{ik}\Bigr)\mathbf{x}_i \cdot \mathbf{x}_i
+         - \sum_{i\neq j} w_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_j\\
+      &= \sum_{i<j} w_{ij}
+         \bigl(\mathbf{x}_i \cdot \mathbf{x}_i - 2\,\mathbf{x}_i \cdot \mathbf{x}_j
+         + \mathbf{x}_j \cdot \mathbf{x}_j\bigr)\\
+      &= \sum_{i<j} w_{ij}\,\lVert \mathbf{x}_i - \mathbf{x}_j \rVert^2.
+  \end{aligned}
+\]
+
+\column{0.35\textwidth}
+\begin{block}{Kernschritt}
+Das \textbf{Diagonalelement} $\sum_{k\neq i} w_{ik}$ liefert genau die
+Terme $\mathbf{x}_i \cdot \mathbf{x}_i$ und $\mathbf{x}_j \cdot \mathbf{x}_j$,
+die \textbf{Nebendiagonale} $-w_{ij}$ den \textbf{gemischten} Term
+$-2\,\mathbf{x}_i \cdot \mathbf{x}_j$.
+\end{block}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+
+\begin{frame}{SMACOF: Zerlegung des Stress}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Mit der binomischen Formel lösen wir die Klammer in 
+$\sigma(X) = \sum_{i<j} w_{ij}(\delta_{ij} - d_{ij}(X))^2$ auf:
+\[
+  \begin{aligned}
+    \sigma(X)
+      &= \sum_{i<j} w_{ij}
+         \bigl(\delta_{ij}^2 - 2\,\delta_{ij}\,d_{ij}(X) + d_{ij}^2(X)\bigr)\\
+      &= \sum_{i<j} w_{ij}\,\delta_{ij}^2
+         - 2\sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)\\
+      &\quad + \sum_{i<j} w_{ij}\,d_{ij}^2(X)
+  \end{aligned}
+\]
+Die drei Summen sind der \textbf{konstante}, der \textbf{Problem}- und der
+\textbf{quadratische} Term:
+\[
+  \sigma(X) = \underbrace{\sum_{i<j} w_{ij}\,\delta_{ij}^2}_{\text{konstant}}
+  - 2\underbrace{\sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)}_{\text{Problemterm $\rho(X)$}}
+  + \underbrace{\operatorname{tr}(X^T V X)}_{\text{quadratisch}}
+\]
+
+\column{0.40\textwidth}
+\begin{blockC1}{\footnotesize Die drei Terme}
+\begin{itemize}
+  \item $\sum_{i<j} w_{ij}\,\delta_{ij}^2$: nur \textbf{Abstände im Ausgangsraum},
+        \textbf{konstant}.
+  \item $\sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)$: enthält $d_{ij}$,
+        \textbf{nicht konvex}.
+  \item $\sum_{i<j} w_{ij}\,d_{ij}^2(X) = \operatorname{tr}(X^T V X)$:
+        \textbf{quadratisch}.
+\end{itemize}
+\end{blockC1}
+
+\begin{blockC2}{\footnotesize Kern des Problems $\rho(X)$}
+Nur der \textbf{Problemterm} ist schwierig. Genau hier setzt die
+\textbf{Majorisierung} an.
+\end{blockC2}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{SMACOF: Die Idee der Majorante}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Wir minimieren den Stress \textbf{iterativ}. Sei $Z = X^{(k)}$ die
+\textbf{aktuelle}, bereits bekannte Konfiguration des letzten Schritts.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Unser schwieriger, nicht konvexer Term ist ja 
+        $\rho(X) = \sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)$.
+  \item Idee: Wir ersetzen $\rho(X)$ durch eine \textbf{lineare} untere
+        Schranke, die von der bekannten Konfiguration $Z$ ausgeht.
+  \item Da die Punkte $\mathbf{z}_i \in Z$ \textbf{fest} sind, lassen sich
+        alle Abstände $d_{ij}(Z)$ konkret \textbf{berechnen}.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC3}{\footnotesize Zwei Konfigurationen}
+\begin{itemize}
+  \item $Z$: \textbf{aktuelle} Konfiguration, bekannt und fest.
+  \item $X$: \textbf{gesuchte} neue Konfiguration.
+\end{itemize}
+\end{blockC3}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{SMACOF: Die Cauchy-Schwarz-Ungleichung}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Die \textbf{Cauchy-Schwarz}-Ungleichung besagt für zwei Vektoren
+$\mathbf{a}, \mathbf{b}$:
+\[
+  \mathbf{a} \cdot \mathbf{b} \leq \lVert \mathbf{a} \rVert\,\lVert \mathbf{b} \rVert
+\]
+mit \textbf{Gleichheit} genau dann, wenn $\mathbf{a}$ und $\mathbf{b}$
+\textbf{parallel} sind.
+
+\vspace{0.4em}
+Wir setzen $\mathbf{a} = \mathbf{x}_i - \mathbf{x}_j$ (neu) und
+$\mathbf{b} = \mathbf{z}_i - \mathbf{z}_j$ (bekannt). Umgestellt ergibt das
+eine \textbf{lineare} untere Schranke für den Abstand:
+\[
+  d_{ij}(X) \geq
+  \frac{(\mathbf{x}_i - \mathbf{x}_j)\cdot(\mathbf{z}_i - \mathbf{z}_j)}
+       {d_{ij}(Z)}
+\]
+
+\column{0.40\textwidth}
+\begin{blockC3}{\footnotesize Der Trick}
+Rechts steht $\mathbf{x}_i - \mathbf{x}_j$ nur noch \textbf{linear}: Der
+Vektor $\mathbf{z}_i - \mathbf{z}_j$ und $d_{ij}(Z)$ sind \textbf{feste
+Zahlen} aus $Z$. Die störende \textbf{Wurzel} ist verschwunden.
+\end{blockC3}
+
+\begin{blockC4}{\footnotesize Berührung}
+Für $X = Z$ gilt \textbf{Gleichheit}.  Schranke und Stress stimmen am
+aktuellen Punkt überein!
+\end{blockC4}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+
+\begin{frame}{SMACOF: Minimierung der Majorante}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Wendet man die Schranke auf alle Paare an, wird der Problemterm nach unten
+beschränkt:
+\[
+  \rho(X) \geq \operatorname{tr}\bigl(X^T B(Z)\,Z\bigr)
+\]
+Setzt man das in den Stress ein, entsteht eine \textbf{quadratische
+Majorante}. Ihr Minimum findet man durch Nullsetzen des Gradienten:
+\[
+  V X = B(Z)\,Z \;\Rightarrow\; X = V^{+} B(Z)\,Z
+\]
+$V$ ist \textbf{nicht invertierbar}: Alle Zeilensummen sind null, da eine
+\textbf{Translation} aller Punkte die Abstände nicht ändert.
+
+\column{0.40\textwidth}
+\begin{block}{\footnotesize Matrix $B(Z)$}
+\[
+  b_{ij} =
+  \begin{cases}
+    -\dfrac{w_{ij}\,\delta_{ij}}{d_{ij}(Z)} & i \neq j,\; d_{ij}(Z) > 0\\[6pt]
+    0 & i \neq j,\; d_{ij}(Z) = 0\\[4pt]
+    -\sum_{k \neq i} b_{ik} & i = j
+  \end{cases}
+\]
+\end{block}
+
+\begin{blockDef}{\footnotesize Pseudoinverse $V^{+}$}
+Die \textbf{Moore-Penrose}-Pseudoinverse verallgemeinert die Inverse für
+\textbf{singuläre} Matrizen und liefert die im Ursprung \textbf{zentrierte}
+Lösung.
+\end{blockDef}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{SMACOF: Die Guttman-Transformation}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Für \textbf{gleiche} Gewichte ($w_{ij} = 1$) vereinfacht sich die
+Pseudoinverse zu $V^{+} = \tfrac{1}{n}I$. Damit folgt die
+\textbf{Guttman-Transformation}:
+\[
+  X^{(k+1)} = \frac{1}{n}\,B\!\left(X^{(k)}\right) X^{(k)}
+\]
+
+\begin{itemize}
+  \item In jedem Schritt wird die aktuelle Konfiguration $X^{(k)}$ in eine
+        \textbf{bessere} $X^{(k+1)}$ überführt.
+  \item Der \textbf{Stress} sinkt dabei garantiert.
+  \item Das Ergebnis $X^{(k+1)}$ wird zum neuen $Z$.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{\footnotesize Iteration}
+Die Transformation wird \textbf{wiederholt} angewandt, bis sich der Stress
+kaum noch ändert.
+\end{blockC1}
+
+\begin{blockC2}{\footnotesize Kern}
+Ein schwieriges Minimierungsproblem wird so zu einer \textbf{Folge einfacher}
+Matrixmultiplikationen.
+\end{blockC2}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\note{Eine Majorante ist eine Funktion, die überall oberhalb einer anderen Funktion liegt. Im SMACOF-Kontext ist sie das zentrale Werkzeug, um das schwierige Stress-Minimierungsproblem in eine Folge einfacher Schritte zu zerlegen.}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{SMACOF: Der Algorithmus}
+\begin{columns}
+\column{0.60\textwidth}
+\footnotesize
+\SetAlgoCaptionLayout{footnotesize}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{Unähnlichkeiten $\delta_{ij}$, Dimension $p$, Toleranz $\varepsilon$}
+\KwOut{Konfiguration $X$}
+Startkonfiguration $X^{(0)}$ initialisieren\;
+$k = 0$\;
+$\sigma_0 = \sigma(X^{(0)})$\;
+\Repeat{$\sigma_{k-1} - \sigma_k < \varepsilon$ \textbf{oder} $k > k_{\max}$}{
+  $k = k + 1$\;
+  $B\!\left(X^{(k-1)}\right)$ berechnen\;
+  \tcc{Guttman-Transformation}
+  $X^{(k)} = \tfrac{1}{n} B\!\left(X^{(k-1)}\right) X^{(k-1)}$\; 
+  $\sigma_k = \sigma(X^{(k)})$\;
+}
+\caption{SMACOF}
+\end{algorithm}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Ablauf}
+In jedem Schritt wird die \textbf{Guttman-Transformation} angewandt und der
+\textbf{Stress} neu berechnet bis er kaum noch sinkt.
+\end{blockC1}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}{SMACOF: Eigenschaften}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item Der Stress ist über die Iterationen \textbf{monoton fallend}.
+  \item Das Verfahren konvergiert gegen ein \textbf{lokales} Minimum.
+  \item Das Ergebnis hängt von der \textbf{Startkonfiguration} ab.
+  \item In der Praxis startet man oft mehrfach oder mit einer klassischen
+        MDS-Lösung.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Fazit}
+SMACOF wandelt ein schwieriges Minimierungsproblem in eine \textbf{Folge
+einfacher} quadratischer Schritte um. \textbf{Stabil} und garantiert
+\textbf{konvergent}.
+\end{blockC1}
+\end{columns}
+\source{\cite{deLeeuw1977}}
+\end{frame}
+
+\begin{frame}[fragile]{MDS in Python: Daten skalieren}
+\begin{columns}
+\column{0.55\textwidth}
+MDS arbeitet mit \textbf{Abständen}. Die Daten müssen daher vorab
+\textbf{skaliert} werden:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_transformed = scaler.fit_transform(X)
+\end{minted}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Warum skalieren?}
+Ohne Skalierung würden Merkmale mit \textbf{großen Werten} die Abstände
+\textbf{dominieren} und das Ergebnis verzerren.
+\end{blockC1}
+\end{columns}
+\source{One Hot Fahrzeugdaten.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{MDS in Python: Projektion}
+\begin{columns}
+\column{0.47\textwidth}
+Transformation aus $\mathbb{R}^7$ nach $\mathbb{R}^2$. \\ \medskip
+
+Der Parameter
+\texttt{n\_components} ist die \textbf{Dimension} des Zielraums. \\ \medskip
+
+\texttt{fit\_transform()} macht training und transformation in einem Schritt. \\ \medskip
+
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.manifold import MDS
+mds = MDS(
+    n_components=2, 
+    random_state=0)
+
+X_2d = mds.fit_transform(X_transformed)
+\end{minted}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_mds_auto_mpg.svg}
+
+\end{columns}
+\source{One Hot Fahrzeugdaten.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{MDS in Python: Projektion}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+\item Man verwendet MDS oft, um sich einen \textbf{Überblick über Daten} zu verschaffen. 
+\item Man kann so beispielsweise sehen, wie gut sich \textbf{Klassen separieren lassen}.
+\item \textbf{Beispiel: }Projektion des 4-dimensionalen Iris-Datensatzes mit zugehörigen Klassen 
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_mds_iris.svg}
+
+\end{columns}
+\source{MDS Iris mit Klassen.ipynb}
+\end{frame}
+
+\begin{frame}{Dimensionsreduktion: Grenzen von MDS}
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item MDS eignet sich sehr gut für \textbf{kleine bis mittelgroße}
+        Datensätze.
+  \item Bei \textbf{großen} Datenmengen ist das Verfahren sehr
+        \textbf{langsam}.
+  \item Bei Daten \textbf{höherer Dimension} ist es sehr langsam und liefert oft \textbf{keine
+        optimalen} Ergebnisse.
+  \item \textbf{Beispiel:} die MDS-Projektion des \textbf{MNIST}-Datensatzes.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/scatter_mds_mnist.svg}
+\end{columns}
+\source{MDS MNIST.ipynb}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
+
+
+
+\begin{frame}{t-SNE: Grundidee}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{itemize}
+  \item \textbf{t-SNE} (t-distributed Stochastic Neighbor Embedding) ist
+        eine \textbf{nichtlineare} Dimensionsreduktion.
+  \item Sie eignet sich besonders zur \textbf{Visualisierung}
+        hochdimensionaler Daten in 2D oder 3D.
+  \item \textbf{Idee:} Paarweise \textbf{Ähnlichkeiten} der Punkte werden als
+        \textbf{Wahrscheinlichkeiten} ausgedrückt.
+  \item Im Zielraum sucht man eine Anordnung, deren Ähnlichkeiten die des
+        Ausgangsraums möglichst gut \textbf{nachbilden}.
+\end{itemize}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Fokus}
+t-SNE erhält vor allem die \textbf{lokale} Nachbarschaft: nahe Punkte
+bleiben nah, die globale Struktur ist zweitrangig.
+\end{blockC1}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Ausgangsraum}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Ausgehend von einem Punkt bestimmt man den \textbf{Abstand} zu allen
+        anderen Punkten.
+\end{itemize}
+
+\vspace{0.3em}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen
+\draw[thick, SecondaryTitle] (0,4.2) -- (0,0) -- (5.2,0);
+% gruenes Cluster (oben links)
+\node[gr] (g1) at (1.3,3.5) {};
+\node[gr] (g2) at (1.0,2.9) {};
+\node[gr] at (1.7,2.9) {};
+\node[gr] at (1.3,2.4) {};
+% Abstand-Markierung zwischen g1 und g2
+\draw[ExampleTitle, thick] (g1) -- (g2);
+\node[ExampleTitle, font=\scriptsize, rotate=62] at (0.8,3.3) {Abstand};
+% blaues Cluster (rechts)
+\node[bl] at (3.6,3.0) {};
+\node[bl] at (3.3,2.5) {};
+\node[bl] at (3.9,2.5) {};
+\node[bl] at (3.6,2.0) {};
+% magenta Cluster (unten)
+\node[ma] at (1.7,1.3) {};
+\node[ma] at (1.4,0.8) {};
+\node[ma] at (2.0,0.8) {};
+\node[ma] at (1.7,0.3) {};
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\begin{itemize}
+  \item Um die \textbf{Nachbarschaftsstruktur} stärker zu gewichten, nimmt
+        man die \textbf{Normalverteilung} mit dem aktuellen Punkt als Zentrum
+        und berechnet daraus die \textbf{unskalierte Ähnlichkeit}.
+\end{itemize}
+
+\vspace{0.3em}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Gauss-Glocke (glatt, vorberechnet)
+\draw[black, line width=1pt]
+  (-3.6,0.001) -- (-3.15,0.005) -- (-2.7,0.028) -- (-2.25,0.11) --
+  (-1.8,0.338) -- (-1.35,0.812) -- (-0.9,1.516) -- (-0.63,1.957) --
+  (-0.45,2.206) -- (-0.27,2.39) -- (0,2.5) -- (0.27,2.39) --
+  (0.45,2.206) -- (0.63,1.957) -- (0.9,1.516) -- (1.35,0.812) --
+  (1.8,0.338) -- (2.25,0.11) -- (2.7,0.028) -- (3.15,0.005) -- (3.6,0.001);
+% Kreuz auf der Kurve bei x=0.9 (Hoehe 1.516)
+\node[cross out,
+  draw=ExampleTitle,
+  line width=1.5pt,
+  minimum size=6pt,
+  inner sep=0pt] at (0.9,1.516) {};
+% Projektionslinie nach unten
+\draw[ExampleTitle, thick, dashed] (0.9,1.516) -- (0.9,-0.7);
+% Punktpaar unten
+\node[gr] (p1) at (0.5,-0.9) {};
+\node[gr] (p2) at (0.9,-0.9) {};
+\draw[ExampleTitle, thick] (p1) -- (p2);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{youtube_NEaUSP4YerM}}
+\end{frame}
+
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Ausgangsraum}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item Berechnet man die Ähnlichkeit zu einem \textbf{weiter entfernten}
+        Punkt, zeigt sich der Sinn der \textbf{Normalverteilung}.
+  \item \textbf{Weit entfernte} Punkte bekommen eine sehr \textbf{geringe}
+        Ähnlichkeit, \textbf{nahe} Punkte eine \textbf{hohe}.
+\end{itemize}
+
+\vspace{0.4em}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+ gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Gauss-Glocke (glatt, vorberechnet)
+\draw[black, line width=1pt]
+  (-3.6,0.001) -- (-3.15,0.005) -- (-2.7,0.028) -- (-2.25,0.11) --
+  (-1.8,0.338) -- (-1.35,0.812) -- (-0.9,1.516) -- (-0.63,1.957) --
+  (-0.45,2.206) -- (-0.27,2.39) -- (0,2.5) -- (0.27,2.39) --
+  (0.45,2.206) -- (0.63,1.957) -- (0.9,1.516) -- (1.35,0.812) --
+  (1.8,0.338) -- (2.25,0.11) -- (2.7,0.028) -- (3.15,0.005) -- (3.6,0.001);
+% Kreuz am flachen Rand bei x=2.25 (Hoehe 0.11)
+\node[cross out,
+  draw=ExampleTitle,
+  line width=1.5pt,
+  minimum size=6pt,
+  inner sep=0pt] at (2.25,0.11) {};
+% Punktpaar unten, weit auseinander
+\node[gr] (p1) at (-0.4,-0.5) {};
+\node[ma] (p2) at (2.25,-0.5) {};
+\draw[ExampleTitle, thick] (p1) -- (p2);
+\draw[ExampleTitle, thick, dashed] (2.25,-0.5) -- (2.25,0.11);
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen
+\draw[thick, SecondaryTitle] (0,4.2) -- (0,0) -- (5.2,0);
+% gruenes Cluster (oben)
+\node[gr] (g1) at (1.6,3.5) {};
+\node[gr] (g2) at (1.3,2.9) {};
+\node[gr] at (2.0,2.9) {};
+\node[gr] at (1.7,2.4) {};
+% blaues Cluster (rechts)
+\node[bl] at (4.0,3.2) {};
+\node[bl] at (3.7,2.7) {};
+\node[bl] at (4.3,2.7) {};
+\node[bl] at (4.0,2.2) {};
+% magenta Cluster (unten)
+\node[ma] (m1) at (1.5,1.3) {};
+\node[ma] at (1.8,0.9) {};
+\node[ma] at (2.1,1.2) {};
+\node[ma] at (1.8,0.4) {};
+% Verbindung gruen <-> magenta (weit entfernt)
+\draw[ExampleTitle, thick] (g2) -- (m1);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{youtube_NEaUSP4YerM}}
+\end{frame}
+
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Ausgangsraum}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item So berechnet man die \textbf{unskalierten} Unähnlichkeiten zu
+        \textbf{allen} Datenpunkten.
+  \item Im nächsten Teilschritt werden die Unähnlichkeiten so
+        \textbf{skaliert}, dass sie sich für jeden Punkt auf \textbf{1}
+        aufsummieren.
+\end{itemize}
+
+\vspace{0.4em}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  kr/.style={
+  cross out,
+  draw=ExampleTitle,
+  line width=1.5pt,
+  minimum size=5pt,
+  inner sep=0pt
+}
+]
+% Gauss-Glocke (glatt, vorberechnet)
+\draw[black, line width=1pt]
+  (-3.6,0.001) -- (-3.15,0.005) -- (-2.7,0.028) -- (-2.25,0.11) --
+  (-1.8,0.338) -- (-1.35,0.812) -- (-0.9,1.516) -- (-0.63,1.957) --
+  (-0.45,2.206) -- (-0.27,2.39) -- (0,2.5) -- (0.27,2.39) --
+  (0.45,2.206) -- (0.63,1.957) -- (0.9,1.516) -- (1.35,0.812) --
+  (1.8,0.338) -- (2.25,0.11) -- (2.7,0.028) -- (3.15,0.005) -- (3.6,0.001);
+% Kreuze magenta (weit links, flach)
+\foreach \x in {-3.0,-2.7,-2.5} \node[kr] at (\x,0.05)  {};
+\node[kr] at (-2.2,0.15)  {};
+% Kreuze gruen (nah, oben rechts der Spitze)
+\node[kr] at (0.2,2.4)  {};
+\node[kr] at (0.5,2.1)  {};
+\node[kr] at (0.6,1.95)  {};
+% Kreuze blau (weit rechts, flach)
+\foreach \x in {2.7,2.9, 3.1} \node[kr] at (\x,0.05)  {};
+\node[kr] at (2.4,0.1)  {};
+% Punktgruppen unter der Achse
+\foreach \x in {-3.0,-2.7, -2.5,-2.2} \node[ma] at (\x,-0.55) {};
+\foreach \x in {0.0,0.2,0.5, 0.6} \node[gr] at (\x,-0.55) {};
+\foreach \x in {2.4,2.7,2.9,3.1} \node[bl] at (\x,-0.55) {};
+\end{tikzpicture}}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen
+\draw[thick, SecondaryTitle] (0,4.2) -- (0,0) -- (5.2,0);
+% gruenes Cluster (oben, Bezugspunkt g0)
+\node[gr] (g0) at (1.4,3.0) {};
+\node[gr] at (1.7,3.6) {};
+\node[gr] at (2.0,3.0) {};
+\node[gr] at (1.7,2.5) {};
+% blaues Cluster (rechts)
+\node[bl] (b1) at (4.0,3.3) {};
+\node[bl] (b2) at (3.7,2.8) {};
+\node[bl] (b3) at (4.3,2.8) {};
+\node[bl] (b4) at (4.0,2.3) {};
+% magenta Cluster (unten)
+\node[ma] (m1) at (1.5,1.3) {};
+\node[ma] (m2) at (1.9,0.9) {};
+\node[ma] (m3) at (2.2,1.3) {};
+\node[ma] (m4) at (1.8,0.4) {};
+% Verbindungen vom Bezugspunkt g0 zu allen anderen
+\foreach \t in {b1,b2,b3,b4,m1,m2,m3,m4}
+  \draw[ExampleTitle, thick, opacity=0.7] (g0) -- (\t);
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{youtube_NEaUSP4YerM}}
+\end{frame}
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Ausgangsraum}
+\begin{columns}
+\column{0.47\textwidth}
+\textbf{Warum skaliert man die Ähnlichkeiten?}
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Zusammengehörige Bereiche müssen nicht zwingend gleich \textbf{dicht}
+        besiedelt sein.
+  \item Auch wenn der \textbf{nächste Nachbar} etwas weiter entfernt ist,
+        bleibt er der \textbf{nächste Nachbar}.
+  \item Das wird durch die \textbf{Skalierung} berücksichtigt.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+gr/.style={circle, fill=AccentColor, draw=AccentTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  ma/.style={circle, fill=AlertColor, draw=AlertTitle,
+             very thick, minimum size=6pt, inner sep=0pt},
+  bl/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+             very thick, minimum size=6pt, inner sep=0pt}
+]
+% Achsen
+\draw[thick, SecondaryTitle] (0,4.5) -- (0,0) -- (6.0,0);
+% gruenes Cluster (oben links, dicht)
+\node[gr] at (1.3,4.0) {};
+\node[gr] at (1.0,3.5) {};
+\node[gr] at (1.6,3.5) {};
+\node[gr] at (1.3,3.0) {};
+% magenta Cluster (unten links, dicht)
+\node[ma] at (1.5,2.1) {};
+\node[ma] at (1.2,1.6) {};
+\node[ma] at (1.8,1.6) {};
+\node[ma] at (1.5,1.1) {};
+% blaues Cluster (rechts, weit auseinandergezogen)
+\node[bl] at (4.6,3.0) {};
+\node[bl] at (4.0,1.9) {};
+\node[bl] at (5.5,1.9) {};
+\node[bl] at (4.6,0.9) {};
+\end{tikzpicture}}
+\end{columns}
+\source{\cite{youtube_NEaUSP4YerM}}
+\end{frame}
+
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Ausgangsraum}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Mit unseren Vorbetrachtungen lässt sich die Ähnlichkeit von $\mathbf{x}_j$ zu $\mathbf{x}_i$ wird als \textbf{bedingte
+Wahrscheinlichkeit} sie folgt definieren:
+\[
+  p_{j|i} =
+  \frac{\exp\!\bigl(-\lVert \mathbf{x}_i - \mathbf{x}_j \rVert^2 / 2\sigma_i^2\bigr)}
+       {\sum_{k \neq i} \exp\!\bigl(-\lVert \mathbf{x}_i - \mathbf{x}_k \rVert^2 / 2\sigma_i^2\bigr)}
+\]
+
+\begin{itemize}
+  \item $p_{j|i}$ ist \textbf{groß} für nahe, \textbf{klein} für ferne
+        Punkte.
+  \item Die Breite $\sigma_i$ wird pro Punkt über die \textbf{Perplexität}
+        festgelegt.
+  \item In dichten Regionen wird $\sigma_i$ \textbf{klein}, in dünnen
+        \textbf{groß}.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{\footnotesize Perplexität}
+Ein Maß für die \textbf{effektive Anzahl} der Nachbarn (typisch $5$--$50$).
+Sie steuert das $\sigma_i$ jedes Punktes.
+\end{blockC1}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Symmetrisierung}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Die bedingten Wahrscheinlichkeiten sind \textbf{nicht symmetrisch}
+($p_{j|i} \neq p_{i|j}$). Man symmetrisiert sie zu einer gemeinsamen
+Verteilung:
+\[
+  p_{ij} = \frac{p_{j|i} + p_{i|j}}{2n}
+\]
+
+\begin{itemize}
+  \item $n$ ist die Anzahl der Datenpunkte.
+  \item Es gilt $p_{ij} = p_{ji}$ und $\sum_{i,j} p_{ij} = 1$.
+  \item Die $p_{ij}$ bilden die \textbf{Ähnlichkeitsmatrix} $P$ des
+        Ausgangsraums.
+\end{itemize}
+
+\column{0.40\textwidth}
+\centering
+\textbf{Matrix $P$}\\[3pt]
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}
+\foreach \i in {0,...,4} {
+  \foreach \j in {0,...,4} {
+    \pgfmathsetmacro{\val}{\i==\j ? 0 : 0.3 + 0.5*rnd}
+    \pgfmathsetmacro{\dval}{\i==\j ? 1 : \val}
+    \fill[SecondaryColor, opacity=\dval] (\j,-\i) rectangle ++(1,-1);
+    \draw[white, thin] (\j,-\i) rectangle ++(1,-1);
+  }
+}
+\end{tikzpicture}}
+
+{\scriptsize Dunkel $=$ hohe Ähnlichkeit}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Ähnlichkeiten im Zielraum}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+
+Die Ähnlichkeitsverteiung im Zielraum wird im Prinzip gleich berechnet. Allerdings nutzt t-SNE hier eine
+\textbf{Student-t}-Verteilung mit einem Freiheitsgrad (Cauchy):
+\[
+  q_{ij} =
+  \frac{\bigl(1 + \lVert \mathbf{y}_i - \mathbf{y}_j \rVert^2\bigr)^{-1}}
+       {\sum_{k \neq l} \bigl(1 + \lVert \mathbf{y}_k - \mathbf{y}_l \rVert^2\bigr)^{-1}}
+\]
+
+\begin{itemize}
+  \item Die $q_{ij}$ bilden die \textbf{Ähnlichkeitsmatrix} $Q$ des
+        Zielraums.
+  \item Ziel: $Q$ soll $P$ möglichst gut \textbf{nachbilden}.
+  \item Der Nenner \textbf{normiert} über alle Paare.
+\end{itemize}
+
+\column{0.40\textwidth}
+\centering
+\textbf{Matrix $Q$}\\[3pt]
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}
+\foreach \i in {0,...,4} {
+  \foreach \j in {0,...,4} {
+    \pgfmathsetmacro{\val}{\i==\j ? 0 : 0.25 + 0.55*rnd}
+    \pgfmathsetmacro{\dval}{\i==\j ? 1 : \val}
+    \fill[ExampleColor, opacity=\dval] (\j,-\i) rectangle ++(1,-1);
+    \draw[white, thin] (\j,-\i) rectangle ++(1,-1);
+  }
+}
+\end{tikzpicture}}
+
+{\scriptsize Ziel: $Q \approx P$}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Warum die Student-t-Verteilung?}
+\footnotesize
+\begin{columns}
+\column{0.47\textwidth}
+\begin{itemize}
+  \item In hohen Dimensionen ist \textbf{viel mehr Platz} als in 2D: ferne
+        Punkte drängen sich beim Projizieren zusammen (\textbf{Crowding
+        Problem}).
+  \item Die Student-t-Verteilung hat \textbf{schwerere Ränder} als die
+        Gauß-Glocke.
+  \item Dadurch dürfen \textbf{unähnliche} Punkte im Zielraum \textbf{weiter}
+        auseinander liegen.
+  \item Cluster werden so klar \textbf{getrennt} dargestellt.
+\end{itemize}
+
+\column{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/vergleich_gauss_student.svg}
+
+{\scriptsize Schwere Ränder $\Rightarrow$ mehr Platz für ferne Punkte}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Kostenfunktion}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Die Anordnung im Zielraum wird so gewählt, dass $Q$ möglichst nah an $P$
+liegt. Als Maß dient die \textbf{Kullback-Leibler-Divergenz}:
+\[
+  C = \mathrm{KL}(P \,\Vert\, Q)
+    = \sum_{i \neq j} p_{ij} \log \frac{p_{ij}}{q_{ij}}
+\]
+
+\begin{itemize}
+  \item Sie misst, wie stark sich $Q$ von $P$ \textbf{unterscheidet}.
+  \item Sie ist \textbf{asymmetrisch}: nahe Paare ($p_{ij}$ groß) im Zielraum
+        auseinanderzureißen wird \textbf{stark bestraft}.
+  \item Ferne Paare zusammenzuziehen kostet dagegen \textbf{wenig}.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{\footnotesize Folge}
+t-SNE erhält bevorzugt die \textbf{lokale} Struktur: enge Nachbarschaften
+werden treu wiedergegeben.
+\end{blockC1}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Optimierung}
+\footnotesize
+\begin{columns}
+\column{0.55\textwidth}
+Die Kostenfunktion wird per \textbf{Gradientenabstieg} minimiert. Der
+Gradient hat eine anschauliche Form:
+\[
+  \frac{\partial C}{\partial \mathbf{y}_i}
+  = 4 \sum_{j} (p_{ij} - q_{ij})
+    \bigl(1 + \lVert \mathbf{y}_i - \mathbf{y}_j \rVert^2\bigr)^{-1}
+    (\mathbf{y}_i - \mathbf{y}_j)
+\]
+
+\begin{itemize}
+  \item Der Term $(p_{ij} - q_{ij})$ wirkt wie eine \textbf{Kraft} zwischen
+        den Punkten.
+  \item $p_{ij} > q_{ij}$: \textbf{Anziehung}; $p_{ij} < q_{ij}$:
+        \textbf{Abstoßung}.
+  \item Das Verfahren pendelt sich in ein \textbf{Gleichgewicht} ein.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC2}{Hinweise}
+\begin{itemize}
+  \item Die Kostenfunktion ist \textbf{nicht konvex}. Das Ergebnis hängt
+        vom \textbf{Zufallsstart} ab.
+  \item \textbf{Perplexität} und Iterationszahl beeinflussen das Bild stark.
+\end{itemize}
+\end{blockC2}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+\begin{frame}{t-SNE: Eigenschaften und Praxis}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item t-SNE trennt \textbf{Cluster} oft sehr überzeugend.
+  \item \textbf{Abstände} zwischen Clustern und deren \textbf{Größen} sind
+        \textbf{nicht} zuverlässig interpretierbar.
+  \item Das Verfahren ist \textbf{rechenintensiv} und für sehr große
+        Datenmengen langsam.
+  \item Es dient der \textbf{Visualisierung}, nicht als Vorverarbeitung für
+        andere Modelle.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Merke}
+t-SNE zeigt \textbf{welche} Punkte zusammengehören, nicht \textbf{wie weit}
+Gruppen voneinander entfernt sind.
+\end{blockC1}
+\end{columns}
+\source{\cite{vanDerMaaten2008}}
+\end{frame}
+
+
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}

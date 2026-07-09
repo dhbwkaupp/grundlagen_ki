@@ -2512,6 +2512,65 @@ Damit:
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
 
+\begin{frame}{Regularisierung im Multi-Layer-Perceptron}
+\footnotesize
+\begin{columns}
+\column{0.75\textwidth}
+\begin{itemize}
+  \item MLPs tendieren bei hoher Modellkomplexität zur \textbf{Überanpassung}.
+    \item Zur Regularisierung wird der Loss-Funktion häufig ein 
+    $L^2$-\textbf{Strafterm} hinzugefügt, der große Gewichte bestraft.
+    \item \textbf{Grundgedanke:} Große Gewichte führen dazu, dass das Netz stark auf kleine Änderungen der Eingangsgrößen reagiert.
+    Dadurch entstehen steile und empfindliche Entscheidungsfunktionen.
+\item Der Parameter  $\alpha$ steuert den Einfluss des $L^2$-\textbf{Strafterms}:
+\[
+C(\mathbf{W})=\underbrace{L(\mathbf{W})}_{\text{Fehler}}+\alpha\underbrace{\textstyle\sum_i w_i^2}_{\text{Strafterm}}
+\]
+    \item \textbf{Großes $\alpha$:} kleinere Gewichte, \textbf{glattere} Entscheidungsgrenze,
+    Overfitting.
+
+    \item \textbf{Kleines $\alpha$:} größere Gewichte, \textbf{komplexere} Entscheidungsgrenze,
+    Unterfitting.
+\end{itemize}
+
+\column{0.25\textwidth}
+\centering
+{\footnotesize kleines $\alpha$ (Overfitting)}\\[2pt]
+\begin{tikzpicture}[scale=1.0]
+  \draw[DarkGrey!50,line width=0.6pt](0,0)rectangle(2.8,2.8);
+  \begin{scope}
+  \clip(0,0)rectangle(2.8,2.8);
+  \draw[AccentTitle,line width=1.4pt](1.4,-0.1)
+     .. controls (0.6,0.6) and (2.2,1.0) .. (1.2,1.5)
+     .. controls (0.5,2.0) and (2.3,2.2) .. (1.5,2.9);
+  \foreach \p in {(0.4,0.5),(0.7,1.1),(0.5,1.7),(1.0,2.1),(0.3,1.3),(0.9,0.4),(0.6,2.3)}
+     {\fill[PrimaryColor]\p circle(1.6pt);}
+  \foreach \p in {(2.1,0.6),(1.8,1.4),(2.4,1.8),(2.0,2.4),(2.5,1.0),(1.6,2.1),(2.3,0.3)}
+     {\draw[ExampleColor,line width=1pt]\p ++(-1.6pt,-1.6pt)--++(3.2pt,3.2pt) ++(-3.2pt,0)--++(3.2pt,-3.2pt);}
+  \end{scope}
+\end{tikzpicture}
+
+\smallskip
+{\footnotesize großes $\alpha$ (glatt)}\\[2pt]
+\begin{tikzpicture}[scale=1.0]
+  \draw[DarkGrey!50,line width=0.6pt](0,0)rectangle(2.8,2.8);
+  \begin{scope}
+  \clip(0,0)rectangle(2.8,2.8);
+  \draw[AccentTitle,line width=1.4pt](1.1,-0.1) .. controls (1.4,1.4) .. (1.3,2.9);
+  \foreach \p in {(0.4,0.5),(0.7,1.1),(0.5,1.7),(1.0,2.1),(0.3,1.3),(0.9,0.4),(0.6,2.3)}
+     {\fill[PrimaryColor]\p circle(1.6pt);}
+  \foreach \p in {(2.1,0.6),(1.8,1.4),(2.4,1.8),(2.0,2.4),(2.5,1.0),(1.6,2.1),(2.3,0.3)}
+     {\draw[ExampleColor,line width=1pt]\p ++(-1.6pt,-1.6pt)--++(3.2pt,3.2pt) ++(-3.2pt,0)--++(3.2pt,-3.2pt);}
+  \end{scope}
+\end{tikzpicture}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+
+\note{Das $L^2$ steht für die euklidische Norm.}
+
+\end{frame}
+
+
 
 \begin{frame}[fragile]{MLP: Daten skalieren}
 \begin{columns}
@@ -2558,7 +2617,7 @@ print(model.score(X_test, y_test))
 \footnotesize
 \begin{blockC1}{\footnotesize Parameter des MLP}
 \begin{itemize}
-  \item \texttt{solver}: \textbf{Optimierungsverfahren} für die Gewichte.
+  \item \texttt{solver}: \textbf{Optimierungsverfahren} für die Gewichte. \texttt{'sgd'} wäre das klassische \emph{Stochastic Graadiend Descent}
   \item \texttt{max\_iter}: maximale \textbf{Iterationszahl}.
   \item \texttt{alpha}: Stärke der \textbf{Regularisierung}.
   \item \texttt{hidden\_layer\_sizes}: \textbf{Größe} der Hidden-Layer, hier

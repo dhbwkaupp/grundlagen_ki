@@ -1,0 +1,327 @@
+\makesectionpage{Hyperparameter}
+
+
+\begin{frame}{Hyperparameter: Grundlagen}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item \textbf{Hyperparameter} beeinflussen die \textbf{Struktur} eines
+        Lernmodells.
+  \item Sie werden bei der \textbf{Erstellung} des Modell-Objektes
+        mitgegeben.
+  \item Die \textbf{Parameter} des Modells passt der Lernalgorithmus
+        dagegen während des \textbf{Trainings} an.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Beispiele}
+\begin{itemize}
+  \item Anzahl der \textbf{Layer} und \textbf{Neuronen} im neuronalen Netz.
+  \item \textbf{Kernel}, $\gamma$ und $C$ bei einer SVM.
+  \item Maximale \textbf{Tiefe} eines Entscheidungsbaumes.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+
+\begin{frame}{Auswahl der besten Hyperparameter}
+\begin{columns}
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{bullseye}
+
+\column{0.60\textwidth}
+Wie finden wir die \textbf{besten} Hyperparameter?
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \textbf{Idee:} Wir probieren viele verschiedene Parameter aus.
+  \item Wir \textbf{vergleichen} die Ergebnisse.
+  \item Wir wählen das Modell mit den \textbf{besten} Ergebnissen.
+\end{itemize}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Hyperparameter: GridSearchCV -- Grundidee}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item sklearn bietet die Klasse \textbf{GridSearchCV} zur Bestimmung der
+        besten Hyperparameter.
+  \item Man gibt ein \textbf{Gitter} (grid) möglicher Werte je
+        Hyperparameter vor.
+  \item GridSearchCV probiert \textbf{alle Kombinationen} systematisch aus.
+  \item Jede Kombination wird bewertet, die \textbf{beste} wird
+        zurückgegeben.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Gitter-Beispiel}
+Für eine SVM etwa:
+\begin{itemize}
+  \item $C \in \{0{,}1,\; 1,\; 10\}$
+  \item $\gamma \in \{0{,}01,\; 0{,}1\}$
+\end{itemize}
+Das ergibt $3 \times 2 = 6$ Kombinationen.
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Hyperparameter: GridSearchCV -- Cross-Validation}
+\begin{columns}
+\column{0.55\textwidth}
+Das \textbf{CV} in GridSearchCV steht für \textbf{Cross-Validation}
+(Kreuzvalidierung):
+\begin{itemize}
+  \item Die Trainingsdaten werden in $k$ \textbf{Teile} (Folds) zerlegt.
+  \item Das Modell wird $k$-mal trainiert -- jeweils auf $k-1$ Teilen, mit
+        einem Teil zur \textbf{Validierung}.
+  \item Der Score ist der \textbf{Mittelwert} über alle $k$ Durchläufe.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Vorteil}
+Die Bewertung ist \textbf{robuster}, da nicht von einer einzelnen
+zufälligen Aufteilung abhängig.
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}[fragile]{Hyperparameter: GridSearchCV in Python}
+\begin{columns}
+\column{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+
+param_grid = {
+    'C': [0.1, 1, 10],
+    'gamma': [0.01, 0.1],
+    'kernel': ['rbf']
+}
+grid = GridSearchCV(SVC(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+print(grid.best_params_)
+print(grid.best_score_)
+\end{minted}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Wichtige Attribute}
+\begin{itemize}
+  \item \texttt{param\_grid}: das \textbf{Gitter} der Werte.
+  \item \texttt{cv}: Anzahl der \textbf{Folds}.
+  \item \texttt{best\_params\_}: beste \textbf{Kombination}.
+  \item \texttt{best\_score\_}: zugehöriger \textbf{Score}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}[fragile]{GridSearchCV: Bearbeitungs-Pipeline}
+\begin{columns}
+\column{0.60\textwidth}
+Eine \textbf{Pipeline} legt fest, welche Schritte nacheinander auf den
+Daten ausgeführt werden -- hier erst der \texttt{StandardScaler}, dann der
+\texttt{RandomForestClassifier}. Jede Komponente bekommt einen
+\textbf{Namen}:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("rf", RandomForestClassifier())
+])
+\end{minted}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Aufbau}
+\begin{itemize}
+  \item Jede Stufe ist ein \textbf{Paar}: Name und Objekt.
+  \item \texttt{scaler}: \textbf{Skalierung} der Merkmale.
+  \item \texttt{rf}: der \textbf{Random Forest}.
+  \item Die Namen brauchen wir später im \textbf{Parametergitter}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{Gridsearch Random Forest.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{GridSearchCV: Parametersuche mit Pipeline}
+\begin{columns}
+\column{0.60\textwidth}
+\textbf{GridSearchCV} probiert verschiedene Konfigurationen aus und gibt die
+Kombination mit dem besten Score zurück -- automatisch mit
+\textbf{k-facher Kreuzvalidierung}:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.model_selection import GridSearchCV
+
+clf = GridSearchCV(pipeline, param_grid={
+    "rf__n_estimators": range(470,500,1)
+})
+clf.fit(X, y)
+print(clf.best_params_)
+\end{minted}
+
+\begin{minted}[frame=none]{text}
+{'rf__n_estimators': 472}
+\end{minted}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Namenskonvention}
+Der Schlüssel im Gitter setzt sich zusammen aus:
+\[
+  \underbrace{\texttt{rf}}_{\text{Komponente}}
+  \;\texttt{\_\_}\;
+  \underbrace{\texttt{n\_estimators}}_{\text{Parameter}}
+\]
+Dahinter steht das \textbf{Feld} aller zu testenden Werte.
+\end{blockC1}
+\end{columns}
+\source{Gridsearch Random Forest.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{GridSearchCV: Pipeline mit MLP}
+\begin{columns}
+\column{0.60\textwidth}
+Die Pipeline kombiniert \texttt{StandardScaler} und
+\texttt{MLPClassifier}. Beim Anlegen lassen sich schon \textbf{einzelne
+Parameter} setzen:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("mlp", MLPClassifier(solver='lbfgs',
+                          max_iter=20000))
+])
+\end{minted}
+
+\column{0.35\textwidth}
+\begin{blockC1}{Aufbau}
+\begin{itemize}
+  \item \texttt{scaler}: \textbf{Skalierung} der Merkmale.
+  \item \texttt{mlp}: das \textbf{neuronale Netz}.
+  \item Feste Parameter (\texttt{solver}, \texttt{max\_iter}) setzt man
+        direkt im \textbf{Konstruktor}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{Gridsearch Neuronales Netz.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{GridSearchCV: Mehrere Parameter optimieren}
+  \footnotesize
+\begin{columns}
+\column{0.60\textwidth}
+Mit GridSearchCV lassen sich \textbf{beliebig viele} Parameter optimieren --
+alle \textbf{Kombinationen} werden ausprobiert:
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.model_selection import GridSearchCV
+
+clf = GridSearchCV(pipeline, param_grid={
+    "mlp__hidden_layer_sizes":
+        [(50,50,50), (30,20,10), (500,10),
+         (20,20,20,20), (30,20)],
+    "mlp__alpha":
+        [10, 5, 3, 2, 1, 0.1, 0.01, 0.001]
+})
+clf.fit(X, y)
+print(clf.best_params_)
+\end{minted}
+
+\begin{minted}[frame=none]{text}
+{'mlp__alpha': 3,
+ 'mlp__hidden_layer_sizes': (20, 20, 20, 20)}
+\end{minted}
+
+\column{0.35\textwidth}
+\begin{blockC2}{\footnotesize Achtung}
+Viele Parameter lassen die Zahl der \textbf{Kombinationen} -- und damit die
+\textbf{Laufzeit} -- schnell \textbf{explodieren}.
+\end{blockC2}
+\end{columns}
+\source{Gridsearch Neuronales Netz.ipynb}
+\end{frame}
+
+\begin{frame}{Classification Challenge: MNIST-Datensatz}
+\small
+\begin{columns}
+\column{0.45\textwidth}
+\begin{itemize}
+  \item \textbf{MNIST} ist einer der Standarddatensätze zum
+        \textbf{Benchmarking} von Klassifikatoren.
+  \item Er umfasst \textbf{70.000} handgeschriebene Ziffern samt
+        \textbf{Label}.
+  \item Feste Aufteilung: \textbf{60.000} Trainings- und \textbf{10.000}
+        Testdatensätze.
+  \item Die feste Teilung schließt \textbf{zufallsbasierte} Schwankungen in
+        den Testergebnissen aus.
+\end{itemize}
+
+\column{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/mnistexamples.png}
+\end{columns}
+\source{Bildquelle: \cite{steppan_mnist_examples}}
+\end{frame}
+
+\begin{frame}{Classification Challenge: MNIST-Datensatz}
+\begin{columns}
+\column{0.55\textwidth}
+\begin{itemize}
+  \item Jedes Zeichen ist ein Bild mit \textbf{28$\times$28 Pixeln}.
+  \item Jedes Pixel hat einen Wert zwischen \textbf{0 und 255}.
+  \item Insgesamt \textbf{70.000} solcher Bilder, als gezippte Dateien.
+  \item Entpackt haben die Daten eine Größe von \textbf{52 MB}.
+\end{itemize}
+
+\column{0.40\textwidth}
+\begin{blockC1}{Erreichbare Trefferquote}
+\begin{itemize}
+  \item In Fachartikeln: über \textbf{99\%} mit sehr speziellen Verfahren
+        und aufwändiger Datenaufbereitung.
+  \item Mit unseren aktuellen Klassifikatoren realistisch: etwa \textbf{98\%}.
+\end{itemize}
+\end{blockC1}
+\end{columns}
+\source{\cite{seemann2024mlaz}}
+\end{frame}
+
+\begin{frame}{Übung: Ziffernerkennung mit GridSearch}
+\begin{columns}
+\column{0.60\textwidth}
+Verwenden Sie die Vorlage \textbf{Projekt Ziffernerkennung.ipynb}. Sie
+enthält bereits das Einlesen und Aufbereiten der Trainings- und Testdaten.
+
+\vspace{0.4em}
+\begin{itemize}
+  \item Erweitern Sie das Notebook, sodass statt eines einfachen Trainings
+        eine \textbf{GridSearch} durchgeführt wird.
+  \item Erstellen Sie verschiedene Notebooks für die verschiedenen
+        \textbf{Klassifikationsverfahren} und suchen Sie jeweils die passenden
+        Parameter.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Frage:} Welche beste \textbf{Prognosegüte} erreichen Sie auf allen
+\textbf{10.000} Testdatensätzen?
+
+\column{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{columns}
+\source{Vorlage: Projekt Ziffernerkennung.ipynb}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
