@@ -192,10 +192,10 @@
         sollen die $\delta_{ij}$ möglichst gut \textbf{annähern}.
 \end{itemize}
 
-\begin{blockC1}{\footnotesize Kernidee}
+\begin{block}{\footnotesize Kernidee}
 Statt der \textbf{Koordinaten} der Ausgangspunkte werden nur ihre
 \textbf{Abstände} zueinander benötigt.
-\end{blockC1}
+\end{block}
 
 \column{0.40\textwidth}
 \begin{blockC2}{\footnotesize Konfiguration}
@@ -308,10 +308,10 @@ Function}.
 \end{itemize}
 
 \column{0.35\textwidth}
-\begin{blockC1}{Prinzip}
+\begin{block}{Prinzip}
 Minimiert man die Majorante und setzt das Ergebnis als neues $Z$ ein,
 \textbf{sinkt} der Stress garantiert.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{\cite{deLeeuw1977}}
 \end{frame}
@@ -413,7 +413,7 @@ Die drei Summen sind der \textbf{konstante}, der \textbf{Problem}- und der
 \]
 
 \column{0.40\textwidth}
-\begin{blockC1}{\footnotesize Die drei Terme}
+\begin{block}{\footnotesize Die drei Terme}
 \begin{itemize}
   \item $\sum_{i<j} w_{ij}\,\delta_{ij}^2$: nur \textbf{Abstände im Ausgangsraum},
         \textbf{konstant}.
@@ -422,7 +422,7 @@ Die drei Summen sind der \textbf{konstante}, der \textbf{Problem}- und der
   \item $\sum_{i<j} w_{ij}\,d_{ij}^2(X) = \operatorname{tr}(X^T V X)$:
         \textbf{quadratisch}.
 \end{itemize}
-\end{blockC1}
+\end{block}
 
 \begin{blockC2}{\footnotesize Kern des Problems $\rho(X)$}
 Nur der \textbf{Problemterm} ist schwierig. Genau hier setzt die
@@ -628,10 +628,10 @@ $\sigma_0 = \sigma(X^{(0)})$\;
 \end{algorithm}
 
 \column{0.35\textwidth}
-\begin{blockC1}{Ablauf}
+\begin{block}{Ablauf}
 In jedem Schritt wird die \textbf{Guttman-Transformation} angewandt und der
 \textbf{Stress} neu berechnet bis er kaum noch sinkt.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{\cite{deLeeuw1977}}
 \end{frame}
@@ -669,10 +669,10 @@ X_transformed = scaler.fit_transform(X)
 \end{minted}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Warum skalieren?}
+\begin{block}{Warum skalieren?}
 Ohne Skalierung würden Merkmale mit \textbf{großen Werten} die Abstände
 \textbf{dominieren} und das Ergebnis verzerren.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{One Hot Fahrzeugdaten.ipynb}
 \end{frame}
@@ -762,10 +762,10 @@ X_2d = mds.fit_transform(X_transformed)
 \end{itemize}
 
 \column{0.35\textwidth}
-\begin{blockC1}{Fokus}
+\begin{block}{Fokus}
 t-SNE erhält vor allem die \textbf{lokale} Nachbarschaft: nahe Punkte
 bleiben nah, die globale Struktur ist zweitrangig.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
 \end{frame}
@@ -1087,10 +1087,10 @@ Wahrscheinlichkeit} definieren:
 \end{itemize}
 
 \column{0.40\textwidth}
-\begin{blockC1}{\footnotesize Perplexität}
+\begin{block}{\footnotesize Perplexität}
 Ein Maß für die \textbf{effektive Anzahl} der Nachbarn (typisch $5$--$50$).
 Sie steuert das $\sigma_i$ jedes Punktes.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
 \end{frame}
@@ -1271,10 +1271,10 @@ Gradient hat eine anschauliche Form:
 \end{itemize}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Merke}
+\begin{block}{Merke}
 t-SNE zeigt \textbf{welche} Punkte zusammengehören, nicht \textbf{wie weit}
 Gruppen voneinander entfernt sind.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
 \end{frame}
@@ -1385,10 +1385,10 @@ Führen Sie auf dem \textbf{Iris-Datensatz} eine Dimensionsreduktion mit
 \end{itemize}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Big Data}
+\begin{block}{Big Data}
 Wegen dieser Eigenschaften wird k-Means sehr oft für Analysen im
 \textbf{Big-Data}-Umfeld verwendet.
-\end{blockC1}
+\end{block}
 \end{columns}
 \end{frame}
 
@@ -1433,10 +1433,10 @@ zu seinem Clusterzentrum:
 \end{itemize}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Wirkung}
+\begin{blockC2}{Wirkung}
 Kleine $J$ bedeuten \textbf{kompakte} Cluster: die Punkte liegen nah an
 ihrem Zentrum.
-\end{blockC1}
+\end{blockC2}
 \end{columns}
 \end{frame}
 
@@ -1602,10 +1602,10 @@ model.fit(X_transformed)
 \end{minted}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Parameter}
+\begin{block}{Parameter}
 \texttt{n\_clusters} legt die \textbf{Anzahl} der gesuchten Cluster fest.
 Sie muss vorab bekannt sein.
-\end{blockC1}
+\end{block}
 \end{columns}
 \source{K-Means Fahrzeugdaten Mit Centroids.ipynb}
 \end{frame}
@@ -1657,10 +1657,10 @@ sie \textbf{zurücktransformiert}.
 \end{itemize}
 
 \column{0.40\textwidth}
-\begin{blockC1}{Grundgedanke}
+\begin{block}{Grundgedanke}
 Mit mehr Clustern sinkt $J$ immer weiter. Gesucht ist der Punkt, ab dem
 weitere Cluster \textbf{kaum noch} etwas bringen.
-\end{blockC1}
+\end{block}
 \end{columns}
 \end{frame}
 
@@ -1978,7 +1978,7 @@ Untersuchen Sie den \textbf{Heart-Disease}-Datensatz mit k-Means:
 
 \begin{itemize}
   \item Verwenden Sie nur \textbf{folgende Spalten: } \texttt{'age', 'chol', 'num'}.
-  \item Verwerfen Sie unvollständige Zeilen mit \texttt{ \bfseries dropna() }
+  \item Verwerfen Sie unvollständige Zeilen mit \texttt{\bfseries dropna() }
   \item Bestimmen Sie die \textbf{Clusteranzahl} mit der Elbow-Methode.
   \item Führen Sie das \textbf{Clustering} mit dem gewählten $k$ durch.
   \item Projizieren Sie die Daten mit \textbf{t-SNE} in 2D.
@@ -1991,6 +1991,9 @@ Untersuchen Sie den \textbf{Heart-Disease}-Datensatz mit k-Means:
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
 \source{Lösung: KMeans Heart Disease.ipynb}
+
+\note{Alter und Cholesterinwert sind wohl die Haupteinflussfaktoren.}
+
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
