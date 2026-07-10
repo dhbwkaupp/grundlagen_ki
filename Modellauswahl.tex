@@ -168,15 +168,15 @@ X_train, X_test, y_train, Y_test = train_test_split(
 
 \column{0.47\textwidth}
 \begin{itemize}
-    \item In der letzten Übung: Modell zur Vorhersage des Fahrzeugverbrauchs
-    \item Eingabe: Gewicht des Fahrzeugs
-    \item Ziel: Verbrauch abschätzen
-    \item Beobachtung:
+    \item In der letzten Übung: Modell zur Vorhersage des \textbf{Fahrzeugverbrauchs}
+    \item \textbf{Eingabe: } Gewicht des Fahrzeugs
+    \item \textbf{Ziel: } Verbrauch abschätzen
+    \item \textbf{Beobachtung: }
     \begin{itemize}
         \item Reale Datenpunkte weichen teilweise deutlich ab
         \item Modell trifft nicht immer exakte Vorhersagen
     \end{itemize}
-    \item Frage: Wie gut ist das Modell wirklich?
+    \item \textbf{Frage: }Wie gut ist das Modell wirklich?
 \end{itemize}
 \end{columns}
 \source{\cite{seemann2024mlaz}, Regression-mpg.ipynb}
@@ -187,8 +187,8 @@ X_train, X_test, y_train, Y_test = train_test_split(
 \begin{columns}
 \column{0.7\textwidth}
 \begin{itemize}
-    \item Vermutlich lässt sich das Modell verbessern
-    \item Wir könnten zusätzliche Merkmale in die Vorhersage einbeziehen
+    \item Vermutlich lässt sich das Modell \textbf{verbessern}
+    \item Wir könnten \textbf{zusätzliche Merkmale} in die Vorhersage einbeziehen
 \end{itemize}
 
 \vspace{0.4em}
@@ -221,8 +221,8 @@ Dies liefert das \textbf{Bestimmtheitsmaß} $R^2$.
     \item Dieses gibt immer den \textbf{Mittelwert} der Zielwerte zurück
     \item Vergleich:
     \begin{itemize}
-        \item Quadratischer Fehler des Modells
-        \item vs. Fehler des Vergleichsmodells
+        \item \textbf{Quadratischer Fehler} des Modells
+        \item vs. Fehler des \textbf{Vergleichsmodells}
     \end{itemize}
 \end{itemize}
 
@@ -299,7 +299,7 @@ Dies liefert das \textbf{Bestimmtheitsmaß} $R^2$.
 \begin{frame}{Bestimmtheitsmaß}
 \begin{columns}
 \column{0.35\textwidth}
-{Quadratischer Fehler des Vergleichsmodells:}
+{Quadratischer Fehler des \textbf{Vergleichsmodells}:}
     \[
         E_{\text{vergleich}} 
         = \sum (y_i - \bar{y})^2
@@ -389,7 +389,7 @@ Dies liefert das \textbf{Bestimmtheitsmaß} $R^2$.
 \begin{frame}{Bestimmtheitsmaß}
 \begin{columns}
 \column{0.35\textwidth}
-Quadratischer Fehler des Regressionsmodells:
+Quadratischer Fehler des \textbf{Regressionsmodells}:
     \[
         E_{\text{modell}} 
         = \sum (y_i - \hat{y}_i)^2
@@ -727,8 +727,8 @@ print(model.score(X_test, Y_test))
 \column{0.45\textwidth}
 
 \begin{itemize}
-    \item Der erzielte Score schwankt abhängig von der Train/Test-Aufteilung.
-    \item Die Schwankungen können reduziert werden, indem das Modell mit mehreren unterschiedlichen Train/Test-Aufteilungen trainiert und bewertet wird.
+    \item Der erzielte \textbf{Score schwankt} abhängig von der Train/Test-Aufteilung.
+    \item Die Schwankungen können reduziert werden, indem das Modell mit mehreren \textbf{unterschiedlichen Train/Test-Aufteilungen} trainiert und bewertet wird.
     \item Ein gängiges Verfahren hierfür ist die \textbf{k-fache Kreuzvalidierung}.
 \end{itemize}
 
@@ -793,7 +793,7 @@ Die Punkte zeigen die Ergebnisse für verschiedene Aufteilungen.
 
 \vspace{0.4em}
 
-Die Linie entspricht einem typischen Mittelwert.
+Die Linie entspricht einem typischen \textbf{Mittelwert}.
 
 \end{columns}
 \source{\cite{seemann2024mlaz}}
@@ -805,12 +805,13 @@ Die Linie entspricht einem typischen Mittelwert.
 \column{0.35\textwidth}
 
 \textbf{Vorgehen:}
+\footnotesize   
 \begin{itemize}
     \item Daten werden in $k$ Blöcke aufgeteilt
     \item Modell wird $k$-mal trainiert und bewertet
-    \item Jeder Block wird einmal als Testdaten verwendet
+    \item Jeder Block wird \textbf{einmal als Testdaten} verwendet
     \item Restliche $k-1$ Blöcke sind Trainingsdaten
-    \item Ergebnis: $k$ Scores
+    \item \textbf{Ergebnis:} $k$ Scores
     \item Mittelwert der Scores als Gesamtbewertung
 \end{itemize}
 
