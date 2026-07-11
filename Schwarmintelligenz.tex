@@ -3,14 +3,12 @@
 \begin{frame}{Schwarmintelligenz: Grundidee}
 \begin{columns}
 \begin{column}{0.35\textwidth}
-  \
 \centering
-
+\includegraphics[width=0.8\linewidth]{figures/vogelschwarm.jpg}
 \end{column}
 
 \begin{column}{0.60\textwidth}
 \textbf{Schwarmintelligenz} bezeichnet kollektives, scheinbar intelligentes Verhalten, das aus dem Zusammenwirken vieler einfacher Individuen entsteht.
-
 \vspace{0.5em}
 \begin{itemize}
 \item Kein Individuum besitzt einen \textbf{Gesamtplan}.
@@ -18,7 +16,7 @@
 \item Aus lokaler Interaktion entsteht globale Ordnung (\textbf{Emergenz}).
 \end{itemize}
 \end{column}
-\includegraphics[width=\linewidth]{figures/vogelschwarm.jpg}
+
 \end{columns}
 \end{frame}
 
@@ -42,10 +40,11 @@ Viele biologische Systeme lösen komplexe Aufgaben ohne zentrale Steuerung:
 \source{\cite{tagesschau2021video121}}
 \end{frame}
 
-\begin{frame}{Prinzipien des Schwarmverhaltens}
+
+\begin{frame}[fragile]{Prinzipien des Schwarmverhaltens}
 \begin{columns}
 \begin{column}{0.60\textwidth}
-Reynolds beschrieb 1987 das Verhalten von Schwärmen (\textbf{Boids}) durch drei Regeln:
+Reynolds simulierte 1987 das Verhalten von Schwärmen durch ein Computermodell mit drei Regeln:
 \begin{itemize}
 \item \textbf{Separation}: Abstand zu Nachbarn halten.
 \item \textbf{Alignment}: Richtung an Nachbarn angleichen.
@@ -54,16 +53,17 @@ Reynolds beschrieb 1987 das Verhalten von Schwärmen (\textbf{Boids}) durch drei
 Diese lokalen Regeln erzeugen das koordinierte Gesamtbild.
 \end{column}
 \begin{column}{0.35\textwidth}
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[>=stealth, every node/.style={font=\scriptsize}]
-\foreach \x/\y in {0/0, 0.7/0.4, 1.4/0.1, 0.5/1.0, 1.3/1.1, 0.2/1.7} {
-  \draw[->, AccentColor, very thick] (\x,\y) -- ++(0.7,0.3);
-}
-\node at (0.9,-0.7) {gemeinsame Richtung};
-\end{tikzpicture}%
-}
+\begin{minted}[fontsize=\large]{text}
+                >
+           >  >   >
+        >   >  >   >  >
+      >  >   >  >  >   >
+         >  >   >  >
+            >   >
+\end{minted}
 \end{column}
 \end{columns}
+\source{\cite{Reynolds1987Boids}}
 \end{frame}
 
 \begin{frame}{Eigenschaften intelligenter Schwärme}
@@ -78,14 +78,19 @@ Schwarmsysteme zeigen typische Merkmale:
 \end{itemize}
 \end{column}
 \begin{column}{0.35\textwidth}
-Das Verhalten des Kollektivs ist \textbf{mehr} als die Summe der Einzelverhalten.
+\begin{blockC2}{Grundprinzip}
+\centering
+\large
+\itshape
+„Das Verhalten des Kollektivs ist \textbf{mehr als die Summe der Einzelverhalten.}“
+\end{blockC2}
 \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}{Von der Natur zur Optimierung}
 \begin{columns}
-\begin{column}{0.60\textwidth}
+\begin{column}{0.47\textwidth}
 Die Grundidee lässt sich auf \textbf{Optimierungsprobleme} übertragen:
 \begin{itemize}
 \item Individuen werden zu \textbf{Suchpunkten} im Lösungsraum.
@@ -94,28 +99,34 @@ Die Grundidee lässt sich auf \textbf{Optimierungsprobleme} übertragen:
 \end{itemize}
 Dieses Prinzip führt zur \textbf{Partikelschwarmoptimierung}.
 \end{column}
-\begin{column}{0.35\textwidth}
+\begin{column}{0.48\textwidth}
 \centering
-\twemoji[width=0.9\linewidth]{bird}
+\includesvg[width=\linewidth]{figures/ackley_iteration_005.svg}
 \end{column}
 \end{columns}
+\source{Partikelschwarmoptimierung.py}
 \end{frame}
 
 \begin{frame}{Partikelschwarmoptimierung: Überblick}
 \begin{columns}
 \begin{column}{0.60\textwidth}
-Die \textbf{Partikelschwarmoptimierung} (PSO) wurde 1995 von \textbf{Kennedy} und \textbf{Eberhart} vorgestellt.
-
-\vspace{0.5em}
 \begin{itemize}
-\item Ein \textbf{Schwarm} aus Partikeln durchsucht den Lösungsraum.
-\item Jedes Partikel ist eine \textbf{Kandidatenlösung}.
-\item Partikel orientieren sich am \textbf{eigenen} und am \textbf{besten} bekannten Ergebnis.
+\item \textbf{Partikelschwarmoptimierung} (PSO) ist ein von \textbf{Schwarmintelligenz} inspirierter Optimierungsalgorithmus.
+\item Entwickelt 1995 von \textbf{Kennedy} und \textbf{Eberhart}.
+\item Ziel: Finden von \textbf{optimalen Lösungen} in komplexen, \textbf{mehrdimensionalen Suchräumen}.
+\item Gehört zu den \textbf{heuristischen Verfahren} $\rightarrow$ keine exakte mathematische Modellierung nötig.
+\item Geeignet bei \textbf{nicht stetigen} oder \textbf{nicht differenzierbaren Zielfunktionen}.
 \end{itemize}
-PSO ist ein \textbf{populationsbasiertes}, ableitungsfreies Verfahren.
 \end{column}
+
+
 \begin{column}{0.35\textwidth}
-Geeignet für nichtlineare, nicht differenzierbare und hochdimensionale Probleme.
+\begin{block}{Vorteile von PSO}
+\begin{itemize}
+\item Arbeitet ohne Gradienten $\rightarrow$ auch für \textbf{nicht differenzierbare Zielfunktion} geeignet.
+\item \textbf{Parallele Suche} mehrerer Partikel macht die Methode robust gegenüber lokalen Optima.
+\end{itemize}
+\end{block}
 \end{column}
 \end{columns}
 \source{\cite{kennedy1995particle}}
@@ -123,7 +134,7 @@ Geeignet für nichtlineare, nicht differenzierbare und hochdimensionale Probleme
 
 \begin{frame}{Das Optimierungsproblem}
 \begin{columns}
-\begin{column}{0.60\textwidth}
+\begin{column}{0.47\textwidth}
 Gesucht wird das Minimum einer \textbf{Zielfunktion}:
 \[
 \min_{x \in \mathbb{R}^n} f(x)
@@ -134,26 +145,31 @@ Gesucht wird das Minimum einer \textbf{Zielfunktion}:
 \item Ein Maximierungsproblem entspricht dem Minimieren von $-f(x)$.
 \end{itemize}
 \end{column}
-\begin{column}{0.35\textwidth}
-Die Funktion $f$ muss \textbf{nur auswertbar} sein, nicht differenzierbar.
+\begin{column}{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/ackley_isometrisch.svg}
 \end{column}
 \end{columns}
-\source{\cite{kennedy1995particle}}
+\source{\cite{kennedy1995particle}, PSO\_Function\_plot.py}
 \end{frame}
 
 \begin{frame}{Ein Partikel}
 \begin{columns}
 \begin{column}{0.60\textwidth}
-Jedes Partikel $i$ besitzt:
+  \begin{itemize}
+\item PSO simuliert die Bewegung von Partikeln (Agenten) im Lösungsraum eines Problems.
+\item Jedes Partikel $i$ besitzt:
 \begin{itemize}
 \item eine \textbf{Position} $x_i$ (aktuelle Lösung),
 \item eine \textbf{Geschwindigkeit} $v_i$ (Bewegungsrichtung),
 \item sein \textbf{persönliches Bestes} $p_i$ (beste bisher besuchte Position).
 \end{itemize}
-In jedem Schritt bewegt sich das Partikel gemäß seiner Geschwindigkeit weiter.
+\item In jedem Schritt bewegt sich das Partikel gemäß seiner Geschwindigkeit weiter.
+\end{itemize}
 \end{column}
 \begin{column}{0.35\textwidth}
-\resizebox{\linewidth}{!}{%
+\centering
+\resizebox{0.8\linewidth}{!}{%
 \begin{tikzpicture}[>=stealth, every node/.style={font=\scriptsize}]
 \node[circle,fill=PrimaryColor,inner sep=2pt,label=below:{$x_i$}] (x) at (0,0) {};
 \node[circle,fill=AccentColor,inner sep=2pt,label=above:{$p_i$}] (p) at (2.2,1.6) {};
@@ -167,7 +183,7 @@ In jedem Schritt bewegt sich das Partikel gemäß seiner Geschwindigkeit weiter.
 \end{frame}
 
 \begin{frame}{Persönliches und globales Bestes}
-\begin{columns}
+\begin{columns}[T]
 \begin{column}{0.60\textwidth}
 Der Schwarm nutzt zwei Gedächtnisse:
 \begin{itemize}
@@ -176,31 +192,41 @@ Der Schwarm nutzt zwei Gedächtnisse:
 \end{itemize}
 
 \vspace{0.5em}
-Das globale Beste wird laufend aktualisiert:
+Das \textbf{globale Beste} wird laufend aktualisiert:
 \[
 g = \arg\min_{i} f(p_i)
 \]
 \end{column}
 \begin{column}{0.35\textwidth}
+\begin{block}{Zwei Optima}
 $p_i$ steht für \textbf{eigene Erfahrung}, $g$ für \textbf{soziales Wissen} des Schwarms.
+\end{block}
 \end{column}
 \end{columns}
 \source{\cite{kennedy1995particle}}
 \end{frame}
 
 \begin{frame}{Geschwindigkeitsupdate}
+  \small
 \begin{columns}
 \begin{column}{0.47\textwidth}
-Die neue Geschwindigkeit setzt sich aus drei Anteilen zusammen:
+\begin{itemize}
+\item Jedes Partikel wird mit zufälliger \textbf{Position} und \textbf{Geschwindigkeit} initialisiert.
+\item Iterativ: \textbf{Aktualisierung der Geschwindigkeit} jedes Partikels.
+\item Geschwindigkeit jedes Partikels setzt sich aus drei \textbf{Anteilen} zusammen:
 \[
+\boxed{
 v_i^{t+1} = \textcolor{PrimaryColor}{v_i^{t}}
 + \textcolor{AccentColor}{c_1 r_1 (p_i - x_i^{t})}
 + \textcolor{AlertColor}{c_2 r_2 (g - x_i^{t})}
+}
 \]
+\vspace{-1em}
 \begin{itemize}
 \item \textcolor{PrimaryColor}{\textbf{Trägheit}}: bisherige Richtung.
 \item \textcolor{AccentColor}{\textbf{kognitiv}}: Zug zum eigenen Besten.
 \item \textcolor{AlertColor}{\textbf{sozial}}: Zug zum globalen Besten.
+\end{itemize}
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -231,42 +257,58 @@ v_i^{t+1} = \textcolor{PrimaryColor}{v_i^{t}}
 
 \begin{frame}{Positionsupdate}
 \begin{columns}
-\begin{column}{0.60\textwidth}
-Nach der Geschwindigkeit wird die \textbf{Position} aktualisiert:
+\column{0.60\textwidth}
+\textbf{Schritt 2: Positionsaktualisierung}
 \[
+\boxed{
 x_i^{t+1} = x_i^{t} + v_i^{t+1}
+}
 \]
+
 \begin{itemize}
-\item Das Partikel bewegt sich entlang der neuen Geschwindigkeit.
-\item Anschließend wird $f(x_i^{t+1})$ bewertet.
-\item Bei Verbesserung werden $p_i$ und ggf. $g$ aktualisiert.
+\item Bewegung des Partikels gemäß \textbf{neuer Geschwindigkeit}.
+\item Bewertung der neuen Position: $\;f(x_i^{t+1})$.
+\item Update von \textbf{$p_i$} und ggf. \textbf{$g$} bei Verbesserung.
 \end{itemize}
-\end{column}
-\begin{column}{0.35\textwidth}
-Geschwindigkeit und Position werden für \textbf{jedes} Partikel in jedem Schritt neu berechnet.
-\end{column}
+
+\column{0.35\textwidth}
+\begin{block}{Kernidee}
+\begin{itemize}
+\item \textbf{Exploration} durch Bewegung im Suchraum.
+\item \textbf{Feedback} durch Funktionsbewertung.
+\item Zyklus für \textbf{jedes Partikel} in jeder Iteration.
+\end{itemize}
+\end{block}
+
 \end{columns}
 \source{\cite{kennedy1995particle}}
 \end{frame}
 
+
 \begin{frame}{Die Parameter}
-\begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Bedeutung}
 \begin{itemize}
-\item $c_1$: \textbf{kognitiver} Faktor (Vertrauen in sich selbst).
-\item $c_2$: \textbf{sozialer} Faktor (Vertrauen in den Schwarm).
-\item $r_1, r_2 \in [0,1]$: \textbf{Zufallswerte} pro Schritt.
-\item $w$: \textbf{Trägheitsgewicht} (spätere Erweiterung).
+\item $c_1$ -- \textbf{kognitiver Faktor} (eigene Erfahrung).
+\item $c_2$ -- \textbf{sozialer Faktor} (Schwarmverhalten).
+\item $r_1, r_2$ -- \textbf{Zufall} in $[0,1]$.
+\item $w$ -- \textbf{Trägheit} der Bewegung.
 \end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
+\end{block}
+
+\column{0.48\textwidth}
+\begin{blockC2}{Wirkung}
 \begin{itemize}
-\item Großes $c_1$: starke \textbf{Exploration}.
-\item Großes $c_2$: schnelle \textbf{Konvergenz}.
-\item Die Zufallswerte sorgen für \textbf{Vielfalt} im Schwarm.
+\item Großes $c_1$ $\rightarrow$ mehr \textbf{Exploration}.
+\item Großes $c_2$ $\rightarrow$ schnellere \textbf{Konvergenz}.
+\item Zufall $\rightarrow$ \textbf{Diversität} im Schwarm.
 \end{itemize}
-Typisch: $c_1 \approx c_2 \approx 2$.
-\end{column}
+
+\vspace{0.5em}
+\textbf{Typisch:} $c_1 \approx c_2 \approx 2$
+\end{blockC2}
+
 \end{columns}
 \source{\cite{kennedy1995particle}}
 \end{frame}
@@ -277,6 +319,7 @@ Typisch: $c_1 \approx c_2 \approx 2$.
 \footnotesize
 \begin{algorithm}[H]
 \DontPrintSemicolon
+\SetAlCapFnt{\footnotesize}
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
 \Input{Zielfunktion $f$, Schwarmgröße $N$, $c_1$, $c_2$}
@@ -299,6 +342,7 @@ $g \leftarrow \arg\min_i f(p_i)$\;
     }
   }
 }
+\caption{\footnotesize Partikelschwarmoptimierung}
 \end{algorithm}
 \end{column}
 \begin{column}{0.35\textwidth}
@@ -308,32 +352,27 @@ Der Schwarm wiederholt \textbf{Bewegung} und \textbf{Bewertung}, bis er konvergi
 \source{\cite{kennedy1995particle}}
 \end{frame}
 
+
 \begin{frame}{Ablauf: Konvergenz des Schwarms}
 \begin{columns}
-\begin{column}{0.35\textwidth}
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[>=stealth, every node/.style={font=\scriptsize}]
-\node[star,star points=5,fill=AlertColor,draw=AlertColor,
-      minimum size=0.6cm,inner sep=0pt,label=below:{$g$}] (opt) at (0,0) {};
-\foreach \x/\y in {-3/1.5, -2.5/-1.2, 2.8/1.0, 3.2/-0.8,
-                   -1.5/2.2, 1.8/-2.0, 0.3/2.6, -3.2/-0.3} {
-  \node[circle,fill=PrimaryColor,inner sep=1.5pt] at (\x,\y) {};
-  \draw[->,AccentColor,thick] (\x,\y) -- ($ (\x,\y)!0.45!(0,0) $);
-}
-\end{tikzpicture}%
-}
-\end{column}
 \begin{column}{0.60\textwidth}
+\includesvg[width=0.43\linewidth]{figures/ackley_iteration_005.svg}\hfill
+\includesvg[width=0.43\linewidth]{figures/ackley_iteration_010.svg}\\[0.5em]
+\includesvg[width=0.43\linewidth]{figures/ackley_iteration_025.svg}\hfill
+\includesvg[width=0.43\linewidth]{figures/ackley_iteration_045.svg}
+\end{column}
+\begin{column}{0.40\textwidth}
 Während des Laufs bewegt sich der Schwarm gemeinsam auf gute Regionen zu:
 \begin{itemize}
-\item Anfangs sind die Partikel \textbf{breit gestreut} (Exploration).
-\item Über die Zeit ziehen sie zum \textbf{globalen Besten} (Exploitation).
+\item Anfangs sind die Partikel \textbf{breit gestreut}.
+\item Über die Zeit ziehen sie zum \textbf{globalen Besten}.
 \item Schließlich \textbf{konzentriert} sich der Schwarm um das Optimum.
 \end{itemize}
 \end{column}
 \end{columns}
-\source{\cite{kennedy1995particle}}
+\source{\cite{kennedy1995particle}, Partikelschwarmoptimierung.py}
 \end{frame}
+
 
 \begin{frame}{Erweiterungen des Grundverfahrens}
 \begin{columns}
@@ -356,29 +395,57 @@ Lokale Topologien verringern die Gefahr, in einem \textbf{lokalen Minimum} zu la
 \source{\cite{shi1998modified}}
 \end{frame}
 
+
 \begin{frame}{Stärken und Grenzen}
 \begin{columns}
-\begin{column}{0.47\textwidth}
-\textbf{Stärken:}
+
+\column{0.48\textwidth}
+\begin{blockC1}{Stärken}
 \begin{itemize}
-\item einfach zu implementieren,
-\item wenige Parameter,
-\item keine Ableitungen nötig,
-\item gut parallelisierbar.
+\item \textbf{Einfach} zu implementieren
+\item \textbf{Wenige Parameter}
+\item \textbf{Keine Ableitungen} erforderlich
+\item Gut \textbf{parallelisierbar}
 \end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Grenzen:}
+\end{blockC1}
+
+\column{0.48\textwidth}
+\begin{blockC2}{Grenzen}
 \begin{itemize}
-\item vorzeitige Konvergenz möglich,
-\item Parameter beeinflussen das Ergebnis stark,
-\item keine Garantie für das globale Optimum.
+\item Gefahr von \textbf{vorzeitiger Konvergenz}
+\item \textbf{Parameterwahl} beeinflusst stark
+\item Keine Garantie für \textbf{globales Optimum}
 \end{itemize}
-\end{column}
+\end{blockC2}
+
 \end{columns}
 \source{\cite{kennedy1995particle}}
 \end{frame}
 
+\begin{frame}{Verwandte naturinspirierte Verfahren}
+\vspace{1em}
+\begin{columns}[t]
+\begin{column}{0.31\textwidth}
+\centering
+\twemoji[width=0.45\linewidth]{honeybee}\\[1em]
+\textbf{Artificial Bee Colony (ABC) Algorithmus}\\[0.6em]
+\footnotesize Bienenvolk sucht kollektiv nach Nahrungsquellen, verteilt auf Sammler und Kundschafter.
+\end{column}
+\begin{column}{0.31\textwidth}
+\centering
+\twemoji[width=0.45\linewidth]{ant}\\[1em]
+\textbf{Ant Colony System}\\[0.6em]
+\footnotesize Ameisen finden über Pheromonspuren gemeinsam kürzeste Wege.
+\end{column}
+\begin{column}{0.31\textwidth}
+\centering
+\twemoji[width=0.45\linewidth]{dna}\\[1em]
+\textbf{Evolutionary Algorithms}\\[0.6em]
+\footnotesize Selektion, Rekombination und Mutation verbessern eine Population über Generationen.
+\end{column}
+\end{columns}
+\vspace{1em}
+\end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
