@@ -127,7 +127,7 @@ print(grid.best_score_)
 \begin{columns}
 \column{0.60\textwidth}
 Eine \textbf{Pipeline} legt fest, welche Schritte nacheinander auf den
-Daten ausgeführt werden -- hier erst der \texttt{StandardScaler}, dann der
+Daten ausgeführt werden; hier erst der \texttt{StandardScaler}, dann der
 \texttt{RandomForestClassifier}. Jede Komponente bekommt einen
 \textbf{Namen}:
 \begin{minted}[fontsize=\footnotesize]{python}
@@ -158,7 +158,7 @@ pipeline = Pipeline([
 \begin{columns}
 \column{0.60\textwidth}
 \textbf{GridSearchCV} probiert verschiedene Konfigurationen aus und gibt die
-Kombination mit dem besten Score zurück -- automatisch mit
+Kombination mit dem besten Score zurück, automatisch mit
 \textbf{k-facher Kreuzvalidierung}:
 \begin{minted}[fontsize=\footnotesize]{python}
 from sklearn.model_selection import GridSearchCV

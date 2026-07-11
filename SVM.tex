@@ -17,7 +17,7 @@ unterschiedlich klassifiziert werden.
 
 \vspace{0.4em}
 {\footnotesize\itshape Beispiel rechts: Entscheidungsgrenze eines
-Entscheidungsbaumes -- achsenparallele Stufen.}
+Entscheidungsbaumes, achsenparallele Stufen.}
 
 \column{0.45\textwidth}
 \centering
@@ -163,7 +163,7 @@ Ebene. Dabei sind:
   \item $a, b, c$: die Komponenten des \textbf{Normalenvektors}
         $\mathbf{n} = (a, b, c)^T$. Er steht \textbf{senkrecht} auf der
         Ebene und bestimmt ihre Ausrichtung.
-  \item $d$: bestimmt die \textbf{Lage} der Ebene -- der Abstand vom
+  \item $d$: bestimmt die \textbf{Lage} der Ebene. Der Abstand vom
         Ursprung (entlang $\mathbf{n}$), multipliziert mit der Länge von
         $\mathbf{n}$.
 \end{itemize}
@@ -392,7 +392,7 @@ Wir formen die Hyperebenengleichung um, um die optimale Lage zu finden:
         $\mathbf{w}$.
   \item Division durch $\lVert\mathbf{w}\rVert$ liefert die \textbf{echte}
         geometrische Distanz.
-  \item \textbf{Klassifikation}: nur Vorzeichen nötig -- Normierung
+  \item \textbf{Klassifikation}: nur Vorzeichen nötig $\rightarrow$ Normierung
         entfällt.
   \item \textbf{Abstand}: Normierung wird gebraucht.
 \end{itemize}
@@ -618,7 +618,7 @@ für alle Trainingspunkte $\mathbf{x}$.
 \footnotesize
 \begin{blockC1}{\footnotesize   Margin}
 \begin{itemize}
-  \item Die rechte Seite ist der \textbf{Margin} -- der Abstand der
+  \item Die rechte Seite ist der \textbf{Margin}, also der Abstand der
         Trennebene zu den nächstgelegenen Trainingspunkten.
   \item \textbf{Kernidee:} Margin maximieren bedeutet
         $\lVert \mathbf{w} \rVert$ \textbf{minimieren}.
@@ -887,7 +887,7 @@ Im \textbf{Optimum} müssen beide Ableitungen \textbf{null} sein
 
 \column{0.35\textwidth}
 \begin{block}{\small Warum null?} 
-    An einem Optimum ist die Steigung waagerecht -- die
+    An einem Optimum ist die Steigung waagerecht $\rightarrow$ die
 Ableitung wird null. Das ist die \textbf{Stationaritätsbedingung} der KKT.
 \end{block}
 
@@ -1344,7 +1344,7 @@ print(model.score(X_test, y_test))
 
 \begin{itemize}
 \item Mit \texttt{kernel="linear"} nutzt die SVM eine \textbf{lineare}
-Trennebene -- also genau die Hyperebene aus der Herleitung.
+Trennebene, also genau die Hyperebene aus der Herleitung.
 \item Die Gerade kann die  Daten nicht genau beschreiben, weil unser Datensatz 
 \textbf{nicht linear trennbar} ist. Wir brauchen eine Soft-Margin.
 
@@ -1429,7 +1429,7 @@ Trennebene -- also genau die Hyperebene aus der Herleitung.
   \item \textbf{Fehlklassifikationen} werden vermieden.
   \item Dafür ergibt sich eine sehr \textbf{schmale}
         Entscheidungsgrenze.
-  \item Auch der Ausreißer wird korrekt eingeordnet -- die Grenze rückt
+  \item Auch der Ausreißer wird korrekt eingeordnet. Die Grenze rückt
         eng an die Punkte heran.
 \end{itemize}
 
@@ -1921,7 +1921,7 @@ bei der Klassifikation.
 \column{0.48\textwidth}
 \begin{blockC1}{\footnotesize Warum das genial ist}
 \begin{itemize}
-  \item $\Phi$ muss \textbf{nie explizit} berechnet werden -- man kennt nur
+  \item $\Phi$ muss \textbf{nie explizit} berechnet werden. Man kennt nur
         das Ergebnis des Skalarprodukts.
   \item So sind selbst \textbf{unendlichdimensionale} Zielräume möglich
         (z.\,B. beim RBF-Kernel).
@@ -1988,7 +1988,7 @@ Beispiel $d = 2$, $c = 0$ im $\mathbb{R}^2$:
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item $d = 1$: entspricht der \textbf{linearen} SVM -- gerade Grenze.
+  \item $d = 1$: entspricht der \textbf{linearen} SVM $\rightarrow$ gerade Grenze.
   \item $d = 2$: \textbf{quadratische} Grenzen (Kreise, Ellipsen,
         Parabeln).
   \item Höheres $d$: zunehmend \textbf{gewundene} Grenzen.
