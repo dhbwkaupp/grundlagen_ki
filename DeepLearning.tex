@@ -1,0 +1,248 @@
+\makesectionpage{Deep Learning}
+
+
+\makesubsectionpage{Deep Neural Networks}
+
+\begin{frame}{Deep Learning}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+\item Deep Learning ist ein \textbf{Sonderfall des überwachten Lernens}.
+\item Die Modelle basieren auf Architekturen \textbf{komplexer neuronaler Netze}.
+\item \textbf{deep} bezieht sich auf die Anzahl der \textbf{verborgenen Schichten}. Modelle können Hunderte oder Tausende davon haben.
+\item Sie werden mit großen Mengen an \textbf{gekennzeichneten Daten} trainiert.
+\item Sie lernen Merkmale oft \textbf{direkt aus den Daten}, ohne manuelle Merkmalsextraktion.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\resizebox{1.0\linewidth}{!}{%
+\centering
+\begin{tikzpicture}[every node/.style={font=\footnotesize}]
+
+% KI
+\filldraw[fill=PrimaryColor, fill opacity=0.1, draw=PrimaryColor, line width=1pt] (0,0) circle (3.75);
+\node[align=center] at (0,3.1)
+{\textbf{Künstliche}\\\textbf{Intelligenz}};
+
+% Machine Learning
+\filldraw[fill=AccentColor, fill opacity=0.1, draw=AccentColor, line width=1pt] (0,-0.6) circle (3);
+\node[align=center] at (0,1.7)
+{\textbf{Machine}\\\textbf{Learning}};
+
+% Deep Learning
+\filldraw[fill=AlertColor, fill opacity=0.1, draw=AlertColor, line width=1pt] (0,-1.2) circle (2.2);
+\node[align=center] at (0,0.4)
+{\textbf{Deep}\\\textbf{Learning}};
+
+% Generative AI
+\filldraw[fill=ThirdColor, fill opacity=0.1, draw=ThirdColor, line width=1pt] (0,-1.7) circle (1.5);
+\node[align=center] at (0,-1.1)
+{\textbf{Generative}\\\textbf{KI}};
+
+% LLM
+\filldraw[fill=ExampleColor, fill opacity=0.1, draw=ExampleColor, line width=1pt] (0,-2.3) circle (0.75);
+\node[align=center] at (0,-2.3)
+{\textbf{LLM}};
+
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\cite{mathworks_deep_learning}}
+\end{frame}
+
+\begin{frame}{Deep Learning: Rechenleistung}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Beim Deep Learning werden mit sehr großen Datensätzen \textbf{enorm viele Parameter} neuronaler Netze optimiert.
+\begin{itemize}
+\item Dadurch erfordert Deep Learning eine \textbf{enorme Rechenleistung}.
+\item Diese ist erst seit den \textbf{2000er-Jahren} allgemein verfügbar.
+\item \textbf{Leistungsstarke Grafikkarten} bieten eine parallele Architektur, die besonders effizient ist.
+\item In der \textbf{Cloud} wird Rechenleistung frei oder gegen Gebühr bereitgestellt.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\includesvg[width=0.9\linewidth]{figures/gpu.svg}
+\end{column}
+\end{columns}
+\source{\cite{mathworks_deep_learning}}
+\end{frame}
+
+
+\begin{frame}{Tensoren}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Ein \textbf{Tensor} ist ein mehrdimensionales Zahlenfeld und die zentrale Datenstruktur im Deep Learning.
+\begin{itemize}
+\item \textbf{Rang 0}: Skalar, eine einzelne Zahl.
+\item \textbf{Rang 1}: Vektor, eine Zahlenreihe.
+\item \textbf{Rang 2}: Matrix, eine Tabelle.
+\item \textbf{Rang $n$}: Verallgemeinerung auf $n$ Achsen.
+\end{itemize}
+Die \textbf{Form} (shape) gibt die Größe entlang jeder Achse an.
+\end{column}
+\begin{column}{0.35\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+
+% ===== Obere Reihe (vertikal zentriert um y = 3.8) =====
+
+% Skalar (0.5 hoch -> 3.55 bis 4.05)
+\filldraw[fill=PrimaryColor!20, draw=PrimaryColor, very thick] (0,3.55) rectangle (0.5,4.05);
+\node at (0.25,2.7) {\textbf{Skalar}};
+\node at (0.25,2.35) {Rang 0};
+
+% Vektor (1.5 hoch -> 3.05 bis 4.55)
+\foreach \y in {3.05,3.55,4.05} {
+  \filldraw[fill=AccentColor!20, draw=AccentColor, very thick] (2.3,\y) rectangle (2.8,\y+0.5);
+}
+\node at (2.55,2.7) {\textbf{Vektor}};
+\node at (2.55,2.35) {Rang 1};
+
+% ===== Untere Reihe (vertikal zentriert um y = 0.75) =====
+
+% Matrix (1.5 hoch -> 0 bis 1.5)
+\foreach \x in {0,0.5} {
+  \foreach \y in {0,0.5,1} {
+    \filldraw[fill=AlertColor!20, draw=AlertColor, very thick] (\x,\y) rectangle (0.5+\x,0.5+\y);
+  }
+}
+\node at (0.5,-0.4) {\textbf{Matrix}};
+\node at (0.5,-0.75) {Rang 2};
+
+% Tensor (Rang 3, visuell 1.36 hoch -> Basis bei 0.07)
+\foreach \z in {0,0.18,0.36} {
+  \foreach \x in {0,0.5} {
+    \foreach \y in {0,0.5} {
+      \filldraw[fill=ThirdColor!20, draw=ThirdColor, very thick]
+        (2.3+\x+\z,0.07+\y+\z) rectangle (2.8+\x+\z,0.57+\y+\z);
+    }
+  }
+}
+\node at (2.7,-0.4) {\textbf{Tensor}};
+\node at (2.7,-0.75) {Rang 3};
+
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Tensoren: Beispiel RGB-Bild}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Ein \textbf{RGB-Bild} ist ein typischer \textbf{Rang-3-Tensor}:
+\begin{itemize}
+\item \textbf{Höhe}: Anzahl der Bildzeilen,
+\item \textbf{Breite}: Anzahl der Bildspalten,
+\item \textbf{Kanäle}: Rot, Grün, Blau.
+\end{itemize}
+Die Form lautet also \textbf{(Höhe, Breite, 3)}. Jeder Eintrag ist ein Helligkeitswert eines Kanals an einer Position.
+\end{column}
+\begin{column}{0.48\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+
+% Drei gestapelte Kanäle
+\foreach \c/\name/\dx/\dy in {AlertColor/Rot/0/0, ExampleColor/Grün/0.6/0.5, PrimaryColor/Blau/1.2/1.0} {
+  \begin{scope}[shift={(\dx,\dy)}]
+    \draw[fill=\c!15, draw=\c, very thick] (0,0) rectangle (3,3);
+    \foreach \i in {0.5,1,1.5,2,2.5} {
+      \draw[\c!40] (\i,0) -- (\i,3);
+      \draw[\c!40] (0,\i) -- (3,\i);
+    }
+  \end{scope}
+}
+
+\node[text=PrimaryColor] at (2.6,1.3) {\textbf{Blau}};
+\node[text=ExampleColor] at (2.2,0.8) {\textbf{Grün}};
+\node[text=AlertColor] at (1.6,0.3) {\textbf{Rot}};
+
+\draw[<->, thick] (-0.3,0) -- (-0.3,3) node[midway,left,rotate=90,anchor=south] {Höhe};
+\draw[<->, thick] (0,-0.3) -- (3,-0.3) node[midway,below] {Breite};
+
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Tensoren im neuronalen Netz}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\textbf{Datenrepräsentation:}
+\begin{itemize}
+\item Tensoren stellen Datentypen wie \textbf{Bilder} und \textbf{Texte} dar.
+\item Eingabedaten werden in strukturierten Tensoren organisiert.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Gewichte der Schichten:}
+\begin{itemize}
+\item Die \textbf{Gewichte} neuronaler Netze sind ebenfalls Tensoren.
+\item Sie werden während des \textbf{Trainings} angepasst.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Mathematische Operationen:}
+\begin{itemize}
+\item \textbf{Matrixmultiplikation} von Eingaben und Gewichten,
+\item \textbf{Aktivierungsfunktionen} für Nichtlinearitäten,
+\item \textbf{Gradientenberechnung} für die Backpropagation.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Vorhersage:}
+\begin{itemize}
+\item Die Ergebnisse führen zu \textbf{Modellausgaben} und \textbf{Vorhersagen}.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{TensorFlow}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\centering
+\includesvg[width=0.9\linewidth]{figures/Tensorflow_logo.svg}
+\end{column}
+\begin{column}{0.60\textwidth}
+\textbf{TensorFlow} ist ein quelloffenes Framework für maschinelles Lernen, entwickelt von Google.
+\begin{itemize}
+\item Rechnungen werden als \textbf{Datenflussgraphen} über Tensoren beschrieben.
+\item Es nutzt \textbf{CPUs, GPUs} und \textbf{TPUs} zur parallelen Verarbeitung.
+\item Man hat \textbf{detaillierte Kontrolle} über alle Parameter, etwa zur Entwicklung \textbf{neuartiger Netztopologien}.
+\item Wird oft in der \textbf{Forschung} eingesetzt.
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{tensorflow2015}}
+\end{frame}
+
+
+\begin{frame}{Keras}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\textbf{Keras} ist leicht erlernbare API für neuronale Netze, die auf Frameworks wie TensorFlow aufsetzt.
+\begin{itemize}
+\item Modelle werden aus \textbf{Schichten} einfach zusammengesetzt.
+\item Der Fokus liegt auf \textbf{Benutzerfreundlichkeit} und schneller Umsetzung.
+\item Für reine \textbf{Anwender*innen} einfacher zu erlernen als TensorFlow.
+\item Bietet bereits \textbf{vortrainierte Modelle} für Klassifikationsaufgaben.
+\item Ideal für \textbf{Einstieg} und schnelles \textbf{Prototyping}.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\includesvg[width=0.9\linewidth]{figures/keras_logo.svg}
+\end{column}
+
+\end{columns}
+\source{\cite{chollet2015keras}}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+
+  <!-- Grafikkarte -->
+  <rect x="100" y="120" width="320" height="240" rx="24" fill="#8899A6"/>
+
+  <!-- Slotblende -->
+  <rect x="70" y="120" width="30" height="240" rx="4" fill="#66757F"/>
+
+  <!-- Videoanschlüsse -->
+  <rect x="78" y="160" width="14" height="24" rx="2" fill="#CCD6DD"/>
+  <rect x="78" y="200" width="14" height="24" rx="2" fill="#CCD6DD"/>
+  <rect x="78" y="240" width="14" height="24" rx="2" fill="#CCD6DD"/>
+
+  <!-- Lüftergehäuse -->
+  <circle cx="260" cy="240" r="82" fill="#292F33"/>
+
+  <!-- Lüfterblätter -->
+  <g fill="#55ACEE">
+    <path d="M260 165 C290 170 310 190 305 225 C285 215 270 195 260 165"/>
+    <path d="M335 240 C330 270 310 290 275 285 C285 265 305 250 335 240"/>
+    <path d="M260 315 C230 310 210 290 215 255 C235 265 250 285 260 315"/>
+    <path d="M185 240 C190 210 210 190 245 195 C235 215 215 230 185 240"/>
+  </g>
+
+  <!-- Nabe -->
+  <circle cx="260" cy="240" r="24" fill="#CCD6DD"/>
+
+  <!-- Schrauben -->
+  <circle cx="130" cy="145" r="5" fill="#66757F"/>
+  <circle cx="390" cy="145" r="5" fill="#66757F"/>
+  <circle cx="130" cy="335" r="5" fill="#66757F"/>
+  <circle cx="390" cy="335" r="5" fill="#66757F"/>
+
+  <!-- Lichtreflex -->
+  <path d="M140 150 C200 120 340 120 390 165"
+        fill="none"
+        stroke="#CCD6DD"
+        stroke-width="8"
+        stroke-linecap="round"
+        opacity="0.7"/>
+
+  <!-- PCIe-Kontakte -->
+  <g fill="#FFCC4D">
+    <rect x="160" y="360" width="12" height="30"/>
+    <rect x="178" y="360" width="12" height="30"/>
+    <rect x="196" y="360" width="12" height="30"/>
+    <rect x="214" y="360" width="12" height="30"/>
+    <rect x="232" y="360" width="12" height="30"/>
+    <rect x="250" y="360" width="12" height="30"/>
+    <rect x="268" y="360" width="12" height="30"/>
+    <rect x="286" y="360" width="12" height="30"/>
+    <rect x="304" y="360" width="12" height="30"/>
+    <rect x="322" y="360" width="12" height="30"/>
+  </g>
+
+</svg>
