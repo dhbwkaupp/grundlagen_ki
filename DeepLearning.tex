@@ -3,6 +3,8 @@
 
 \makesubsectionpage{Deep Neural Networks}
 
+\makesubsubsectionpage{Grundlagen}
+
 \begin{frame}{Deep Learning}
 \begin{columns}
 \begin{column}{0.60\textwidth}
@@ -244,5 +246,1656 @@ Die Form lautet also \textbf{(Höhe, Breite, 3)}. Jeder Eintrag ist ein Helligke
 \source{\cite{chollet2015keras}}
 \end{frame}
 
+\begin{frame}{Neuronale Netze in Keras: Datensatz}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+Wir kennen bereits den \textbf{MNIST-Datensatz}.
+\begin{itemize}
+\item Für herkömmliche Klassifikatoren war er eher \textbf{schwierig}.
+\item Mit \textbf{70000 Datensätzen} liegen genug Trainingsdaten für Deep Learning vor.
+\item Für Deep-Learning-Verfahren ist er fast schon \textbf{zu leicht}.
+\item Hier erreicht man Trefferquoten von fast \textbf{100\%}.
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/mnistexamples.png}
+\end{column}
+\end{columns}
+\source{Bildquelle: \cite{steppan_mnist_examples}}
+\end{frame}
+
+
+\begin{frame}{Neuronale Netze in Keras: Fashion-MNIST}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{Fashion-MNIST} ist ein Ersatz für die ursprüngliche MNIST-Datenbank zum Benchmarken von Lernalgorithmen.
+\begin{itemize}
+\item Gleiche \textbf{Bildgröße}, gleiches \textbf{Datenformat} und gleiche Struktur der Splits wie MNIST.
+\item \textbf{70000} Graustufenbilder ($28 \times 28$) von Modeprodukten aus \textbf{10 Kategorien} (Zalando), je 7000 pro Kategorie.
+\item \textbf{60000} Trainingsbilder, \textbf{10000} Testbilder.
+\item Oft bereits in Standard-Bibliotheken enthalten.
+\end{itemize}
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/fashion\_mnist.png}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning, rabab_fashionmnist}, Bildquelle: \cite{rabab_fashionmnist}}
+\end{frame}
+
+\begin{frame}{Neuronale Netze in Keras: Fashion-MNIST}
+\begin{columns}
+\begin{column}{0.40\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/fashion_mnist.png}
+\end{column}
+\begin{column}{0.55\textwidth}
+Jeder Datensatz hat eines von zehn möglichen \textbf{Labels}:
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item[\textbf{0}] T-shirt/top
+\item[\textbf{1}] Trouser
+\item[\textbf{2}] Pullover
+\item[\textbf{3}] Dress
+\item[\textbf{4}] Coat
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item[\textbf{5}] Sandal
+\item[\textbf{6}] Shirt
+\item[\textbf{7}] Sneaker
+\item[\textbf{8}] Bag
+\item[\textbf{9}] Ankle boot
+\end{itemize}
+\end{column}
+\end{columns}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}, Bildquelle: \cite{rabab_fashionmnist}}
+\end{frame}
+
+\makesubsubsectionpage{Binäre Klassifikation}
+
+\begin{frame}{Neuronale Netze in Keras: Binäre Klassifikation}
+\begin{columns}
+\begin{column}{0.40\textwidth}
+Zunächst klassifizieren wir, ob auf einem Bild ein \textbf{T-Shirt/Top} zu sehen ist (Label 0). Das ist eine \textbf{binäre Klassifikation}.
+\begin{itemize}
+\item Eingang: die \textbf{784 Graustufenwerte} der Bildpixel, jeweils zwischen $0$ und $1$.
+\item Ausgang: die \textbf{Wahrscheinlichkeit} für T-Shirt.
+\end{itemize}
+\end{column}
+\begin{column}{0.55\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=12pt, inner sep=0pt, text=white},
+  hidden/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+                 very thick, minimum size=12pt, inner sep=0pt, text=white},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=12pt, inner sep=0pt, text=white}
+]
+% Schichttitel
+\node[font=\scriptsize\bfseries, align=center] at (0,6.2) {Input Layer\\$28 \cdot 28 = 784$};
+\node[font=\scriptsize\bfseries, align=center] at (3.2,6.2) {Hidden Layer\\z.~B. 100 Neuronen};
+\node[font=\scriptsize\bfseries, align=center] at (6.6,6.2) {Output Layer\\1 Neuron};
+
+% Input
+\node[input] (x1) at (0,4.6) {};
+\node[input] (x2) at (0,3.2) {};
+\node[input] (x3) at (0,1.8) {};
+\node[font=\scriptsize, left] at (-0.4,4.6) {$x_1$};
+\node[font=\scriptsize, left] at (-0.4,3.2) {$x_2$};
+\node[font=\scriptsize, left] at (-0.4,1.8) {$x_3$};
+\node[font=\large] at (0,0.7) {$\vdots$};
+
+% Hidden
+\node[hidden] (a1) at (3.2,5.0) {};
+\node[hidden] (a2) at (3.2,3.7) {};
+\node[hidden] (a3) at (3.2,2.4) {};
+\node[hidden] (a4) at (3.2,1.1) {};
+\node[font=\large] at (3.2,0.1) {$\vdots$};
+
+% Output
+\node[outp] (o) at (6.6,3.2) {};
+\node[font=\scriptsize, right] at (7.1,3.2) {$\hat{y}$};
+
+% Kanten Input -> Hidden
+\foreach \i in {x1,x2,x3} {
+  \foreach \h in {a1,a2,a3,a4} {
+    \draw[->] (\i) -- (\h);
+  }
+}
+% Kanten Hidden -> Output
+\foreach \h in {a1,a2,a3,a4} {
+  \draw[->] (\h) -- (o);
+}
+\end{tikzpicture}}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+  \end{frame}
+
+
+ \begin{frame}[fragile]{Neuronale Netze in Keras: Daten einlesen}
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\centering
+\includesvg[width=1.0\linewidth]{figures/mnist_shirt.svg}
+\end{column}
+\begin{column}{0.70\textwidth}
+Das Einlesen ist praktisch \textbf{identisch} zum Einlesen der MNIST-Daten.
+
+\vspace{0.5em}
+\begin{minted}[fontsize=\footnotesize]{python}
+X_train = open_images(
+  "../Datensätze/fashion/train-images-idx3-ubyte.gz")
+
+X_train.shape
+# Ausgabe: (60000, 28, 28)
+
+plt.imshow(X_train[1], cmap="gray_r")
+\end{minted}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]{Neuronales Netz erzeugen}
+\begin{columns}
+\begin{column}{0.57\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Dense
+
+model = Sequential()
+
+model.add(Input(shape=(784,)))
+model.add(Dense(100, activation="relu"))
+model.add(Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="sgd",
+              loss="binary_crossentropy")
+\end{minted}
+\end{column}
+\begin{column}{0.43\textwidth}
+  \footnotesize
+\begin{itemize}
+\item \textbf{Sequential}: Modell, dem man einzelne Layer hinzufügt.
+\item \textbf{Input}: Shape der Eingabedaten (784).
+\item \textbf{Dense}: fully connected, alle Neuronen mit allen Ein- und Ausgängen verbunden.
+\item \textbf{sgd}: stochastic gradient descent.
+\item \textbf{compile}: Legt fest, wie das Netz trainiert wird (Optimierungsverfahren und Verlustfunktion).
+\item \textbf{binary\_crossentropy}: Verlustfunktion für binäre Klassifikation (Ausgabe 0 oder 1).
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+  \begin{frame}{Keras: Struktur selbst angeben}
+    \small
+  \begin{columns}
+  \begin{column}{0.47\textwidth}
+  Beim \textbf{Sequential}-Modell legt man zuerst das Objekt an und baut das Netz dann \textbf{Lage um Lage} auf.
+  \begin{itemize}
+\item Netzwerk wird \textbf{schichtweise} mit \texttt{add()} aufgebaut.
+\item Reihenfolge: \textbf{Input $\rightarrow$ Hidden $\rightarrow$ Output}.
+\item Eingabedimension wird im \textbf{ersten Layer} festgelegt.
+\item Mit \texttt{model.summary()} kann man sich die Netzstruktur ausgeben lassen
+  \end{itemize}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{figures/model_summary.png}
+  \end{column}
+  \end{columns}
+  \source{\cite{Frochte2020}}
+  \note{In der Summary sind die Bias-Neuronen berücksichtigt}
+  \end{frame}
+
+\begin{frame}{Keras: Dense-Layer}
+  \small
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\includesvg[width=0.9\linewidth, inkscapelatex=false]{figures/model_plot.svg}\par
+\footnotesize Mit \texttt{plot\_model()} erzeugte Modell-Skizze
+\end{column}
+\begin{column}{0.48\textwidth}
+Wir bleiben beim \textbf{MLP}, bei dem jedes Neuron einer Schicht mit allen Neuronen der nächsten verbunden ist. Solche Schichten heißen \textbf{Fully-connected}.
+\begin{itemize}
+\item Keras nennt sie kurz \textbf{Dense}.
+\item Ein Netz nur aus Dense-Layern ist ein \textbf{Fully-connected Neural Network}.
+\item Das grenzt es vom später behandelten \textbf{Convolutional Neural Network} ab.
+\end{itemize}
+Nötig sind dafür lediglich das \textbf{Sequential}-Modell und die \textbf{Dense}-Layer.
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Keras: Berechnung einer Dense-Schicht}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+
+Für eine Dense-Schicht berechnet Keras den \textbf{Output} als
+\[
+\boxed{
+\text{output} = a(\text{input}\cdot W + b)
+}
+\]
+
+mit
+
+\[
+\text{input} \in \mathbb{R}^{1 \times n_{\text{in}}},
+\qquad
+W \in \mathbb{R}^{n_{\text{in}} \times n_{\text{out}}},
+\qquad
+b \in \mathbb{R}^{1 \times n_{\text{out}}}.
+\]
+
+\begin{itemize}
+\item $a$ ist die \textbf{Aktivierungsfunktion}, z.~B. Sigmoid oder ReLU.
+\item $W$ ist die zu lernende \textbf{Gewichtsmatrix}.
+\item $b$ ist der zu lernende \textbf{Bias-Vektor}.
+\item Standardmäßig verwendet Keras Bias-Parameter
+(\texttt{use\_bias=True}).
+\end{itemize}
+
+\end{column}
+\begin{column}{0.35\textwidth}
+
+\begin{blockC3}{\footnotesize Beispiel}
+\[
+784 \rightarrow 100 \text{ Neuronen}
+\]
+\[
+W \in \mathbb{R}^{784 \times 100}
+\]
+\[
+b \in \mathbb{R}^{100}
+\]
+\par \bigskip
+Gewichte: $784 \cdot 100 = 78\,400$\par \medskip
+
+Bias-Parameter: $100$\par \medskip
+
+Gesamt: $78\,400 + 100 = 78\,500$\par \medskip
+
+\end{blockC3}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Die ReLU-Funktion}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Die \textbf{ReLU} (Rectified Linear Unit) ist die gängigste Aktivierungsfunktion in tiefen Netzen:
+\[
+\text{ReLU}(x) = \max(0, x)
+\]
+\begin{itemize}
+\item Negative Werte werden auf \textbf{0} gesetzt.
+\item Positive Werte bleiben \textbf{unverändert}.
+\item Sie führt die nötige \textbf{Nichtlinearität} ein.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+  width=8cm, height=6cm,
+  axis lines=middle,
+  xlabel={$x$}, ylabel={$\text{ReLU}(x)$},
+  xmin=-3, xmax=3, ymin=-0.5, ymax=3,
+  xtick={-2,-1,1,2}, ytick={1,2},
+  grid=major, grid style={gray!25},
+  every axis plot/.append style={very thick}
+]
+\addplot[draw=AccentColor, domain=-3:0] {0};
+\addplot[draw=AccentColor, domain=0:3] {x};
+\end{axis}
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{ReLU: Einsatz und Vorteile}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+ReLU wird in den \textbf{verborgenen Schichten} tiefer Netze eingesetzt:
+\begin{itemize}
+\item Ohne Aktivierungsfunktion wäre das Netz nur eine \textbf{lineare Abbildung}.
+\item ReLU bringt \textbf{Nichtlinearität}, sodass komplexe Zusammenhänge lernbar werden.
+\item Sie ist \textbf{schnell} zu berechnen (nur ein Vergleich).
+\item Sie mildert das \textbf{Vanishing-Gradient-Problem} gegenüber Sigmoid und Tanh.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+In Keras stehen neben ReLU auch die bereits bekannten Aktivierungsfunktionen zur Verfügung:
+\begin{itemize}
+\item \textbf{sigmoid}
+\item \textbf{tanh}
+\item \textbf{linear}
+\end{itemize}
+
+\begin{blockC2}{\footnotesize Praxistipp}
+  Es lohnt sich, immer \textbf{Sigmoid} und \textbf{ReLU} auszuprobieren. 
+\end{blockC2}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020,seemann_deeplearning}}
+\end{frame}
+
+
+\begin{frame}{Binary Crossentropy als Loss}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Bei der binären Klassifikation gibt das Netz eine \textbf{Wahrscheinlichkeit} $\hat{y} \in [0,1]$ aus. Der \textbf{Loss} misst, wie weit diese von der wahren Klasse $y \in \{0,1\}$ abweicht.
+
+\vspace{0.5em}
+Für einen einzelnen Datensatz gilt:
+\[
+L(y, \hat{y}) = -\big[\, y \log(\hat{y}) + (1-y)\log(1-\hat{y}) \,\big]
+\]
+Über alle $n$ Datensätze wird gemittelt:
+\[
+L = -\frac{1}{n}\sum_{i=1}^{n} \big[\, y_i \log(\hat{y}_i) + (1-y_i)\log(1-\hat{y}_i) \,\big]
+\]
+\end{column}
+\begin{column}{0.35\textwidth}
+Der Name stammt aus der \textbf{Informationstheorie}: Die Crossentropy misst den Abstand zwischen zwei Wahrscheinlichkeitsverteilungen.\par\medskip
+
+\begin{block}{Sinn}
+  Die Binary Crossentropy bestraft niedrige vorhergesagte Wahrscheinlichkeiten für die tatsächlich richtige Klasse.
+\end{block}
+
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Binary Crossentropy: Verhalten}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Nur einer der beiden Terme ist je aktiv, abhängig von der wahren Klasse:
+\begin{itemize}
+\item Für $y = 1$ bleibt $-\log(\hat{y})$.
+\item Für $y = 0$ bleibt $-\log(1-\hat{y})$.
+\end{itemize}
+Eine \textbf{korrekte, sichere} Vorhersage ergibt einen Loss nahe \textbf{0}. Eine \textbf{falsche, sichere} Vorhersage wird durch den Logarithmus \textbf{sehr stark} bestraft.
+\end{column}
+\begin{column}{0.48\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+  width=8cm, height=6cm,
+  axis lines=middle,
+  xlabel={vorhergesagte Wahrscheinlichkeit $\hat{y}$},
+  ylabel={Loss $L(y,\hat{y})$},
+  xlabel style={at={(axis description cs:0.5,-0.12)},anchor=north},
+ ylabel style={
+  rotate=90,
+  at={(axis description cs:-0.12,0.5)},
+  anchor=center
+},
+  xmin=0, xmax=1, ymin=0, ymax=5,
+  xtick={0.25,0.5,0.75,1},
+  ytick={1,2,3,4},
+  grid=major,
+  grid style={gray!25},
+  every axis plot/.append style={very thick}
+]
+\addplot[draw=AccentColor, domain=0.01:1, samples=100] {-ln(x)};
+\addplot[draw=AlertColor, domain=0:0.99, samples=100] {-ln(1-x)};
+\legend{\footnotesize $y=1$, \footnotesize $y=0$}
+\end{axis}
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}{Bewertung binärer Klassifikation}
+\footnotesize
+\begin{columns}
+\column{0.58\textwidth}
+\textbf{Warum passt Sigmoid + Binary Crossentropy so gut zusammen?}
+
+\begin{itemize}
+\item \textbf{Sigmoid:} wandelt den Netzoutput in eine Wahrscheinlichkeit $\hat{y}\in[0,1]$ um.
+\item \textbf{Interpretation:} $\hat{y}$ beschreibt die \textbf{Sicherheit} der Vorhersage.
+\item \textbf{Crossentropy:} misst, wie gut diese Wahrscheinlichkeit zur wahren Klasse passt.
+\end{itemize}
+
+\begin{block}{\footnotesize Merksatz}
+Große Fehler entstehen genau dort, wo das Modell \textbf{zu sicher falsch} ist.\\*[0.2em]
+
+\textbf{Beispiel:} Ausgabe 95\% Wahrscheinlichkeit T-Shirt obwohl es ein Stiefel ist.
+\end{block}
+
+\column{0.38\textwidth}
+\textbf{Einfluss auf das Training:}
+\begin{itemize}
+\item Gradienten sind der Loss Function \textbf{glatt} und gut berechenbar
+\item falsche Vorhersagen erzeugen \textbf{starke Updates}
+\item korrekt klassifizierte Beispiele werden \textbf{kaum verändert}
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Praxis (Keras):}
+\begin{itemize}
+\item Ausgabe: \texttt{activation="sigmoid"}
+\item Loss: \texttt{binary\_crossentropy}
+\end{itemize}
+
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Training: model.fit()}
+\footnotesize
+\begin{columns}
+\begin{column}{0.35\textwidth}
+In der einfachsten Variante startet man das Training so:
+\begin{minted}[fontsize=\footnotesize]{python}
+model.fit(
+    X_train, y_train,
+    epochs=30,
+    batch_size=600,
+    validation_split=0.25,
+    verbose=1
+)
+\end{minted}
+
+\end{column}
+\begin{column}{0.60\textwidth}
+\footnotesize
+Pro \textbf{Epoche} wird eine Zeile ausgegeben:
+\begin{itemize}
+\item \textbf{75/75}: Anzahl der Batches (75 bei Batchgröße 600).
+\item \textbf{loss}: Fehler auf den Trainingsdaten.
+\item \textbf{val\_loss}: Fehler auf den Validierungsdaten.
+\end{itemize}
+Der anfangs sehr hohe Loss fällt rasch und \textbf{sinkt} dann stetig.
+
+\begin{minted}[fontsize=\tiny]{text}
+Epoch 1/30
+75/75 ---- loss: 1063.1340 - val_loss: 0.1544
+Epoch 2/30
+75/75 ---- loss: 0.1541 - val_loss: 0.1450
+Epoch 3/30
+75/75 ---- loss: 0.1460 - val_loss: 0.1411
+...
+Epoch 10/30
+75/75 ---- loss: 0.1169 - val_loss: 0.1153
+...
+Epoch 29/30
+75/75 ---- loss: 0.0931 - val_loss: 0.1034
+Epoch 30/30
+75/75 ---- loss: 0.0926 - val_loss: 0.1030
+\end{minted}
+
+
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Training: Verlauf speichern und plotten}
+\footnotesize
+\begin{columns}
+\begin{column}{0.4\textwidth}
+Der Rückgabewert von \texttt{fit} enthält die \textbf{History} mit dem Fehlerverlauf:
+\begin{minted}[fontsize=\footnotesize]{python}
+history = model.fit(
+    X_train, y_train,
+    epochs=30,
+    batch_size=600,
+    validation_split=0.25,
+    verbose=1
+)
+\end{minted}
+Aus \texttt{history.history} lassen sich \textbf{loss} und \textbf{val\_loss} über die Epochen als Diagramm ausgeben.
+\end{column}
+\begin{column}{0.55\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/mlp_binary_history.svg}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\end{frame}
+
+\begin{frame}{Training: Overfitting}
+  \footnotesize
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/mlp_binary_history_overfitting.svg}
+\end{column}
+\begin{column}{0.45\textwidth}
+Bei sehr vielen Trainingszyklen (hier 300) zeigt sich ein typisches Muster:
+\begin{itemize}
+\item Der Loss auf den \textbf{Trainingsdaten} sinkt immer weiter.
+\item Der Loss auf den \textbf{Testdaten} sinkt zunächst, steigt dann aber wieder.
+\end{itemize}
+Das Netz passt sich zu stark an die Trainingsdaten an und \textbf{verliert} die Fähigkeit zur \textbf{Verallgemeinerung} (\textbf{Overfitting}).
+
+\vspace{0.5em}
+\begin{block}{\footnotesize Praxistipp}
+Der Punkt, an dem der Testfehler wieder steigt, markiert das \textbf{Ende des sinnvollen Trainings}.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Vorhersage für ein Bild}
+
+\begin{columns}
+
+\begin{column}{0.35\textwidth}
+\centering
+\includesvg[width=0.8\linewidth]{figures/mlp_bild_vorhersage.svg}
+\end{column}
+
+\begin{column}{0.60\textwidth}
+\footnotesize
+Wir machen eine \textbf{Vorhersage} für dieses Bild.
+Welche Ausgabe erwarten wir?
+
+\begin{uncoverenv}<2->
+
+\vspace{0.5em}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+model.predict(X_test[19].reshape(1, 784))
+# array([[0.96202034]], dtype=float32)
+\end{minted}
+
+Das ist die \textbf{Wahrscheinlichkeit} für die Klasse
+\textbf{T-Shirt}.
+
+\end{uncoverenv}
+
+\begin{uncoverenv}<3->
+
+\vspace{0.5em}
+
+Für die \textbf{Klassenzuordnung} rundet man:
+
+\begin{minted}[fontsize=\footnotesize]{python}
+np.round(
+    model.predict(X_test[19].reshape(1, 784)))
+# array([[1.]], dtype=float32)
+\end{minted}
+
+Das Bild wird also der Klasse \textbf{1 (T-Shirt)}
+zugeordnet.
+\end{uncoverenv}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}, Binäre Klassifikation mit Keras.ipynb}
+\end{frame}
+
+  \begin{frame}[fragile]{Prognosegüte ermitteln}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Die \textbf{Genauigkeit} auf den Testdaten liefert:
+\begin{minted}[fontsize=\footnotesize]{python}
+model.evaluate(
+  X_test.reshape(10000, 784), y_test)
+\end{minted}
+
+\vspace{0.3em}
+Ausgabe:
+\begin{minted}[fontsize=\footnotesize]{text}
+313/313 ---- accuracy: 0.9542
+              loss: 0.1258
+\end{minted}
+
+\vspace{0.3em}
+Die Ausgabe enthält zwei Werte:
+\begin{itemize}
+\item \textbf{loss}: 0.1258, Fehler auf den Testdaten.
+\item \textbf{accuracy}: 0.9542, Anteil korrekt klassifizierter Bilder.
+\end{itemize}
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\twemoji[width=0.35\linewidth]{thinking face}
+
+\vspace{0.5em}
+\begin{block}{Zum Nachdenken}
+Nur \textbf{10\%} der Bilder sind T-Shirts.
+
+\vspace{0.3em}
+Ist eine Trefferquote von \textbf{95{,}42\%} hier wirklich gut?
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\end{frame}
+
+\begin{frame}{Auflösung: Warum 95\% täuschen können}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{block}{Die naive Baseline}
+Ein Modell, das \textbf{immer} „kein T-Shirt“ vorhersagt, erreicht bereits \textbf{90\%} Genauigkeit.
+\end{block}
+
+Der Grund liegt allein in der Datenverteilung:
+\begin{itemize}
+\item Nur \textbf{10\%} der Bilder sind T-Shirts.
+\item Das Modell hat dabei \textbf{nichts gelernt}.
+\item Trotzdem sieht die Accuracy hoch aus.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\vspace{0.5em}
+\begin{alertblock}{Konsequenz}
+Unsere \textbf{95{,}42\%} liegen nur \textbf{knapp} über der Baseline von 90\%.
+
+\vspace{0.3em}
+Bei unausgewogenen Klassen ist die Accuracy \textbf{irreführend}. Wir brauchen \textbf{bessere Metriken}.
+\end{alertblock}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Die Confusion Matrix}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\footnotesize
+Die Confusion Matrix zeigt, dass von den 1000 T-Shirts nur \textbf{68\%} korrekt klassifiziert werden.
+\vspace{0.5em}
+\begin{minted}[fontsize=\scriptsize]{python}
+from sklearn.metrics import (
+    confusion_matrix,
+    ConfusionMatrixDisplay)
+
+cm = confusion_matrix(y_test, y_pred)
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=[
+        "Kein T-Shirt", "T-Shirt"])
+disp.plot(colorbar=False)
+plt.show()
+\end{minted}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/mlp_confusion_matrix.svg}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Balanced Error Rate}
+  \footnotesize
+
+\begin{columns}
+\begin{column}{0.60\textwidth}
+ 
+\begin{itemize}
+\item \textbf{Balanced Error Rate} (BER): Mittelwert der Fehlerraten \textbf{beider} Klassen.
+\item Es gilt $\text{BER} = 1 - \text{Balanced Accuracy}$.
+\item Kleine Werte sind \textbf{besser}.
+\end{itemize}
+
+\vspace{0.3em}
+\begin{minted}[fontsize=\footnotesize]{python}
+from sklearn.metrics import balanced_accuracy_score
+
+bal_acc = balanced_accuracy_score(y_test, y_pred)
+ber = 1 - bal_acc
+# Balanced Accuracy:   0.8337
+# Balanced Error Rate: 0.1663
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+Das Baseline-Modell „immer kein T-Shirt“ erreicht eine \textbf{BER von 0{,}5}.
+
+\vspace{0.5em}
+So wird der scheinbare Vorteil hoher Accuracy sofort \textbf{entlarvt}.
+
+\vspace{0.5em}
+Unser Modell erreicht eine \textbf{BER von 0{,}1663}, also deutlich besser als die Baseline, aber klar schlechter als die 95\% Accuracy vermuten lassen.
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\end{frame}
+
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+
+\begin{frame}{Aufgabe: Binäre Klassifikation}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+\item Erstellen Sie ein Jupyter-Notebook mit dem originalen \textbf{MNIST-Datensatz} der handgeschriebenen Ziffern.
+\item Klassifizieren Sie mit einem \textbf{neuronalen Netz}, ob auf einem Bild eine \textbf{'4'} zu sehen ist oder nicht.
+\item Bewerten Sie die \textbf{Genauigkeit} der Vorhersagen auf den Testdaten.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{column}
+\end{columns}
+\source{Lösung: mnist\_binär.ipynb}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
+
+
+\makesubsubsectionpage{Multiclass Klassifikation}
+
+\begin{frame}[fragile]{One-Hot-Encoding der Labels}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Bei \textbf{mehreren Klassen} müssen die Labels \textbf{One-Hot-codiert} werden. Keras bietet dafür \textbf{to\_categorical()}.
+\begin{itemize}
+\item Die Klassen beginnen bei \textbf{0} und sind \textbf{vollständig}.
+\item Beispiel: die Klassen 1, 2, 4 werden zu den Positionen 0, 1, 2, 3, 4 codiert.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+# One-Hot-Encoding
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test_original)
+
+print(y_train[0])
+# [0. 0. 0. 0. 0. 1. 0. 0. 0. 0.]
+\end{minted}
+
+\vspace{0.3em}
+Die \textbf{1} steht an Position \textbf{5}, das Bild zeigt also die Ziffer \textbf{5}.
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}, Multiclass Klassifikation.ipynb}
+\end{frame}
+
+
+\begin{frame}{Multiclass-Klassifikation: Aufbau des Netzes}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+Bei der \textbf{Multiclass-Klassifikation} hat die Ausgabeschicht so viele Neuronen, wie es \textbf{Klassen} gibt.
+
+\vspace{0.5em}
+Jede Ausgabe entspricht der \textbf{Wahrscheinlichkeit}, dass die Eingabe zur jeweiligen Klasse gehört.
+\end{column}
+\begin{column}{0.65\textwidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=12pt, inner sep=0pt, text=white},
+  hidden/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+                 very thick, minimum size=12pt, inner sep=0pt, text=white},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=12pt, inner sep=0pt, text=white}
+]
+% Schichttitel
+\node[font=\scriptsize\bfseries, align=center] at (0,6.2) {Input Layer\\$28 \cdot 28 = 784$};
+\node[font=\scriptsize\bfseries, align=center] at (3.2,6.2) {Hidden Layer\\z.B. 100 Neuronen};
+\node[font=\scriptsize\bfseries, align=center] at (6.4,6.2) {Output Layer\\10 Neuronen};
+
+% Input
+\node[input] (x1) at (0,4.6) {};
+\node[input] (x2) at (0,3.2) {};
+\node[input] (x3) at (0,1.8) {};
+\node[font=\scriptsize, left] at (-0.4,4.6) {$x_1$};
+\node[font=\scriptsize, left] at (-0.4,3.2) {$x_2$};
+\node[font=\scriptsize, left] at (-0.4,1.8) {$x_3$};
+\node[font=\large] at (0,0.7) {$\vdots$};
+
+% Hidden
+\node[hidden] (a1) at (3.2,5.0) {};
+\node[hidden] (a2) at (3.2,3.7) {};
+\node[hidden] (a3) at (3.2,2.4) {};
+\node[hidden] (a4) at (3.2,1.1) {};
+\node[font=\large] at (3.2,0.1) {$\vdots$};
+
+% Output
+\node[outp] (o1) at (6.4,4.6) {};
+\node[outp] (o2) at (6.4,3.2) {};
+\node[outp] (o3) at (6.4,0.4) {};
+\node[font=\large] at (6.4,1.8) {$\vdots$};
+
+% Ausgabewerte + Beschriftung
+\node[font=\scriptsize, right] at (7.0,4.6) {$\hat{y}_0$};
+\node[font=\scriptsize, right] at (7.0,3.2) {$\hat{y}_1$};
+\node[font=\scriptsize, right] at (7.0,0.4) {$\hat{y}_9$};
+\node[font=\scriptsize, right] at (7.7,4.6) {$P(\text{Klasse 0})$};
+\node[font=\scriptsize, right] at (7.7,3.2) {$P(\text{Klasse 1} )$};
+\node[font=\scriptsize, right] at (7.7,0.4) {$P(\text{Klasse 9})$};
+
+% Kanten Input -> Hidden
+\foreach \i in {x1,x2,x3} {
+  \foreach \h in {a1,a2,a3,a4} {
+    \draw[->] (\i) -- (\h);
+  }
+}
+% Kanten Hidden -> Output
+\foreach \h in {a1,a2,a3,a4} {
+  \foreach \o in {o1,o2,o3} {
+    \draw[->] (\h) -- (\o);
+  }
+}
+% Output -> Ausgabewert
+\draw[->] (o1) -- (7.0,4.6);
+\draw[->] (o2) -- (7.0,3.2);
+\draw[->] (o3) -- (7.0,0.4);
+\end{tikzpicture}}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame} 
+\begin{frame}{Von Binary zu Categorical Crossentropy}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Die \textbf{Binary Crossentropy} kennen wir bereits für \textbf{zwei} Klassen.
+
+\vspace{0.5em}
+Bei \textbf{mehr als zwei} Klassen verwenden wir die \textbf{Categorical Crossentropy}. Die Binary Crossentropy ist dann nur noch der \textbf{Spezialfall} für genau zwei Klassen.
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Was sich ändert}
+\begin{itemize}
+\item Das Netz gibt statt einer Wahrscheinlichkeit $\hat{y}$ einen \textbf{Vektor} aus, einen Wert je Klasse.
+\item Das wahre Label liegt als \textbf{One-Hot-Vektor} vor.
+\item Der Loss misst den \textbf{Abstand} zwischen beiden Vektoren.
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Categorical Crossentropy: Formel}
+  \footnotesize
+\begin{columns}
+\begin{column}{0.65\textwidth}
+Für einen Datensatz mit $K$ Klassen gilt in \textbf{Vektorschreibweise}:
+\[
+L(\mathbf{y}, \hat{\mathbf{y}}) = -\,\mathbf{y} \cdot \log(\hat{\mathbf{y}})
+\]
+\begin{itemize}
+\item $\mathbf{y}$ ist das \textbf{One-Hot-Label} als Vektor.
+\item $\hat{\mathbf{y}}$ ist der Vektor der vorhergesagten \textbf{Wahrscheinlichkeiten}.
+\item Der Logarithmus wirkt \textbf{komponentenweise}.
+\item Das \textbf{Skalarprodukt} summiert über alle Klassen.
+\end{itemize}
+Über den gesamten Datensatz wird über alle $n$ Datensätze gemittelt:
+\[
+L = -\frac{1}{n}\sum_{i=1}^{n} \mathbf{y}_i \cdot \log(\hat{\mathbf{y}}_i)
+\]
+\end{column}
+\begin{column}{0.3\textwidth}
+\begin{block}{\footnotesize Eigenschaft}
+Da $\mathbf{y}$ ein One-Hot-Vektor ist, bleibt im Skalarprodukt nur \textbf{ein} Summand übrig: der für die \textbf{wahre} Klasse.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Categorical Crossentropy: Verhalten}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Weil nur der Term der wahren Klasse übrig bleibt, vereinfacht sich der Loss zu:
+\[
+L = -\log(\hat{y}_{\text{wahr}})
+\]
+\begin{itemize}
+\item Eine \textbf{hohe} Wahrscheinlichkeit für die richtige Klasse ergibt einen Loss nahe \textbf{0}.
+\item Eine \textbf{niedrige} Wahrscheinlichkeit wird durch den Logarithmus \textbf{stark bestraft}.
+\item Die Werte der falschen Klassen fließen \textbf{indirekt} über die Softmax-Normierung ein.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+ \centering
+\twemoji[width=0.35\linewidth]{index pointing up}
+\par\medskip
+
+Das ist exakt dasselbe Prinzip wie bei der Binary Crossentropy, nur auf \textbf{mehrere} Klassen erweitert.
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Die Softmax-Funktion}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Die Ausgabeneuronen liefern zunächst beliebige reelle Werte, die \textbf{Logits}. \textbf{Softmax} wandelt sie in eine \textbf{Wahrscheinlichkeitsverteilung} um:
+\[
+\text{softmax}(z)_k = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}
+\]
+\begin{itemize}
+\item Jeder Wert wird \textbf{exponenziert}, dadurch stets positiv.
+\item Anschließend wird durch die \textbf{Summe} aller exponenzierten Werte geteilt.
+\item So entsteht für jede Klasse ein Wert in $[0,1]$.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{blockC2}{Grundregel}
+  Die \textbf{Ausgabeschicht} eines Multiclass-Netzes hat Softmax als Aktivierungsfunktion.
+\end{blockC2}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Softmax: Eigenschaften}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Softmax hat mehrere nützliche Eigenschaften:
+\begin{itemize}
+\item Alle Ausgaben sind \textbf{positiv} und liegen in $[0,1]$.
+\item Der \textbf{größte} Logit erhält die \textbf{höchste} Wahrscheinlichkeit.
+\item Durch die Exponentialfunktion werden Unterschiede \textbf{verstärkt}: Der stärkste Wert dominiert.
+\item Die vorhergesagte Klasse ist die mit der höchsten Wahrscheinlichkeit, also $\arg\max_k \hat{y}_k$.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{Unterschied zu Sigmoid}
+Bei \textbf{Sigmoid} wird jede Klasse \textbf{einzeln} bewertet.
+
+\vspace{0.3em}
+Bei \textbf{Softmax} summieren sich alle Ausgaben zu \textbf{1}:
+\[
+\sum_{k=1}^{K} \hat{y}_k = 1
+\]
+Die Klassen \textbf{konkurrieren} also miteinander.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Softmax: Beispiel}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\textwidth}
+Gegeben seien die Logits $z = (2{,}0;\ 1{,}0;\ 0{,}1)$.
+
+\vspace{0.3em}
+\textbf{1. Exponenzieren:}
+\[
+e^{2{,}0} \approx 7{,}39 \quad
+e^{1{,}0} \approx 2{,}72 \quad
+e^{0{,}1} \approx 1{,}11
+\]
+
+\textbf{2. Summe bilden:}
+\[
+7{,}39 + 2{,}72 + 1{,}11 \approx 11{,}22
+\]
+
+\textbf{3. Normieren:}
+\[
+\hat{y}_0 = \frac{7{,}39}{11{,}22} \approx 0{,}66
+\]
+\[
+\hat{y}_1 = \frac{2{,}72}{11{,}22} \approx 0{,}24
+\]
+\[
+\hat{y}_2 = \frac{1{,}11}{11{,}22} \approx 0{,}10
+\]
+Die erste Klasse erhält die \textbf{höchste} Wahrscheinlichkeit.
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+\begin{scope}
+% Balken
+\filldraw[fill=PrimaryColor!30, draw=PrimaryColor, very thick] (0,0) rectangle (0.8,3.3);
+\filldraw[fill=AccentColor!30, draw=AccentColor, very thick] (1.2,0) rectangle (2.0,1.2);
+\filldraw[fill=AlertColor!30, draw=AlertColor, very thick] (2.4,0) rectangle (3.2,0.5);
+% Achsen
+\draw[->] (-0.3,0) -- (3.6,0);
+\draw[->] (0,-0.1) -- (0,3.8);
+% Werte
+\node at (0.4,3.55) {$0{,}66$};
+\node at (1.6,1.45) {$0{,}24$};
+\node at (2.8,0.75) {$0{,}10$};
+% Klassenlabels
+\node at (0.4,-0.35) {Klasse 0};
+\node at (1.6,-0.35) {Klasse 1};
+\node at (2.8,-0.35) {Klasse 2};
+\node[rotate=90] at (-0.35,1.9) {Wahrscheinlichkeit};
+\end{scope}
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Zusammenspiel mit Softmax und One-Hot}
+  \footnotesize
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Die Categorical Crossentropy wird mit einer \textbf{Softmax}-Ausgabe kombiniert:
+\begin{itemize}
+\item \textbf{Softmax} erzeugt einen Vektor, dessen Komponenten sich zu \textbf{1} summieren.
+\item So entsteht eine echte \textbf{Wahrscheinlichkeitsverteilung} über die Klassen.
+\item Das \textbf{One-Hot}-Label ist die ideale Zielverteilung, mit der der Loss verglichen wird.
+\end{itemize}
+
+\vspace{0.3em}
+Im Keras-Modell setzt man daher \texttt{activation="softmax"} zusammen mit \texttt{loss="categorical\_crossentropy"}.
+
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{block}{\footnotesize Labels als ganze Zahlen}
+Statt die Labels explizit per \textbf{One-Hot-Encoding} umzuwandeln, kann direkt die Loss-Funktion
+\begin{center}
+\texttt{\textbf{sparse\_categorical\_crossentropy}}
+\end{center}
+verwendet werden. Die Umwandlung der ganzzahligen Labels in die interne One-Hot-Darstellung übernimmt \textbf{Keras automatisch}.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Multiclass-Netz in Keras erzeugen}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Dense
+
+model = Sequential()
+model.add(Input(shape=(784,)))
+model.add(Dense(300, activation="relu"))  
+model.add(Dense(10, activation="softmax"))
+
+model.compile(
+    optimizer="sgd",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"])
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+Gegenüber der binären Variante ändern sich drei Dinge:
+\begin{itemize}
+\item \textbf{10 Ausgabe-Neuronen} für 10 Klassen.
+\item Aktivierung \textbf{softmax} statt sigmoid.
+\item Loss \textbf{categorical\_crossentropy} statt binary.
+\end{itemize}
+\end{column}
+\end{columns}
+\source{Multiclass Klassifikation.ipynb}  
+\end{frame}
+
+\begin{frame}[fragile]{Multiclass: Vorhersage auswerten}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+pred = model.predict(X_test[0].reshape(1, 784))
+print(pred)
+# [[3.8757731e-14 3.3366131e-16 3.3527864e-19 
+#   3.0264283e-10 3.7406296e-20 2.6444239e-03 
+#   1.0029910e-13 3.3167897e-05 3.4632836e-14 
+#   9.9732238e-01]]
+
+# Argmax liefert den Index mit dem
+# höchsten Wert
+np.argmax(pred)
+# np.int64(9)
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+Das Netz gibt einen \textbf{Vektor} mit 10 Wahrscheinlichkeiten aus, eine je Klasse.
+
+\vspace{0.5em}
+Mit \textbf{argmax} findet man den Index der \textbf{höchsten} Wahrscheinlichkeit, hier die Klasse \textbf{9}.
+\end{column}
+\end{columns}
+\source{Multiclass Klassifikation.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Multiclass: Validierung mit Testdaten}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.evaluate(
+    X_test.reshape(-1, 784), y_test)
+# [0.4208528399467468,
+#  0.8515999913215637]
+\end{minted}
+\end{column}
+\begin{column}{0.40\textwidth}
+\footnotesize
+\begin{block}{\footnotesize Zwei Rückgabewerte}
+\textbf{loss}: 0.4209\\
+Categorical Crossentropy auf den Testdaten.
+
+\vspace{0.3em}
+\textbf{accuracy}: 0.8516\\
+Anteil korrekt erkannter Ziffern.
+\end{block}
+
+Das Netz erkennt rund \textbf{85\%} der Ziffern korrekt. \textbf{Das geht noch besser!}
+\end{column}
+\end{columns}
+\source{Multiclass Klassifikation.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Multiclass: Konfusionsmatrix}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{minted}[fontsize=\scriptsize]{python}
+from sklearn import metrics
+import numpy as np
+
+# Alle Vorhersagen auf einmal
+vorhersagen = model.predict(X_test)
+# 10000x10 Feld: argmax je Zeile
+vorhersagen = np.argmax(vorhersagen, axis=1)
+
+cm = metrics.confusion_matrix(
+    y_test_original, vorhersagen)
+
+cm_display = metrics.ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=[
+        "T-shirt/top", "Trouser", "Pullover",
+        "Dress", "Coat", "Sandal", "Shirt",
+        "Sneaker", "Bag", "Ankle boot"])
+cm_display.plot(xticks_rotation="vertical")
+plt.show()
+\end{minted}
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\includesvg[width=\linewidth]{figures/multiclass_confusion_matrix.svg}
+\end{column}
+\end{columns}
+\source{Multiclass Klassifikation Confusion Matrix.ipynb}
+\end{frame}
+
+\begin{frame}{Übung: Multiclass-Klassifikation mit MNIST}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+\item Erstellen Sie ein Jupyter-Notebook mit dem originalen \textbf{MNIST-Datensatz} der handgeschriebenen Ziffern.
+\item Klassifizieren Sie mit einem \textbf{neuronalen Netz} alle \textbf{zehn Ziffern}.
+\item Welche Ziffern werden von Ihrem Klassifikator besonders häufig \textbf{verwechselt}?
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{column}
+\end{columns}
+\source{L\"osung: mnist\_multiclass.ipynb}
+\end{frame}
+
+\makesubsubsectionpage{Optimizer}
+\begin{frame}{Optimierungsverfahren beim Training}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Beim Training werden die \textbf{Gewichte} an die Daten angepasst. Das ist ein \textbf{Optimierungsproblem}: Gesucht sind die Gewichte mit den \textbf{besten Vorhersagen}.
+\begin{itemize}
+\item Bisher nutzten wir \textbf{Stochastic Gradient Descent} (sgd).
+\item Alternative Verfahren konvergieren oft \textbf{schneller} oder liefern \textbf{bessere} Ergebnisse.
+\item Gängig sind \textbf{sgd}, \textbf{rmsprop} und \textbf{adam}.
+\end{itemize}
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/beale_function.pdf}
+
+\vspace{0.3em}
+{\footnotesize Die Beale-Funktion, eine Testfunktion für Optimierungsalgorithmen.}
+\end{column}
+\end{columns}
+\source{Bildquelle: \cite{gaortizg2012beale}}
+\end{frame}
+
+
+\begin{frame}{Momentum}
+\footnotesize
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Der \textbf{Momentum}-Optimizer erweitert den Gradientenabstieg um \textbf{Trägheit}, ähnlich zu PSO.
+\begin{itemize}
+\item Es zählt nicht nur der aktuelle Gradient, sondern auch die \textbf{bisherige Bewegungsrichtung}.
+\item Schritte in \textbf{gleichbleibender} Richtung summieren sich und werden \textbf{schneller}.
+\item In \textbf{wechselnden} Richtungen gleichen sie sich \textbf{aus}.
+\end{itemize}
+Das Update lautet:
+\[
+v_t = \beta\, v_{t-1} + (1-\beta)\, g_t
+\]
+\[
+w_{t+1} = w_t - \eta\, v_t
+\]
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth, every node/.style={font=\scriptsize}]
+% Talkonturen (elliptische Höhenlinien)
+\foreach \r in {1,2,3} {
+  \draw[gray!50] (0,0) ellipse ({\r*1.4} and {\r*0.55});
+}
+\node[circle,fill=AlertColor,inner sep=1.5pt,label=below:{Minimum}] at (0,0) {};
+
+% SGD: Zickzack (rot)
+\coordinate (s0) at (-4.0,1.5);
+\coordinate (s1) at (-2.6,-1.1);
+\coordinate (s2) at (-1.7,0.9);
+\coordinate (s3) at (-0.9,-0.6);
+\coordinate (s4) at (-0.4,0.35);
+\draw[->,AlertColor,very thick] (s0)--(s1);
+\draw[->,AlertColor,very thick] (s1)--(s2);
+\draw[->,AlertColor,very thick] (s2)--(s3);
+\draw[->,AlertColor,very thick] (s3)--(s4);
+\node[AlertColor] at (-3.7,2.0) {\textbf{SGD}};
+
+% Momentum: geglättet (grün/accent)
+\coordinate (m0) at (-4.0,1.5);
+\coordinate (m1) at (-2.7,0.55);
+\coordinate (m2) at (-1.5,0.18);
+\coordinate (m3) at (-0.5,0.05);
+\draw[->,AccentColor,very thick] (m0) to[out=-25,in=170] (m1);
+\draw[->,AccentColor,very thick] (m1) to[out=-10,in=175] (m2);
+\draw[->,AccentColor,very thick] (m2) to[out=-8,in=178] (m3);
+\node[AccentColor] at (-2.2,1.4) {\textbf{Momentum}};
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\note{
+\begin{itemize}
+    \item PSO: Partikel-Schwarm-Optimierung
+    \item $\beta$: Trägheitsgewicht
+    \item $\eta$: eta, Lernrate
+\end{itemize}
+}
+\end{frame}
+
+
+\begin{frame}{RMSprop}
+  \footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\textbf{RMSprop} (Root Mean Square Propagation) passt die Lernrate für \textbf{jeden Parameter einzeln} an.
+\begin{itemize}
+\item Es führt einen \textbf{gleitenden Mittelwert} der quadrierten Gradienten mit.
+\item Jeder Gradient wird durch die \textbf{Wurzel} dieses Mittelwerts geteilt.
+\item Parameter mit \textbf{großen} Gradienten erhalten \textbf{kleinere} Schritte, und umgekehrt.
+\end{itemize}
+Das Update lautet:
+\[
+E[g^2]_t = \gamma\, E[g^2]_{t-1} + (1-\gamma)\, g_t^2
+\]
+\[
+w_{t+1} = w_t - \frac{\eta}{\sqrt{E[g^2]_t + \varepsilon}}\, g_t
+\]
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{\footnotesize Vorteil}
+Die \textbf{parameterweise} Lernrate glättet den Weg durch \textbf{steile} und \textbf{flache} Bereiche der Fehlerfläche.
+\end{block}
+\par\medskip
+$E[g^2]_t$ ist der Erwartungswert des quadrierten Gradienten. 
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Adam: Definition}
+\footnotesize
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{Adam} (Adaptive Moment Estimation) kombiniert \textbf{Momentum} und \textbf{RMSprop}.
+
+\vspace{0.3em}
+\textbf{1. Momente schätzen} (gleitende Mittelwerte):
+\[
+m_t = \beta_1 m_{t-1} + (1-\beta_1)\, g_t
+\]
+\[
+v_t = \beta_2 v_{t-1} + (1-\beta_2)\, g_t^2
+\]
+
+\textbf{2. Bias-Korrektur:}
+\[
+\hat{m}_t = \frac{m_t}{1-\beta_1^{\,t}}
+\qquad
+\hat{v}_t = \frac{v_t}{1-\beta_2^{\,t}}
+\]
+
+\textbf{3. Gewichte aktualisieren:}
+\[
+w_{t+1} = w_t - \frac{\eta}{\sqrt{\hat{v}_t} + \varepsilon}\, \hat{m}_t
+\]
+\end{column}
+\begin{column}{0.40\textwidth}
+\textbf{Formelzeichen:}
+\begin{itemize}
+\item $g_t$: Gradient im Schritt $t$.
+\item $m_t$: \textbf{erstes Moment}, geglätteter Mittelwert der Gradienten.
+\item $v_t$: \textbf{zweites Moment}, geglätteter Mittelwert der quadrierten Gradienten.
+\item $\hat{m}_t, \hat{v}_t$: die \textbf{bias-korrigierten} Momente.
+\item $\beta_1, \beta_2$: Glättungsfaktoren, typisch $0{,}9$ und $0{,}999$.
+\item $\eta$: Lernrate.
+\item $\varepsilon$: kleiner Wert gegen Division durch Null.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Adam: Warum die Bias-Korrektur?}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Die Momente $m_t$ und $v_t$ starten bei \textbf{Null} ($m_0 = v_0 = 0$).
+\begin{itemize}
+\item In den \textbf{ersten Schritten} sind sie dadurch zu klein, also \textbf{zum Nullpunkt hin verzerrt}.
+\item Diese systematische Verzerrung nennt man \textbf{Bias}.
+\item Die Division durch $1 - \beta^{\,t}$ \textbf{korrigiert} sie.
+\end{itemize}
+
+\vspace{0.3em}
+Der Faktor $1 - \beta^{\,t}$ ist anfangs klein (großer Korrektureffekt) und geht mit wachsendem $t$ gegen $1$ (keine Korrektur mehr nötig).
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{Warum beliebt}
+Adam vereint \textbf{Trägheit} (stabile Richtung) und \textbf{adaptive} Lernraten (passende Schrittweite).
+\end{block}
+Robust, wenig Feintuning, häufiger \textbf{Standard}.
+\end{column}
+\end{columns}
+\end{frame}
+
+\makesubsubsectionpage{Tiefe Netze}
+
+\begin{frame}[fragile]{Komplexere Netze}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Dense
+
+model = Sequential()
+model.add(Input(shape=(784,)))
+# Macht ein weiterer Dense Layer Sinn?
+model.add(Dense(512, activation="relu"))
+model.add(Dense(10, activation="softmax"))
+
+model.compile(optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"])
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+Man kann einem Netz einfach \textbf{weitere Layer} hinzufügen.
+\begin{itemize}
+\item Das Netz wird \textbf{komplexer}.
+\item Es gibt \textbf{mehr Gewichte}, die trainiert werden müssen.
+\end{itemize}
+Aber: Mehr ist nicht immer besser.
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Wie komplex darf das Netz sein?}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Man vergleicht \textbf{Trainings-} und \textbf{Testgenauigkeit}:
+\begin{itemize}
+\item \textbf{Geringer Unterschied}: Test nur minimal schlechter als Training. Das Modell darf \textbf{komplexer} sein.
+\item \textbf{Großer Unterschied}: Test deutlich schlechter als Training. Das Modell ist \textbf{zu komplex}, es liegt \textbf{Overfitting} vor.
+\item \textbf{Beides schlecht}: Training und Test niedrig. Es werden \textbf{mehr Daten} benötigt.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{Ziel}
+Ein Netz, das \textbf{gut verallgemeinert}: hohe Trainings- \textbf{und} Testgenauigkeit bei kleinem Abstand.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}[fragile]{Komplexere Netze: Beispiel}
+\begin{columns}
+\begin{column}{0.52\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model = Sequential()
+model.add(Input(shape=(784,)))
+model.add(Dense(512, activation="relu"))
+model.add(Dense(256, activation="relu"))
+model.add(Dense(128, activation="relu"))
+model.add(Dense(10, activation="softmax"))
+
+model.compile(optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"])
+\end{minted}
+
+\vspace{0.3em}
+Drei verborgene Schichten mit \textbf{512}    , \textbf{256} und \textbf{128} Neuronen.
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/deep_nn_summary.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Trainings- gegen Testgenauigkeit}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+# Trainingsdaten
+model.evaluate(
+    X_train.reshape(-1, 784), y_train)
+# [0.0456, 0.9822]
+
+# Testdaten
+model.evaluate(
+    X_test.reshape(-1, 784), y_test)
+# [0.5240, 0.8384]
+\end{minted}
+
+\vspace{0.3em}
+Trainingsgenauigkeit \textbf{98{,}2\%}, Testgenauigkeit nur \textbf{83{,}8\%}.
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{alertblock}{Overfitting}
+Der \textbf{große Abstand} von rund \textbf{14 Prozentpunkten} zeigt: Das Netz ist \textbf{zu komplex}.
+\end{alertblock}
+Es hat die Trainingsdaten teils \textbf{auswendig gelernt} und \textbf{verallgemeinert} schlechter.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Einfacheres Netz im Vergleich}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{minted}[fontsize=\scriptsize]{python}
+model = Sequential()
+model.add(Input(shape=(784,)))
+model.add(Dense(300, activation="relu"))
+model.add(Dense(10, activation="softmax"))
+model.compile(optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"])
+
+# Trainingsdaten
+model.evaluate(X_train.reshape(-1,784), y_train)
+# [0.1106, 0.9624]
+
+# Testdaten
+model.evaluate(X_test.reshape(-1,784), y_test)
+# [0.3328, 0.8966]
+\end{minted}
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{block}{Kleinerer Abstand}
+Training \textbf{96{,}2\%}, Test \textbf{89{,}7\%}.
+
+\vspace{0.3em}
+Nur rund \textbf{6{,}5} Prozentpunkte Abstand statt 14.
+\end{block}
+Die \textbf{einfachere} Struktur passt hier \textbf{besser}: weniger Overfitting und sogar \textbf{höhere} Testgenauigkeit.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Beschleunigung durch GPU: Modellierung}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Neuronale Netze werden intern über \textbf{Vektoren} und \textbf{Matrizen} beschrieben:
+\begin{itemize}
+\item Jede \textbf{Schicht} ist ein Vektor.
+\item Die \textbf{Gewichte} liegen in Matrizen.
+\item Die Ausgänge der Neuronen entstehen durch \textbf{Matrixmultiplikation} und \textbf{-addition}.
+\end{itemize}
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{block}{Kernpunkt}
+Je \textbf{komplexer} das Netz, desto \textbf{mehr} Matrixberechnungen fallen im Training an.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Beschleunigung durch GPU: CPU gegen GPU}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{CPUs} besitzen wenige arithmetische Logikeinheiten (ALU) und rechnen weitgehend \textbf{sequenziell}.
+
+\vspace{0.5em}
+\textbf{GPUs} auf Grafikkarten sind für \textbf{massiv paralleles} Rechnen mit Matrizen gebaut, ursprünglich für die 3D-Grafik.
+
+\vspace{0.5em}
+Genau diese effizienten \textbf{Matrixberechnungen} beschleunigen auch neuronale Netze erheblich.
+\end{column}
+\begin{column}{0.40\textwidth}
+\centering
+\includesvg[width=0.9\linewidth]{figures/gpu.svg}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Beschleunigung durch GPU: Tiefe Netze}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Der Vorteil wächst mit der \textbf{Tiefe} des Netzes:
+\begin{itemize}
+\item Jede zusätzliche Schicht bringt \textbf{weitere} Matrixoperationen.
+\item Diese lassen sich auf der GPU \textbf{parallel} statt nacheinander berechnen.
+\item Je \textbf{tiefer} das Netz, desto \textbf{größer} der Geschwindigkeitsgewinn gegenüber der CPU.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{Fazit}
+Tiefe Netze profitieren \textbf{besonders} von der GPU, da hier die meisten parallelen Matrixberechnungen anfallen.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+\begin{frame}[fragile]{GPU-Nutzung in TensorFlow aktivieren}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+TensorFlow nutzt eine kompatible \textbf{NVIDIA-GPU} automatisch, sobald die passenden Treiber und Bibliotheken vorhanden sind. Prüfen lässt sich das mit:
+\begin{minted}[fontsize=\footnotesize]{python}
+import tensorflow as tf
+print(tf.config.list_physical_devices("GPU"))
+\end{minted}
+Wird eine GPU gelistet, läuft das Training ohne weitere Codeänderung darauf.
+
+\vspace{0.3em}
+Unter \textbf{Linux} genügt meist:
+\begin{minted}[fontsize=\footnotesize]{bash}
+pip install tensorflow[and-cuda]
+\end{minted}
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{alertblock}{Problem unter Windows}
+Seit \textbf{TensorFlow 2.11} gibt es \textbf{keine} native GPU-Unterstützung mehr unter Windows.
+\end{alertblock}
+Nötig ist stattdessen \textbf{WSL2} (Linux unter Windows). Die native Windows-Installation nutzt sonst nur die \textbf{CPU}.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Beschleunigung durch GPU: GPU in der Cloud}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Leistungsfähige GPUs sind \textbf{groß}, \textbf{teuer} und produzieren viel \textbf{Wärme}. Daher fehlen sie in vielen Studi-Laptops.
+
+\vspace{0.5em}
+Alternativen aus der Cloud:
+\begin{itemize}
+\item Bei einschlägigen \textbf{Cloud-Anbietern} lassen sich Server mit GPU \textbf{mieten}.
+\item Mit einem \textbf{Google-Account} bietet \textbf{Google Colaboratory} über Google Drive \textbf{gratis} Zugriff auf Cloud-GPUs.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{cloud}
+\end{column}
+\end{columns}
+\end{frame}
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+
+\begin{frame}{Übung: Netz optimieren}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Experimentieren Sie mit Ihrem \textbf{MNIST-Multiclass-Notebook}:
+\begin{itemize}
+\item Können Sie durch \textbf{mehr Schichten} bessere Ergebnisse erzielen?
+\item Hilft ein \textbf{anderer Optimizer} (z.B. adam statt sgd)?
+\item Vergleichen Sie \textbf{Trainings-} und \textbf{Testgenauigkeit}, um Overfitting zu erkennen.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{column}
+\end{columns}
+\source{Lösung: mnist\_multiclass\_optimiert.ipynb}
+\end{frame}
+
 \makequestionspage{\FRAGENIMAGE}
