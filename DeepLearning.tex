@@ -1949,14 +1949,6 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 
 {
 \setbeamercolor{background canvas}{bg=AlertColor!10}
-
-% =========================================================
-% Abschnitt: Grundlagen der Bildverarbeitung
-% Vorlesung: Convolutional Neural Networks
-% =========================================================
-
-\section{Grundlagen der Bildverarbeitung}
-
 % ---------------------------------------------------------
 \begin{frame}{Digitale Bilder: Aufbau und Grundbegriffe}
   \small
@@ -2863,12 +2855,191 @@ Verschiedene Filter erkennen verschiedene \textbf{Merkmale}, etwa Kanten, Ecken 
 
 
 
+\begin{frame}[fragile]{CNN auf MNIST: Modellaufbau}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import 
+    Input, Dense, Conv2D, Flatten
+
+model = Sequential()
+model.add(Input(shape=(28, 28, 1)))
+
+model.add(Conv2D(100, kernel_size=(3, 3),
+                 activation="relu"))
+model.add(Flatten())
+
+model.add(Dense(100, activation="sigmoid"))
+model.add(Dense(10, activation="softmax"))
+
+model.compile(optimizer="rmsprop",
+              loss="categorical_crossentropy",
+              metrics=["accuracy"])
+\end{minted}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Bilder bleiben im Format \textbf{28x28}, kein Flachklopfen der Eingabe
+  \item \texttt{X\_train.shape} ergibt \texttt{(60000, 28, 28)}
+  \item Eingabe braucht zusätzlich die \textbf{Kanaldimension}: \texttt{(28, 28, 1)}
+  \item 10 Klassen, also \textbf{10 Ausgabe-Neuronen} mit \texttt{softmax}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{CNN.ipynb}
+\end{frame}
+
+\begin{frame}{Conv2D: Faltungsschicht}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Schiebt \textbf{100 Filter} der Größe 3x3 über das Bild
+  \item Die Gewichte der Filter werden \textbf{gelernt}, nicht vorgegeben
+  \item Ergebnis sind 100 \textbf{Feature Maps} der Größe 26x26 (ohne Padding)
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Ausgabeform: \texttt{(26, 26, 100)}
+  \item Parameter: $3 \cdot 3 \cdot 1 \cdot 100 + 100 = 1000$
+  \item \texttt{relu} setzt negative Aktivierungen auf 0
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Flatten: Übergang zu Dense}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item \texttt{Dense} erwartet einen \textbf{Vektor}, \texttt{Conv2D} liefert einen 3D-Tensor
+  \item \texttt{Flatten} schreibt alle Werte hintereinander in einen langen Vektor
+  \item Aus \texttt{(26, 26, 100)} wird \texttt{(67600,)}
+  \item \textbf{Keine Parameter}, keine Berechnung, nur Umformung
+  \item Die räumliche Information geht dabei als Struktur verloren, die Werte selbst bleiben erhalten
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Danach: \texttt{Dense(100)} mit \texttt{sigmoid}
+  \item Abschluss: \texttt{Dense(10)} mit \texttt{softmax} als Klassenverteilung
+  \item Verlust: \texttt{categorical\_crossentropy}, also \textbf{One-Hot-Labels} nötig
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
 
 
+\begin{frame}{CNN auf MNIST: model.summary()}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/cnn_model_summary.png}
+\end{figure}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item \texttt{Conv2D}: \texttt{(26, 26, 100)}, \textbf{1.000} Parameter
+  \item \texttt{Flatten}: \texttt{(67600,)}, \textbf{0} Parameter
+  \item \texttt{Dense(100)}: \textbf{6.760.100} Parameter
+  \item \texttt{Dense(10)}: \textbf{1.010} Parameter
+  \item Gesamt: \textbf{6.762.110} Parameter
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Wo stecken die Parameter?}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Die Faltungsschicht ist mit 1.000 Parametern \textbf{winzig}, obwohl sie 100 Filter lernt
+  \item Grund: \textbf{Gewichtsteilung}, jeder Filter besitzt nur $3 \cdot 3$ Gewichte plus Bias
+  \item Über \textbf{99 Prozent} aller Parameter liegen in der ersten \texttt{Dense}-Schicht
+  \item Ursache: \texttt{Flatten} erzeugt 67.600 Eingänge, jeder ist mit allen 100 Neuronen verbunden
+  \item Rechnung: $67600 \cdot 100 + 100 = 6.760.100$
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Konsequenz: hoher Speicherbedarf, Gefahr von \textbf{Overfitting}
+  \item Gegenmittel: \textbf{Pooling} vor \texttt{Flatten} verkleinert die Feature Maps deutlich
+  \item Alternative: mehrere Faltungsschichten mit \texttt{strides} statt einer breiten \texttt{Dense}-Schicht
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
 
 
+\begin{frame}[fragile]{CNN auf MNIST: Training}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.fit(X_train, y_train,
+          epochs=300,
+          batch_size=600,
+          verbose=1,
+          validation_split=0.25)
+\end{minted}
+\begin{itemize}
+  \item \textbf{300 Epochen}, das gesamte Training läuft 300 mal über die Daten
+  \item \textbf{batch\_size 600}: Gewichte werden nach je 600 Bildern aktualisiert
+  \item \texttt{validation\_split=0.25}: ein Viertel der Trainingsdaten dient nur zur \textbf{Kontrolle}, nicht zum Lernen
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Trainiert wird also auf 45.000 Bildern, validiert auf 15.000
+  \item Pro Epoche 75 Gewichtsupdates
+  \item Große Batches bedeuten \textbf{stabilere}, aber seltenere Updates
+\end{itemize}
+\end{column}
+\end{columns}
+\source{CNN.ipynb}
+\end{frame}
 
+\begin{frame}[fragile]{CNN auf MNIST: Evaluation}
+\begin{columns}
+\begin{column}{0.47\linewidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.evaluate(X_test, y_test)
+\end{minted}
+\begin{minted}[fontsize=\footnotesize]{text}
+[0.6399479508399963, 0.8952999711036682]
+\end{minted}
+\end{column}
+\begin{column}{0.47\linewidth}
+\begin{itemize}
+   \item Rückgabe ist eine Liste: erst \textbf{Loss}, dann \textbf{Accuracy}
+  \item Ergebnis ohne jede Optimierung: rund \textbf{89 Prozent} Prognosegüte auf den Testdaten
+  \item Der Loss von 0,64 ist für 10 Klassen \textbf{hoch}, das Modell ist unsicher
+\end{itemize}
+\end{column}
+\end{columns}
+\source{CNN.ipynb}
+\end{frame}
 
+\begin{frame}{Warum nur 89 Prozent?}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item \textbf{Kein Pooling}: die 67.600 Eingänge in \texttt{Dense} erzeugen 6,7 Millionen Parameter, das Modell lernt auswendig statt zu verallgemeinern
+  \item \textbf{Sigmoid} in der versteckten Schicht bremst den Gradienten, \texttt{relu} lernt schneller
+  \item \textbf{Nur eine Faltungsschicht}, damit kaum hierarchische Merkmale
+  \item \textbf{300 Epochen} sind deutlich zu viel, Overfitting ist wahrscheinlich
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item Übliche Stellschrauben: \textbf{MaxPooling}, \textbf{Dropout}, \texttt{relu}, \textbf{Early Stopping}
+  \item Gut abgestimmte CNNs erreichen auf MNIST über \textbf{99 Prozent}
+  \item Die Architektur zählt hier mehr als die Trainingsdauer
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
 
 
 
