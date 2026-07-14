@@ -1898,4 +1898,1064 @@ Experimentieren Sie mit Ihrem \textbf{MNIST-Multiclass-Notebook}:
 \source{Lösung: mnist\_multiclass\_optimiert.ipynb}
 \end{frame}
 
+
+\makesubsectionpage{Convolutional Neural Networks}
+\begin{frame}{Bilderkennung}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\textbf{Bilderkennung} ist ein häufiges Anwendungsgebiet des Maschinellen Lernens und gehört zur \textbf{Computer Vision}.
+\vspace{0.3em}
+Ziel ist die \textbf{Identifizierung} von Objekten oder Mustern in Bildern und Videos.
+
+\vspace{0.3em}
+Typische Anwendungsfälle:
+\begin{itemize}
+\item \textbf{Medizin}: Auswertung von MRT- und Röntgenbildern.
+\item \textbf{Autonomes Fahren}: Erkennung von Autos, Fußgängern, Verkehrsschildern.
+\item \textbf{Sicherheit}: Gesichtserkennung.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/objekterkennung.png}
+\end{column}
+\end{columns}
+\source{Bildquelle: \cite{handa_object_detection_ell}}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Convolutional Neural Networks: Motivation}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784 Werten. Dabei geht die \textbf{räumliche Struktur} verloren.
+\begin{itemize}
+\item Benachbarte Pixel gehören zusammen, das Netz weiß davon nichts.
+\item Jede Position braucht \textbf{eigene} Gewichte, das sind sehr viele Parameter.
+\item Ein Muster an neuer Stelle muss \textbf{neu} gelernt werden.
+\end{itemize}
+\end{column}
+\begin{column}{0.40\textwidth}
+\begin{block}{Idee}
+\textbf{CNNs} arbeiten direkt auf dem \textbf{2D-Bild} und nutzen die \textbf{Nachbarschaft} der Pixel aus.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=AlertColor!10}
+
+% =========================================================
+% Abschnitt: Grundlagen der Bildverarbeitung
+% Vorlesung: Convolutional Neural Networks
+% =========================================================
+
+\section{Grundlagen der Bildverarbeitung}
+
+% ---------------------------------------------------------
+\begin{frame}{Digitale Bilder: Aufbau und Grundbegriffe}
+  \small
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Ein digitales Bild ist ein \textbf{Rasterbild}: eine regelmäßige Anordnung diskreter Bildpunkte (\textbf{Pixel})
+    \item Jedes Pixel speichert einen \textbf{Intensitätswert} (Grauwert) oder mehrere Farbwerte
+    \item Die \textbf{Auflösung} beschreibt die Anzahl der Pixel in Höhe und Breite, z.\,B. $1920 \times 1080$
+    \item Die \textbf{Bittiefe} bestimmt den Wertebereich pro Pixel, typisch 8 Bit pro Kanal, also Werte in $\{0, \dots, 255\}$
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Mathematisch ist ein Graustufenbild eine Funktion
+    \[
+        I : \{0, \dots, H-1\} \times \{0, \dots, W-1\} \to \mathbb{Z}
+    \]
+    \item Darstellung als \textbf{Matrix} $I \in \mathbb{Z}^{H \times W}$:
+    \[
+    I = \begin{pmatrix}
+        12 & 40 & 255 \\
+        0  & 87 & 200 \\
+        34 & 90 & 128
+    \end{pmatrix}
+    \]
+    \item Koordinatenkonvention: \textbf{Ursprung oben links}, Zeilenindex $y$ nach unten, Spaltenindex $x$ nach rechts
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{GonzalezWoods2018}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Farbbilder: Kanäle und Tensoren}
+
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Farbbilder bestehen aus mehreren \textbf{Kanälen}, im RGB-Modell aus Rot, Grün und Blau.
+    
+    \item Jeder Kanal ist selbst eine Matrix; das Gesamtbild ist ein
+    \textbf{Tensor dritter Stufe}:
+    \[
+        I \in \mathbb{R}^{H \times W \times C},
+        \qquad C = 3
+    \]
+
+    \item \textbf{Relevanz für CNNs:} Eingabebilder werden als Tensoren
+    der Form $H \times W \times C$ verarbeitet.
+
+    \item Für das Training werden Pixelwerte meist auf $[0,1]$
+    oder auf Mittelwert $0$ \textbf{normalisiert}.
+\end{itemize}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+
+% Drei gestapelte Kanäle
+\foreach \c/\name/\dx/\dy in {
+    AlertColor/Rot/0/0,
+    ExampleColor/Grün/0.6/0.5,
+    PrimaryColor/Blau/1.2/1.0
+}{
+  \begin{scope}[shift={(\dx,\dy)}]
+    \draw[fill=\c!15, draw=\c, very thick] (0,0) rectangle (3,3);
+
+    \foreach \i in {0.5,1,1.5,2,2.5} {
+      \draw[\c!40] (\i,0) -- (\i,3);
+      \draw[\c!40] (0,\i) -- (3,\i);
+    }
+  \end{scope}
+}
+
+\node[text=AlertColor]   at (1.6,0.3) {\textbf{Rot}};
+\node[text=ExampleColor] at (2.2,0.8) {\textbf{Grün}};
+\node[text=PrimaryColor] at (2.8,1.3) {\textbf{Blau}};
+
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+% ---------------------------------------------------------
+\begin{frame}{Von RGB zu Graustufen: Gewichtete Summe}
+\footnotesize
+\begin{columns}[T]
+
+\begin{column}{0.48\textwidth}
+
+\textbf{RGB-Bild}
+
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.55]
+
+% Raster
+\draw[step=0.8cm,gray!70] (0,0) grid (3.2,3.2);
+
+% Beispielpixel
+\fill[red!80] (0.8,2.4) rectangle (1.6,1.6);
+\fill[green!80!black] (1.6,1.6) rectangle (2.4,0.8);
+\fill[blue!80] (2.4,2.4) rectangle (3.2,1.6);
+
+\node at (1.6,-0.6) {$H \times W \times 3$};
+
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item Jeder Pixel enthält \textbf{drei Werte}:     \(    (R,G,B)    \)
+    \item Beispiel:    \(    (255,0,0)    \)
+    entspricht reinem Rot.
+    \item Das menschliche Auge nimmt die Grundfarben \textbf{unterschiedlich hell} war.
+    \item Für die Umrechnung in Graustufen werden die Pixelwerte \textbf{nach Farbe gewichtet} (Grün: 58{,}7\,\%, 
+        Rot: 29{,}9\,\%,  Blau: 11{,}4\,\%).
+\end{itemize}
+
+\end{column}
+
+\begin{column}{0.47\textwidth}
+
+\textbf{Graustufenbild}
+
+\vspace{0.2cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.55]
+
+\draw[step=0.8cm,gray!70] (0,0) grid (3.2,3.2);
+
+\fill[white!30!black] (0.8,2.4) rectangle (1.6,1.6);
+\fill[white!59!black] (1.6,1.6) rectangle (2.4,0.8);
+\fill[white!11!black] (2.4,2.4) rectangle (3.2,1.6);
+
+\node at (1.6,-0.6) {$H \times W$};
+
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item Jeder Pixel hat nur \textbf{einen Helligkeitswert}.
+    \item \textbf{Umrechnung aus RGB}:
+    \[
+    I_{\text{grau}}
+    =0{,}299R
+    +0{,}587G
+    +0{,}114B
+    \]
+    \item Die gewichtete Summe liefert die \textbf{wahrgenommene Helligkeit} des Farbpixels.
+\end{itemize}
+
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+% ---------------------------------------------------------
+\begin{frame}{Faltung: Motivation}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Viele Bildoperationen berechnen den neuen Wert eines Pixels aus seiner \textbf{lokalen Nachbarschaft}
+    \item Beispiele: Glättung, Rauschunterdrückung, Kantendetektion, Schärfung
+    \item Die zentrale Operation dafür ist die \textbf{Faltung} (engl. Convolution) mit einer kleinen Gewichtsmatrix
+    \item Diese Gewichtsmatrix heißt \textbf{Filtermaske}, \textbf{Kernel} oder \textbf{Filterkern}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Eigenschaften der Faltung:
+    \begin{itemize}
+        \item \textbf{Linear}: Skalierung und Addition bleiben erhalten
+        \item \textbf{Verschiebungsinvariant}: dieselbe Operation an jeder Bildposition
+        \item \textbf{Lokal}: nur eine kleine Umgebung geht in das Ergebnis ein
+    \end{itemize}
+    \item Genau diese Eigenschaften machen die Faltung zum \textbf{Grundbaustein von CNNs}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Faltung: Mathematische Definition}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Die \textbf{diskrete 2D-Faltung} eines Bildes $I$ mit einem Kernel $K$ der Größe $(2a+1) \times (2b+1)$:
+    \[
+        (I * K)(x, y) = \sum_{m=-a}^{a} \sum_{n=-b}^{b} I(x - m,\, y - n)\, K(m, n)
+    \]
+    \item Der Kernel wird für die Faltung formal \textbf{um 180 Grad gedreht} (Spiegelung in beiden Achsen)
+    \item Kontinuierliches Analogon:
+    \[
+        (f * g)(x, y) = \iint f(\tau, \sigma)\, g(x - \tau,\, y - \sigma)\, d\tau\, d\sigma
+    \]
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Wichtige Rechenregeln:
+    \begin{itemize}
+        \item Kommutativität: $I * K = K * I$
+        \item Assoziativität: $(I * K_1) * K_2 = I * (K_1 * K_2)$
+        \item Distributivität über der Addition
+    \end{itemize}
+    \item Assoziativität erlaubt das \textbf{Zusammenfassen} mehrerer Filter zu einem
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{GonzalezWoods2018}}
+
+\note{
+\begin{itemize}
+    \item Die Faltung stammt aus der Systemtheorie: Ein Eingangssignal wird als Summe verschobener Impulse aufgefasst, deren Antworten sich überlagern, was die Spiegelung erzwingt.
+    \item Durch die Spiegelung wird die Faltung \textbf{kommutativ} und erfüllt das \textbf{Faltungstheorem} $\mathcal{F}\{I * K\} = \mathcal{F}\{I\} \cdot \mathcal{F}\{K\}$.
+    \item Diese algebraischen Eigenschaften sind für die klassische Signalverarbeitung zentral, für lernende CNNs jedoch entbehrlich, weshalb dort die ungespiegelte Kreuzkorrelation genügt.
+\end{itemize}
+}
+
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Die Faltung (Convolution)}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jeder Position ein \textbf{gewichtetes Mittel} seiner Umgebung.
+\begin{itemize}
+\item Der Filter ist typisch $3 \times 3$ oder $5 \times 5$ groß.
+\item Seine Gewichte sind für das \textbf{ganze} Bild gleich.
+\item So entsteht eine \textbf{Merkmalskarte} (Feature Map).
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+% Eingabebild (Gitter)
+\foreach \x in {0,...,4} {
+  \foreach \y in {0,...,4} {
+    \draw[gray!40] (\x*0.5,\y*0.5) rectangle (\x*0.5+0.5,\y*0.5+0.5);
+  }
+}
+% Filterposition hervorheben
+\draw[AlertColor, very thick] (0.5,1.0) rectangle (2.0,2.5);
+\node[AlertColor] at (1.25,2.8) {\textbf{Filter}};
+% Feature Map
+\begin{scope}[shift={(4.0,1.0)}]
+  \foreach \x in {0,...,2} {
+    \foreach \y in {0,...,2} {
+      \filldraw[fill=AccentColor!20, draw=AccentColor] (\x*0.5,\y*0.5) rectangle (\x*0.5+0.5,\y*0.5+0.5);
+    }
+  }
+  \node at (0.75,1.85) {\textbf{Feature Map}};
+\end{scope}
+% Pfeil
+\draw[->, very thick] (2.6,1.75) -- (3.8,1.75);
+\end{tikzpicture}%
+}
+
+\footnotesize
+
+\begin{itemize}
+    \item Die \textbf{Valid-Faltung} arbeitet \textbf{ohne Padding}: Der Kernel wird nur dort ausgewertet, wo er vollständig im Bild liegt.
+    \item Das Ausgabebild wird \textbf{kleiner}: Bei Stride 1 gilt $W_{\text{out}} = W - F + 1$, im Beispiel $5 - 3 + 1 = 3$.
+\end{itemize}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+% ---------------------------------------------------------
+\begin{frame}{Beispiel: Faltung eines Bildes mit einem Boxfilter}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Gegeben ist ein $5 \times 5$-Bild $I$:
+    \[
+        I = \begin{pmatrix}
+            3 & 3 & 2 & 1 & 0 \\
+            0 & 0 & 1 & 3 & 1 \\
+            3 & 1 & 2 & 2 & 3 \\
+            2 & 0 & 0 & 2 & 2 \\
+            2 & 0 & 0 & 0 & 1
+        \end{pmatrix}
+    \]
+    \item Der Filter $k$ ist ein $3 \times 3$-\textbf{Mittelwertfilter}:
+    \[
+        k = \frac{1}{9}
+        \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}
+    \]
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Wir verwenden \textbf{Stride 1} und die \textbf{Valid}-Variante ohne Padding
+    \item Ausgabegröße:
+    \[
+        5 - 3 + 1 = 3 \;\Rightarrow\; \text{Ergebnis } 3 \times 3
+    \]
+    \item Für die echte Faltung \textbf{drehen wir den Kernel um 180 Grad}
+    \item Da $k$ vollständig \textbf{symmetrisch} ist, bleibt er dabei unverändert, Faltung und Kreuzkorrelation liefern hier dasselbe Ergebnis
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ablauf der Faltung}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Das \textbf{Fenster} gleitet mit \textbf{Stride 1} zeilenweise über das Bild $I$
+    \item Jede Position erzeugt genau einen Wert im Ausgabebild $I^{*}$
+    \item Werte auf eine Nachkommastelle gerundet
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    cell/.style={draw=SecondaryColor!55, minimum size=0.85cm, anchor=center, fill=SecondaryColor!6},
+    ocell/.style={draw=ExampleColor!45!black, minimum size=0.85cm, anchor=center, fill=ExampleColor!8},
+    win/.style={draw=AccentTitle, line width=2.2pt}
+]
+% --- Bild I ---
+\node[anchor=south west] at (-0.5,0.7) {\large Bild $I$};
+\foreach \row [count=\y from 0] in {{3,3,2,1,0},{0,0,1,3,1},{3,1,2,2,3},{2,0,0,2,2},{2,0,0,0,1}}{
+    \foreach \val [count=\x from 0] in \row {
+        \node[cell] at (\x,-\y) {\val};
+    }
+}
+% --- leeres Ausgabebild I* ---
+\node[anchor=south west] at (6.5,0.7) {\large Bild $I^{*}$};
+\foreach \ox in {0,1,2}{
+    \foreach \oy in {0,1,2}{
+        \node[ocell] at (\ox+7,-\oy) {};
+    }
+}
+% --- gleitendes Fenster (jeweils genau ein Overlay) ---
+\only<1>{\draw[win] (-0.5, 0.5) rectangle ( 2.5,-2.5);}
+\only<2>{\draw[win] ( 0.5, 0.5) rectangle ( 3.5,-2.5);}
+\only<3>{\draw[win] ( 1.5, 0.5) rectangle ( 4.5,-2.5);}
+\only<4>{\draw[win] (-0.5,-0.5) rectangle ( 2.5,-3.5);}
+\only<5>{\draw[win] ( 0.5,-0.5) rectangle ( 3.5,-3.5);}
+\only<6>{\draw[win] ( 1.5,-0.5) rectangle ( 4.5,-3.5);}
+\only<7>{\draw[win] (-0.5,-1.5) rectangle ( 2.5,-4.5);}
+\only<8>{\draw[win] ( 0.5,-1.5) rectangle ( 3.5,-4.5);}
+\only<9>{\draw[win] ( 1.5,-1.5) rectangle ( 4.5,-4.5);}
+% --- Ausgabewerte (erscheinen kumulativ) ---
+\onslide<1->{\node at (7,0)  {1,7};}
+\onslide<2->{\node at (8,0)  {1,7};}
+\onslide<3->{\node at (9,0)  {1,7};}
+\onslide<4->{\node at (7,-1) {1,0};}
+\onslide<5->{\node at (8,-1) {1,2};}
+\onslide<6->{\node at (9,-1) {1,8};}
+\onslide<7->{\node at (7,-2) {1,1};}
+\onslide<8->{\node at (8,-2) {0,8};}
+\onslide<9->{\node at (9,-2) {1,3};}
+% --- aktuelle Ausgabezelle hervorheben ---
+\only<1>{\draw[win] (6.5, 0.5) rectangle (7.5,-0.5);}
+\only<2>{\draw[win] (7.5, 0.5) rectangle (8.5,-0.5);}
+\only<3>{\draw[win] (8.5, 0.5) rectangle (9.5,-0.5);}
+\only<4>{\draw[win] (6.5,-0.5) rectangle (7.5,-1.5);}
+\only<5>{\draw[win] (7.5,-0.5) rectangle (8.5,-1.5);}
+\only<6>{\draw[win] (8.5,-0.5) rectangle (9.5,-1.5);}
+\only<7>{\draw[win] (6.5,-1.5) rectangle (7.5,-2.5);}
+\only<8>{\draw[win] (7.5,-1.5) rectangle (8.5,-2.5);}
+\only<9>{\draw[win] (8.5,-1.5) rectangle (9.5,-2.5);}
+\end{tikzpicture}}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Ergebnis der Faltung}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Wir erhalten folgende Matrix als Endergebnis:
+    \[
+        O \approx \begin{pmatrix}
+            1{,}67 & 1{,}67 & 1{,}67 \\
+            1{,}00 & 1{,}22 & 1{,}78 \\
+            1{,}11 & 0{,}78 & 1{,}33
+        \end{pmatrix}
+    \]
+\end{itemize}
+\end{column}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+    \item Jeder Ausgabewert ist der \textbf{Mittelwert} seiner $3 \times 3$-Nachbarschaft
+    \item Das Bild wirkt dadurch \textbf{geglättet}, harte Übergänge werden abgeschwächt
+    \item Die Valid-Faltung verkleinert das Bild von $5 \times 5$ auf $3 \times 3$, der Rand geht verloren
+    \item Mit \textbf{Same Padding} bliebe die Größe $5 \times 5$ erhalten
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Glättungsfilter: Wirkung am Beispiel}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_original.png}\\[0.3em]
+\textbf{Originalbild}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_geglaettet.png}\\[0.3em]
+\textbf{Geglättetes Bild}
+\end{column}
+\end{columns}
+\source{Bildfilter.ipynb}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Faltung vs. Kreuzkorrelation}
+  \small
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+    \item Die \textbf{Kreuzkorrelation} verzichtet auf die Spiegelung des Kernels:
+    \[
+        (I \star K)(x, y) = \sum_{m} \sum_{n} I(x + m,\, y + n)\, K(m, n)
+    \]
+    \item Für \textbf{symmetrische Kernel} (z.\,B. Gauß, Box) sind Faltung und Kreuzkorrelation identisch
+    \item Bildverarbeitungsbibliotheken wie \textbf{OpenCV} verwenden die Kreuzkorrelation statt der Faltung. In OpenCV heißt die entsprechende Methode \texttt{filter2D()}.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item \textbf{Hinweis für CNNs:} Auch ast alle Deep-Learning-Frameworks implementieren tatsächlich die Kreuzkorrelation, nennen sie aber Convolution
+    \item Für das Lernen ist das unerheblich: das Netz lernt die Gewichte ohnehin frei, eine feste Spiegelung ändert nur die Parametrisierung
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Warum CNNs die Kreuzkorrelation bevorzugen}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Spiegelung ist redundant:} Bei festen Filtern (z.\,B. Sobel) verändert die Drehung das Ergebnis, bei CNNs sind die Kernel jedoch \textbf{lernbar}
+    \item Ob das Netz $K$ oder die gespiegelte Version $K'$ lernt, ist gleichwertig, es lernt von vornherein die passende Anordnung
+    \item Die Ausdruckskraft des Modells bleibt \textbf{unverändert}
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item \textbf{Effizienz:} Die Kreuzkorrelation greift direkt mit $I(x+m, y+n)$ zu, die Spiegelung vor jeder Operation entfällt
+    \item \textbf{Konsistenz:} Vorwärtspfad und Gradientenberechnung passen ohne zusätzliche Spiegelung besser zusammen
+    \item \textbf{Interpretation:} Ein hoher Wert bedeutet, dass das Kernelmuster gut zur Bildregion passt, ganz im Sinne eines \textbf{Merkmalsdetektors}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{Goodfellow2016}}
+\end{frame}
+% ---------------------------------------------------------
+\begin{frame}{Faltung anschaulich: Gleitendes Fenster}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Vorstellung: Der Kernel \textbf{gleitet} Pixel für Pixel über das Bild
+    \item An jeder Position:
+    \begin{enumerate}
+        \item Kernel über der Nachbarschaft ausrichten
+        \item Elementweise multiplizieren
+        \item Produkte aufsummieren
+        \item Summe als neuen Pixelwert eintragen
+    \end{enumerate}
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Zahlenbeispiel mit einem $3 \times 3$-Ausschnitt und Mittelwertfilter:
+    \[
+    \underbrace{\begin{pmatrix} 10 & 20 & 30 \\ 40 & 50 & 60 \\ 70 & 80 & 90 \end{pmatrix}}_{\text{Bildausschnitt}}
+    \odot
+    \underbrace{\frac{1}{9}\begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}}_{\text{Kernel}}
+    \]
+    \item Ergebnis: $\frac{1}{9}(10 + 20 + \dots + 90) = 50$
+    \item Der zentrale Pixel erhält also den \textbf{Mittelwert seiner Nachbarschaft}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Randbehandlung und Padding}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Am Bildrand ragt der Kernel \textbf{über das Bild hinaus}: dort fehlen Nachbarpixel
+    \item Übliche Strategien:
+    \begin{itemize}
+        \item \textbf{Zero Padding}: fehlende Werte werden mit $0$ aufgefüllt
+        \item \textbf{Replikation}: Randpixel werden wiederholt
+        \item \textbf{Spiegelung}: das Bild wird am Rand reflektiert
+        \item \textbf{Valid}: Randpositionen werden ausgelassen, das Bild schrumpft
+    \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Same Padding}: Padding so gewählt, dass die Ausgabegröße der Eingabegröße entspricht
+    \item Für einen $k \times k$-Kernel mit ungeradem $k$ gilt dann $P = \frac{k-1}{2}$
+    \item \textbf{Relevanz für CNNs:} Zero Padding ist Standard, da es die räumliche Auflösung über viele Schichten erhält
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Stride und Ausgabegröße}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Der \textbf{Stride} $S$ gibt die Schrittweite an, mit der der Kernel verschoben wird
+    \item $S = 1$: jede Position wird ausgewertet
+    \item $S > 1$: das Ausgabebild wird \textbf{unterabgetastet}, die Auflösung sinkt
+    \item In CNNs dient ein größerer Stride der \textbf{Reduktion der räumlichen Dimension}
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Ausgabegröße bei Eingabebreite $W$, Kernelgröße $F$, Padding $P$ und Stride $S$:
+    \[
+        W_{\text{out}} = \left\lfloor \frac{W - F + 2P}{S} \right\rfloor + 1
+    \]
+    \item Beispiel: $W = 32$, $F = 3$, $P = 1$, $S = 1$ ergibt $W_{\text{out}} = 32$
+    \item Beispiel: $W = 32$, $F = 3$, $P = 1$, $S = 2$ ergibt $W_{\text{out}} = 16$
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{Goodfellow2016}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Typische Filtermasken: Glättung}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item \textbf{Boxfilter} (Mittelwertfilter): alle Gewichte gleich
+    \[
+        K_{\text{Box}} = \frac{1}{9}
+        \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}
+    \]
+    \item Wirkung: \textbf{Tiefpass}, unterdrückt Rauschen, verwischt aber auch Kanten
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Gaußfilter}: Gewichte nach der Gaußfunktion, zentrale Pixel zählen stärker
+    \[
+        K_{\text{Gauß}} = \frac{1}{16}
+        \begin{pmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{pmatrix}
+    \]
+    \item Glättet \textbf{isotroper und natürlicher} als der Boxfilter
+    \item Die Summe der Gewichte ist jeweils $1$, damit die mittlere Helligkeit erhalten bleibt
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{GonzalezWoods2018}}
+\end{frame}
+
+
+\begin{frame}{Gauß-Filter}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_original.png}\\[0.3em]
+\textbf{Originalbild}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_gauss.png}\\[0.3em]
+\textbf{Geglättetes Bild}
+\end{column}
+\end{columns}
+\source{Bildfilter.ipynb, Bildquelle: \cite{dhbw_horb_campus}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Typische Filtermasken: Kantendetektion}
+\footnotesize  
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Kanten sind Stellen \textbf{starker Intensitätsänderung}, also große Beträge der Ableitung
+    \item \textbf{Sobel-Operator} approximiert die partiellen Ableitungen und glättet quer dazu:
+    \[
+        K_x = \begin{pmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{pmatrix}
+        \quad
+        K_y = \begin{pmatrix} -1 & -2 & -1 \\ 0 & 0 & 0 \\ 1 & 2 & 1 \end{pmatrix}
+    \]
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Gradientenbetrag und Kantenrichtung:
+    \[
+        \|\nabla I\| = \sqrt{G_x^2 + G_y^2}, \quad \theta = \arctan\frac{G_y}{G_x}
+    \]
+    \item \textbf{Prewitt-Operator}: analoge Struktur, jedoch ohne stärkere Gewichtung der Mittelzeile
+    \item Die Gewichtssumme ist $0$: in homogenen Regionen liefert der Filter den Wert $0$
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{GonzalezWoods2018}}
+\end{frame}
+
+
+\begin{frame}{Kantenfilter}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_sobel_x.png}\\[0.3em]
+\textbf{Sobel $x$}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_sobel_y.png}\\[0.3em]
+\textbf{Sobel $y$}
+\end{column}
+\end{columns}
+\source{Bildfilter.ipynb}
+\end{frame}
+
+
+% ---------------------------------------------------------
+\begin{frame}{Typische Filtermasken: Laplace und Schärfung}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Der \textbf{Laplace-Operator} approximiert die zweite Ableitung:
+    \[
+        K_{\Delta} = \begin{pmatrix} 0 & 1 & 0 \\ 1 & -4 & 1 \\ 0 & 1 & 0 \end{pmatrix}
+    \]
+    \item Reagiert \textbf{richtungsunabhängig} auf Intensitätsänderungen
+    \item Sehr empfindlich gegenüber Rauschen, daher oft mit Gaußglättung kombiniert (\textbf{Laplacian of Gaussian})
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item \textbf{Schärfung} durch Verstärken der Hochfrequenzanteile:
+    \[
+        K_{\text{schärf}} = \begin{pmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{pmatrix}
+    \]
+    \item Idee: Originalbild plus gewichteter Laplace-Anteil (\textbf{Unsharp Masking})
+    \item Kanten treten stärker hervor, Rauschen wird jedoch ebenfalls verstärkt
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Laplace und Schärfung}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_laplace.png}\\[0.3em]
+\textbf{Gaußfilter anschließend Laplace}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/filter_campus_sharpened.png}\\[0.3em]
+\textbf{Schärfungsfilter}
+\end{column}
+\end{columns}
+\source{Bildfilter.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Aufgabe: Eigenen Filter implementieren}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Verwenden Sie das Notebook \texttt{Bildfilter.ipynb}
+    \item \textbf{Implementieren} Sie den folgenden Filter und \textbf{wenden} Sie ihn auf Bilder an
+\begin{minted}[fontsize=\footnotesize]{python}
+kernel = np.array([
+    [-2, -1, 0],
+    [-1,  1, 1],
+    [ 0,  1, 2]
+])
+\end{minted}
+\item Was bewirkt dieser Filter?
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.9\linewidth]{laptop}
+\end{column}
+\end{columns}
+\source{Lösung: Bildfilter\_emboss.ipynb}
+\end{frame}
+
+
+% ---------------------------------------------------------
+\begin{frame}{Separierbare Filter}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Ein 2D-Kernel heißt \textbf{separierbar}, wenn er als äußeres Produkt zweier Vektoren darstellbar ist:
+    \[
+        K = k_y \, k_x^{\top}
+    \]
+    \item Beispiel Sobel:
+    \[
+        \begin{pmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{pmatrix}
+        = \begin{pmatrix} 1 \\ 2 \\ 1 \end{pmatrix}
+        \begin{pmatrix} -1 & 0 & 1 \end{pmatrix}
+    \]
+    \item Die 2D-Faltung zerfällt dann in \textbf{zwei 1D-Faltungen} (erst zeilenweise, dann spaltenweise)
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Aufwand pro Pixel sinkt von $O(k^2)$ auf $O(2k)$
+    \item Gauß- und Boxfilter sind ebenfalls separierbar
+    \item In CNNs greifen \textbf{Depthwise Separable Convolutions} (z.\,B. MobileNet) dieselbe Idee auf
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Algorithmus: Diskrete 2D-Faltung}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Naive Implementierung mit vier verschachtelten Schleifen
+    \item Laufzeit: $O(H \cdot W \cdot k^2)$
+    \item Annahme hier: Zero Padding und Stride $1$, Ausgabe in Eingabegröße
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{algorithm}[H]
+\footnotesize
+\KwIn{Image $I$ of size $H \times W$, kernel $K$ of size $k \times k$, $a \gets \lfloor k/2 \rfloor$}
+\KwOut{Filtered image $O$ of size $H \times W$}
+\For{$y \gets 0$ \KwTo $H - 1$}{
+    \For{$x \gets 0$ \KwTo $W - 1$}{
+        $s \gets 0$\;
+        \For{$m \gets -a$ \KwTo $a$}{
+            \For{$n \gets -a$ \KwTo $a$}{
+                $s \gets s + I(y - m,\, x - n) \cdot K(m, n)$\;
+            }
+        }
+        $O(y, x) \gets s$\;
+    }
+}
+\Return{$O$}\;
+\end{algorithm}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}[fragile]{Implementierung: Faltung in Python}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Direkte Umsetzung mit NumPy
+    \item Kernel wird für die echte Faltung gespiegelt
+    \item In der Praxis: optimierte Bibliotheksfunktionen (SciPy, OpenCV) oder Framework-Operationen (PyTorch, TensorFlow)
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy as np
+
+def convolve2d(img, kernel):
+    k = kernel.shape[0]
+    a = k // 2
+    kernel = np.flip(kernel)
+    padded = np.pad(img, a, mode="constant")
+    out = np.zeros_like(img, dtype=float)
+    H, W = img.shape
+    for y in range(H):
+        for x in range(W):
+            region = padded[y:y+k, x:x+k]
+            out[y, x] = np.sum(region * kernel)
+    return out
+\end{minted}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+
+% ---------------------------------------------------------
+\begin{frame}{Von festen Filtern zu gelernten Filtern}
+\begin{columns}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Klassische Bildverarbeitung: Filtermasken werden \textbf{von Hand entworfen} (Sobel, Gauß, Laplace)
+    \item CNNs: die Einträge der Kernel sind \textbf{lernbare Parameter}, optimiert per Gradientenabstieg
+    \item Das Netz entdeckt selbstständig, \textbf{welche Merkmale} für die Aufgabe relevant sind
+\end{itemize}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Zentrale Prinzipien einer Convolutional Layer:
+    \begin{itemize}
+        \item \textbf{Lokale Konnektivität}: jedes Neuron sieht nur einen kleinen Bildausschnitt
+        \item \textbf{Parameterteilung}: derselbe Kernel wird an allen Positionen verwendet
+        \item \textbf{Translationsäquivarianz}: Verschiebung im Bild verschiebt die Antwort
+    \end{itemize}
+    \item Ergebnis pro Kernel: eine \textbf{Feature Map}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{LeCun1998}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Faltung über mehrere Kanäle}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+    \item Bei einem Eingabetensor mit $C$ Kanälen ist der Kernel dreidimensional: $K \in \mathbb{R}^{k \times k \times C}$
+    \item Die Faltung summiert \textbf{über alle Kanäle}:
+    \[
+        O(x, y) = \sum_{c=1}^{C} \sum_{m} \sum_{n} I_c(x + m,\, y + n)\, K_c(m, n) + b
+    \]
+    \item Eine Schicht mit $D$ Kerneln erzeugt $D$ Feature Maps, also einen Ausgabetensor der Tiefe $D$
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+    \item Parameterzahl pro Schicht:
+    \[
+        D \cdot (k^2 \cdot C + 1)
+    \]
+    \item Beispiel: $k = 3$, $C = 3$, $D = 64$ ergibt $64 \cdot 28 = 1792$ Parameter
+    \item Deutlich weniger als bei vollvernetzten Schichten gleicher Eingabegröße
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Hierarchie der Merkmale und rezeptives Feld}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+    \item Das \textbf{rezeptive Feld} eines Neurons ist der Bildbereich, der seinen Wert beeinflusst
+    \item Mit jeder weiteren Faltungsschicht \textbf{wächst} das rezeptive Feld
+    \item Stride und Pooling vergrößern das rezeptive Feld zusätzlich
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+    \item Typische Merkmalshierarchie in tiefen CNNs:
+    \begin{itemize}
+        \item Frühe Schichten: \textbf{Kanten und Farbkontraste}, ähnlich Sobel- und Gaborfiltern
+        \item Mittlere Schichten: \textbf{Texturen und Muster}
+        \item Späte Schichten: \textbf{Objektteile und semantische Konzepte}
+    \end{itemize}
+    \item Klassische Filtermasken entstehen so \textbf{implizit durch das Training}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{ZeilerFergus2014}}
+\end{frame}
+
+
+\begin{frame}{Warum Faltung so gut passt}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+Die Faltung bringt zwei entscheidende Vorteile:
+\begin{itemize}
+\item \textbf{Weniger Parameter}: Ein kleiner Filter wird über das ganze Bild \textbf{wiederverwendet}, statt für jede Position eigene Gewichte zu lernen.
+\item \textbf{Translationsinvarianz}: Ein einmal gelerntes Muster wird an \textbf{jeder} Stelle des Bildes erkannt.
+\end{itemize}
+Verschiedene Filter erkennen verschiedene \textbf{Merkmale}, etwa Kanten, Ecken oder Texturen.
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{block}{Kernprinzip}
+\textbf{Ein} Filter, \textbf{viele} Positionen. Das spart Gewichte und macht das Netz \textbf{robuster}.
+\end{block}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\makequestionspage{\FRAGENIMAGE}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Pooling: Verkleinern der Feature Maps}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+Nach der Faltung folgt oft eine \textbf{Pooling}-Schicht, die die Feature Map \textbf{verkleinert}.
+\begin{itemize}
+\item \textbf{Max-Pooling} nimmt je Bereich den \textbf{größten} Wert.
+\item Das reduziert die \textbf{Datenmenge} und die Rechenlast.
+\item Es macht die Erkennung \textbf{robuster} gegen kleine Verschiebungen.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\resizebox{0.85\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+% 4x4 Eingabe
+\foreach \x/\y/\v in {0/1/3, 1/1/1, 0/0/2, 1/0/0,
+                      2/1/5, 3/1/4, 2/0/1, 3/0/2} {
+  \draw[gray!50] (\x*0.5,\y*0.5) rectangle (\x*0.5+0.5,\y*0.5+0.5);
+  \node at (\x*0.5+0.25,\y*0.5+0.25) {\v};
+}
+% Hervorhebung 2x2
+\draw[AlertColor, very thick] (0,0) rectangle (1,1);
+\draw[AccentColor, very thick] (1,0) rectangle (2,1);
+% Ausgabe
+\begin{scope}[shift={(3.0,0.25)}]
+  \filldraw[fill=AlertColor!25, draw=AlertColor, very thick] (0,0) rectangle (0.5,0.5);
+  \node at (0.25,0.25) {3};
+  \filldraw[fill=AccentColor!25, draw=AccentColor, very thick] (0.5,0) rectangle (1,0.5);
+  \node at (0.75,0.25) {5};
+\end{scope}
+\draw[->, very thick] (2.1,0.5) -- (2.8,0.5);
+\node at (0.5,-0.4) {$2\times2$ Max-Pool};
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+\begin{frame}{Aufbau eines CNN}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+Ein CNN staffelt mehrere Blöcke:
+\begin{itemize}
+\item \textbf{Convolution} und \textbf{Pooling} extrahieren Merkmale.
+\item Am Ende \textbf{plättet} man die Karten (Flatten).
+\item \textbf{Dense}-Schichten treffen die Klassenentscheidung.
+\end{itemize}
+\end{column}
+\begin{column}{0.60\textwidth}
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[every node/.style={font=\scriptsize}, >=Stealth]
+\node[draw=SecondaryTitle, fill=SecondaryColor!30, very thick, minimum height=1.6cm, minimum width=0.9cm] (in) at (0,0) {};
+\node[below=0.1cm of in] {Bild};
+\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=1.3cm, minimum width=0.7cm] (c1) at (1.4,0) {};
+\node[below=0.1cm of c1, align=center] {Conv\\+Pool};
+\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=1.0cm, minimum width=0.7cm] (c2) at (2.8,0) {};
+\node[below=0.1cm of c2, align=center] {Conv\\+Pool};
+\node[draw=AccentTitle, fill=AccentColor!30, very thick, minimum height=1.4cm, minimum width=0.3cm] (fl) at (4.0,0) {};
+\node[below=0.1cm of fl] {Flatten};
+\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=1.0cm, minimum width=0.3cm] (d) at (5.0,0) {};
+\node[below=0.1cm of d] {Dense};
+\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=0.6cm, minimum width=0.3cm] (o) at (5.9,0) {};
+\node[below=0.1cm of o] {Ausgabe};
+\draw[->, very thick] (in)--(c1);
+\draw[->, very thick] (c1)--(c2);
+\draw[->, very thick] (c2)--(fl);
+\draw[->, very thick] (fl)--(d);
+\draw[->, very thick] (d)--(o);
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\cite{Frochte2020}}
+\end{frame}
+
+
 \makequestionspage{\FRAGENIMAGE}
