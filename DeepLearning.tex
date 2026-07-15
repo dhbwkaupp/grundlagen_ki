@@ -1963,7 +1963,7 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 \end{column}
 \begin{column}{0.48\textwidth}
 \begin{itemize}
-    \item Mathematisch ist ein Graustufenbild eine Funktion
+    \item \textbf{Mathematisch} ist ein Graustufenbild eine Funktion
     \[
         I : \{0, \dots, H-1\} \times \{0, \dots, W-1\} \to \mathbb{Z}
     \]
@@ -1991,7 +1991,7 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 \begin{itemize}
     \item Farbbilder bestehen aus mehreren \textbf{Kanälen}, im RGB-Modell aus Rot, Grün und Blau.
     
-    \item Jeder Kanal ist selbst eine Matrix; das Gesamtbild ist ein
+    \item Jeder Kanal ist selbst eine Matrix. Das Gesamtbild ist ein
     \textbf{Tensor dritter Stufe}:
     \[
         I \in \mathbb{R}^{H \times W \times C},
@@ -2040,15 +2040,13 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 
 % ---------------------------------------------------------
 \begin{frame}{Von RGB zu Graustufen: Gewichtete Summe}
+    \medskip
 \footnotesize
 \begin{columns}[T]
 
 \begin{column}{0.48\textwidth}
 
 \textbf{RGB-Bild}
-
-\vspace{0.2cm}
-
 \begin{center}
 \begin{tikzpicture}[scale=0.55]
 
@@ -2079,9 +2077,6 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 \begin{column}{0.47\textwidth}
 
 \textbf{Graustufenbild}
-
-\vspace{0.2cm}
-
 \begin{center}
 \begin{tikzpicture}[scale=0.55]
 
@@ -2118,15 +2113,15 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
 % ---------------------------------------------------------
 \begin{frame}{Faltung: Motivation}
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.50\textwidth}
 \begin{itemize}
-    \item Viele Bildoperationen berechnen den neuen Wert eines Pixels aus seiner \textbf{lokalen Nachbarschaft}
-    \item Beispiele: Glättung, Rauschunterdrückung, Kantendetektion, Schärfung
-    \item Die zentrale Operation dafür ist die \textbf{Faltung} (engl. Convolution) mit einer kleinen Gewichtsmatrix
-    \item Diese Gewichtsmatrix heißt \textbf{Filtermaske}, \textbf{Kernel} oder \textbf{Filterkern}
+    \item Viele Bildoperationen berechnen den neuen Wert eines Pixels aus seiner \textbf{lokalen Nachbarschaft}.
+    \item \textbf{Beispiele:} Glättung, Rauschunterdrückung, Kantendetektion, Schärfung
+    \item Die zentrale Operation dafür ist die \textbf{Faltung} (engl. Convolution) mit einer kleinen Gewichtsmatrix.
+    \item Diese Gewichtsmatrix heißt \textbf{Filtermaske}, \textbf{Kernel} oder \textbf{Filterkern}.
 \end{itemize}
 \end{column}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.45\textwidth}
 \begin{itemize}
     \item Eigenschaften der Faltung:
     \begin{itemize}
@@ -2261,7 +2256,7 @@ Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jed
         5 - 3 + 1 = 3 \;\Rightarrow\; \text{Ergebnis } 3 \times 3
     \]
     \item Für die echte Faltung \textbf{drehen wir den Kernel um 180 Grad}
-    \item Da $k$ vollständig \textbf{symmetrisch} ist, bleibt er dabei unverändert, Faltung und Kreuzkorrelation liefern hier dasselbe Ergebnis
+    \item Da $k$ in unserem Fall vollständig \textbf{symmetrisch} ist, bleibt er dabei unverändert.
 \end{itemize}
 \end{column}
 \end{columns}
@@ -2353,7 +2348,7 @@ Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jed
     \item Jeder Ausgabewert ist der \textbf{Mittelwert} seiner $3 \times 3$-Nachbarschaft
     \item Das Bild wirkt dadurch \textbf{geglättet}, harte Übergänge werden abgeschwächt
     \item Die Valid-Faltung verkleinert das Bild von $5 \times 5$ auf $3 \times 3$, der Rand geht verloren
-    \item Mit \textbf{Same Padding} bliebe die Größe $5 \times 5$ erhalten
+    \item Mit \textbf{Same Padding} würde die Größe $5 \times 5$ erhalten bleiben.
 \end{itemize}
 \end{column}
 \end{columns}
@@ -2391,10 +2386,12 @@ Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jed
 \end{itemize}
 \end{column}
 \begin{column}{0.35\textwidth}
+    \begin{block}{Hinweis für CNNs}
 \begin{itemize}
-    \item \textbf{Hinweis für CNNs:} Auch ast alle Deep-Learning-Frameworks implementieren tatsächlich die Kreuzkorrelation, nennen sie aber Convolution
-    \item Für das Lernen ist das unerheblich: das Netz lernt die Gewichte ohnehin frei, eine feste Spiegelung ändert nur die Parametrisierung
+    \item Deep-Learning- Frameworks implementieren die Kreuzkorrelation, nennen sie aber Convolution
+    \item Für \textbf{das Lernen ist das unerheblich}: das Netz lernt die Gewichte ohnehin frei, eine feste Spiegelung ändert nur die Parametrisierung
 \end{itemize}
+\end{block}
 \end{column}
 \end{columns}
 \source{\cite{goodfellow2016deep}}
@@ -2798,7 +2795,7 @@ def convolve2d(img, kernel):
         D \cdot (k^2 \cdot C + 1)
     \]
     \item Beispiel: $k = 3$, $C = 3$, $D = 64$ ergibt $64 \cdot 28 = 1792$ Parameter
-    \item Deutlich weniger als bei vollvernetzten Schichten gleicher Eingabegröße
+    \item \textbf{Deutlich weniger} als bei vollvernetzten Schichten gleicher Eingabegröße!
 \end{itemize}
 \end{column}
 \end{columns}
@@ -2808,14 +2805,14 @@ def convolve2d(img, kernel):
 % ---------------------------------------------------------
 \begin{frame}{Hierarchie der Merkmale und rezeptives Feld}
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.35\textwidth}
 \begin{itemize}
     \item Das \textbf{rezeptive Feld} eines Neurons ist der Bildbereich, der seinen Wert beeinflusst
     \item Mit jeder weiteren Faltungsschicht \textbf{wächst} das rezeptive Feld
     \item Stride und Pooling vergrößern das rezeptive Feld zusätzlich
 \end{itemize}
 \end{column}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.60\textwidth}
 \begin{itemize}
     \item Typische Merkmalshierarchie in tiefen CNNs:
     \begin{itemize}
@@ -2854,55 +2851,85 @@ Verschiedene Filter erkennen verschiedene \textbf{Merkmale}, etwa Kanten, Ecken 
 }
 
 
-
-\begin{frame}[fragile]{CNN auf MNIST: Modellaufbau}
+\begin{frame}[fragile]{CNN in Python: Aufbereitung der Daten}
 \begin{columns}
-\begin{column}{0.6\linewidth}
+\begin{column}{0.6\textwidth}
 \begin{minted}[fontsize=\footnotesize]{python}
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import 
-    Input, Dense, Conv2D, Flatten
+# Werte normalisieren auf [0,1]
+x_train = x_train.astype("float32") / 255.0
+x_test = x_test.astype("float32") / 255.0
 
-model = Sequential()
-model.add(Input(shape=(28, 28, 1)))
+# Farbkanal ergaenzen
+print("Ohne Kanal:", x_train.shape)
+x_train = x_train[..., None]
+x_test = x_test[..., None]
+print("Mit Kanal:", x_train.shape)
 
-model.add(Conv2D(100, kernel_size=(3, 3),
-                 activation="relu"))
-model.add(Flatten())
-
-model.add(Dense(100, activation="sigmoid"))
-model.add(Dense(10, activation="softmax"))
-
-model.compile(optimizer="rmsprop",
-              loss="categorical_crossentropy",
-              metrics=["accuracy"])
+# One Hot Encoding
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
 \end{minted}
 \end{column}
-\begin{column}{0.35\linewidth}
+\begin{column}{0.35\textwidth}
 \begin{itemize}
-  \item Bilder bleiben im Format \textbf{28x28}, kein Flachklopfen der Eingabe
-  \item \texttt{X\_train.shape} ergibt \texttt{(60000, 28, 28)}
-  \item Eingabe braucht zusätzlich die \textbf{Kanaldimension}: \texttt{(28, 28, 1)}
-  \item 10 Klassen, also \textbf{10 Ausgabe-Neuronen} mit \texttt{softmax}
+  \item \textbf{Normalisierung}: Pixelwerte von $[0,255]$ auf $[0,1]$
+  \item \textbf{Farbkanal}: Convolution Layer erwarten Bilder der Form (H, B, C)
+  \item Shape wechselt von $(N,28,28)$ zu $(N,28,28,1)$
+  \item \textbf{One Hot Encoding}: Label als Vektor statt als Klassenindex
 \end{itemize}
 \end{column}
 \end{columns}
-\source{CNN.ipynb}
+\source{mnist cnn.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Modellaufbau}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model = Sequential()
+
+model.add(Input(shape=(28, 28, 1)))
+model.add(Conv2D(64, kernel_size=(3, 3), activation="relu"))
+
+model.add(Flatten())
+model.add(Dense(128, activation="relu"))
+model.add(Dense(10, activation="softmax"))
+
+model.compile(
+    optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"]
+)
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+\footnotesize
+\begin{itemize}
+  \item \textbf{Input}: erwartet Bilder der Form $(28,28,1)$
+  \item \textbf{Conv2D}: 64 Filter der Groesse $3 \times 3$, extrahiert lokale Merkmale
+  \item \textbf{Flatten}: wandelt Merkmalskarten in einen Vektor
+  \item \textbf{Dense}: Klassifikation ueber 256 und 128 Neuronen
+  \item \textbf{Softmax}: 10 Ausgaben als Wahrscheinlichkeitsverteilung
+  \item \textbf{compile}: Adam als Optimierer, Cross Entropy als Verlustfunktion
+\end{itemize}
+\end{column}
+\end{columns}
+\source{mnist cnn.ipynb}
 \end{frame}
 
 \begin{frame}{Conv2D: Faltungsschicht}
 \begin{columns}
 \begin{column}{0.6\linewidth}
 \begin{itemize}
-  \item Schiebt \textbf{100 Filter} der Größe 3x3 über das Bild
+  \item Schiebt \textbf{64 Filter} der Größe 3x3 über das Bild
   \item Die Gewichte der Filter werden \textbf{gelernt}, nicht vorgegeben
-  \item Ergebnis sind 100 \textbf{Feature Maps} der Größe 26x26 (ohne Padding)
+  \item Ergebnis sind 64 \textbf{Feature Maps} der Größe 26x26 (ohne Padding)
 \end{itemize}
 \end{column}
 \begin{column}{0.35\linewidth}
 \begin{itemize}
-  \item Ausgabeform: \texttt{(26, 26, 100)}
-  \item Parameter: $3 \cdot 3 \cdot 1 \cdot 100 + 100 = 1000$
+  \item Ausgabeform: \texttt{(26, 26, 64)}
+  \item Parameter: $3 \cdot 3 \cdot 1 \cdot 64 + 64 = 640$
   \item \texttt{relu} setzt negative Aktivierungen auf 0
 \end{itemize}
 \end{column}
@@ -2915,7 +2942,7 @@ model.compile(optimizer="rmsprop",
 \begin{itemize}
   \item \texttt{Dense} erwartet einen \textbf{Vektor}, \texttt{Conv2D} liefert einen 3D-Tensor
   \item \texttt{Flatten} schreibt alle Werte hintereinander in einen langen Vektor
-  \item Aus \texttt{(26, 26, 100)} wird \texttt{(67600,)}
+  \item Aus \texttt{(26, 26, 64)} wird \texttt{(67600,)}
   \item \textbf{Keine Parameter}, keine Berechnung, nur Umformung
   \item Die räumliche Information geht dabei als Struktur verloren, die Werte selbst bleiben erhalten
 \end{itemize}
@@ -2930,36 +2957,67 @@ model.compile(optimizer="rmsprop",
 \end{columns}
 \end{frame}
 
-
-\begin{frame}{CNN auf MNIST: model.summary()}
+\begin{frame}[fragile]{CNN auf MNIST: model.summary()}
 \begin{columns}
-\begin{column}{0.6\linewidth}
-\begin{figure}
-\centering
-\includegraphics[width=\linewidth]{figures/cnn_model_summary.png}
-\end{figure}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.summary()
+\end{minted}
+\vspace{0.5em}
+
+{\ttfamily\footnotesize
+\definecolor{jupytertype}{HTML}{2196F3}
+\definecolor{jupyternum}{HTML}{00AA00}
+\noindent\textbf{Model: "sequential\_13"}
+
+\vspace{0.3em}
+\setlength{\arrayrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|r|}
+\hline
+\textbf{Layer (type)} & \textbf{Output Shape} & \textbf{Param \#}\\
+\hline
+conv2d\_16 (\textcolor{jupytertype}{Conv2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{26}, \textcolor{jupyternum}{26}, \textcolor{jupyternum}{64}) & \textcolor{jupyternum}{640}\\
+\hline
+flatten\_13 (\textcolor{jupytertype}{Flatten}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{43264}) & \textcolor{jupyternum}{0}\\
+\hline
+dense\_29 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{128}) & \textcolor{jupyternum}{5,537,920}\\
+\hline
+dense\_30 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{10}) & \textcolor{jupyternum}{1,290}\\
+\hline
+\end{tabular}
+
+\vspace{0.5em}
+\noindent\textbf{Total params:} \textcolor{jupyternum}{5,539,850} (21.13 MB)\\
+\textbf{Trainable params:} \textcolor{jupyternum}{5,539,850} (21.13 MB)\\
+\textbf{Non-trainable params:} \textcolor{jupyternum}{0} (0.00 B)
+}
 \end{column}
-\begin{column}{0.35\linewidth}
-\begin{itemize}
-  \item \texttt{Conv2D}: \texttt{(26, 26, 100)}, \textbf{1.000} Parameter
-  \item \texttt{Flatten}: \texttt{(67600,)}, \textbf{0} Parameter
-  \item \texttt{Dense(100)}: \textbf{6.760.100} Parameter
-  \item \texttt{Dense(10)}: \textbf{1.010} Parameter
-  \item Gesamt: \textbf{6.762.110} Parameter
+\begin{column}{0.35\textwidth}
+    \footnotesize
+\begin{itemize}    
+  \item \textbf{Conv2D}: $28 \times 28$ wird zu $26 \times 26$, da der $3 \times 3$ Filter den Rand verliert
+  \item \textbf{Parameter Conv2D}: $3 \cdot 3 \cdot 1 \cdot 64 + 64 = 640$
+  \item \textbf{Flatten}: $26 \cdot 26 \cdot 64 = 43{.}264$ Werte, keine Parameter
+  \item \textbf{Dense 128}: $43{.}264 \cdot 128 + 128 = 5{.}537{.}920$ Parameter, der Löwenanteil des Modells
+  \item \textbf{Dense 10}: $128 \cdot 10 + 10 = 1{.}290$ Parameter für die Klassen
+  \item \textbf{None}: Platzhalter für die variable Batchgröße
 \end{itemize}
 \end{column}
 \end{columns}
+\source{mnist cnn.ipynb}
 \end{frame}
+
 
 \begin{frame}{Wo stecken die Parameter?}
 \begin{columns}
 \begin{column}{0.6\linewidth}
 \begin{itemize}
-  \item Die Faltungsschicht ist mit 1.000 Parametern \textbf{winzig}, obwohl sie 100 Filter lernt
+  \item Die Faltungsschicht ist mit 640 Parametern \textbf{winzig}, obwohl sie 64 Filter lernt
   \item Grund: \textbf{Gewichtsteilung}, jeder Filter besitzt nur $3 \cdot 3$ Gewichte plus Bias
   \item Über \textbf{99 Prozent} aller Parameter liegen in der ersten \texttt{Dense}-Schicht
-  \item Ursache: \texttt{Flatten} erzeugt 67.600 Eingänge, jeder ist mit allen 100 Neuronen verbunden
-  \item Rechnung: $67600 \cdot 100 + 100 = 6.760.100$
+  \item Ursache: \texttt{Flatten} erzeugt 43.264 Eingänge, jeder ist mit allen 128 Neuronen verbunden
+  \item Rechnung: $43{.}5264 \cdot 128 + 128 = 5{.}537{.}920$
 \end{itemize}
 \end{column}
 \begin{column}{0.35\linewidth}
@@ -2977,76 +3035,98 @@ model.compile(optimizer="rmsprop",
 \begin{columns}
 \begin{column}{0.6\linewidth}
 \begin{minted}[fontsize=\footnotesize]{python}
-model.fit(X_train, y_train,
-          epochs=300,
-          batch_size=600,
-          verbose=1,
-          validation_split=0.25)
+model.fit(
+    x_train, y_train,
+    epochs=10,
+    batch_size=128,
+    validation_split=0.1
+)
+
 \end{minted}
 \begin{itemize}
-  \item \textbf{300 Epochen}, das gesamte Training läuft 300 mal über die Daten
-  \item \textbf{batch\_size 600}: Gewichte werden nach je 600 Bildern aktualisiert
-  \item \texttt{validation\_split=0.25}: ein Viertel der Trainingsdaten dient nur zur \textbf{Kontrolle}, nicht zum Lernen
+  \item \textbf{10 Epochen}, das gesamte Training läuft 12 mal über den Gesamtdatensatz
+  \item \textbf{batch\_size 128}: Gewichte werden nach je 128 Bildern aktualisiert
+  \item \texttt{validation\_split=0.1}: 10\% der Trainingsdaten dient nur zur \textbf{Kontrolle}, nicht zum Lernen
 \end{itemize}
 \end{column}
 \begin{column}{0.35\linewidth}
 \begin{itemize}
-  \item Trainiert wird also auf 45.000 Bildern, validiert auf 15.000
-  \item Pro Epoche 75 Gewichtsupdates
-  \item Große Batches bedeuten \textbf{stabilere}, aber seltenere Updates
+  \item Trainiert wird also auf 54.000 Bildern, validiert auf 6.000
+  \item Pro Epoche 422 Gewichtsupdates
+  \item Größere Batches würden \textbf{stabilere}, aber seltenere Updates bedeuten. 
 \end{itemize}
 \end{column}
 \end{columns}
-\source{CNN.ipynb}
+\source{mnist cnn.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{CNN auf MNIST: Evaluation}
+    \footnotesize
 \begin{columns}
-\begin{column}{0.47\linewidth}
+\begin{column}{0.47\textwidth}
 \begin{minted}[fontsize=\footnotesize]{python}
-model.evaluate(X_test, y_test)
+model.evaluate(x_test, y_test)
 \end{minted}
 \begin{minted}[fontsize=\footnotesize]{text}
-[0.6399479508399963, 0.8952999711036682]
+[0.06669081747531891, 0.9868999719619751]
 \end{minted}
-\end{column}
-\begin{column}{0.47\linewidth}
+\vspace{0.5em}
 \begin{itemize}
-   \item Rückgabe ist eine Liste: erst \textbf{Loss}, dann \textbf{Accuracy}
-  \item Ergebnis ohne jede Optimierung: rund \textbf{89 Prozent} Prognosegüte auf den Testdaten
-  \item Der Loss von 0,64 ist für 10 Klassen \textbf{hoch}, das Modell ist unsicher
+  \item Erster Wert: \textbf{Loss} $\approx 0{,}067$ (categorical crossentropy)
+  \item Zweiter Wert: \textbf{Accuracy} $\approx 98{,}7$ Prozent auf den Testdaten
+  \item Bedeutung: rund \textbf{156 von 10.000} Testbildern werden falsch klassifiziert
 \end{itemize}
 \end{column}
+\begin{column}{0.48\textwidth}
+    \begin{block}{\footnotesize Einordnung}
+\begin{itemize}
+  \item \textbf{Solides Ergebnis}, aber noch nicht Spitze: gute CNNs erreichen über \textbf{99 Prozent}
+  \item \textbf{Loss und Accuracy passen zusammen}:  niedriger Loss zeigt, dass richtige Klassen mit \textbf{hoher Sicherheit} vorhergesagt werden
+  \item \textbf{Weitere Reserven}: MaxPooling, zweite Faltungsschicht, Dropout
+  \item \textbf{Prüfen}: Abstand zur Trainings-Accuracy zeigt, das noch leichtes Overfitting vorliegt. Die 5,5 Mio. Parameter des Dense Layer lernen die Bildmuster auswendig.
+\end{itemize}
+\end{block}
+\end{column}
 \end{columns}
-\source{CNN.ipynb}
+\source{mnist cnn.ipynb}
 \end{frame}
 
-\begin{frame}{Warum nur 89 Prozent?}
+
+
+\begin{frame}{Kernel sichtbar machen}
 \begin{columns}
-\begin{column}{0.6\linewidth}
+
+\begin{column}{0.45\textwidth}
+\footnotesize
 \begin{itemize}
-  \item \textbf{Kein Pooling}: die 67.600 Eingänge in \texttt{Dense} erzeugen 6,7 Millionen Parameter, das Modell lernt auswendig statt zu verallgemeinern
-  \item \textbf{Sigmoid} in der versteckten Schicht bremst den Gradienten, \texttt{relu} lernt schneller
-  \item \textbf{Nur eine Faltungsschicht}, damit kaum hierarchische Merkmale
-  \item \textbf{300 Epochen} sind deutlich zu viel, Overfitting ist wahrscheinlich
+  \item Keras erlaubt es, die gelernten \textbf{Convolution Kernel} direkt auszulesen
+  \item Angewendet auf ein Bild zeigen sie, welche Merkmale ein Filter hervorhebt
+  \item Ergebnis ist die \textbf{gefilterte Ausgabe}, die an den Flatten Layer weitergegeben wird
+  \item Im Bild: Ergebnis der ersten \textbf{16 Kernel} auf dem ersten Bild des Testdatensatzes
+  \item Jeder Kernel reagiert auf ein anderes Muster, etwa Kanten in einer bestimmten Richtung
 \end{itemize}
 \end{column}
-\begin{column}{0.35\linewidth}
-\begin{itemize}
-  \item Übliche Stellschrauben: \textbf{MaxPooling}, \textbf{Dropout}, \texttt{relu}, \textbf{Early Stopping}
-  \item Gut abgestimmte CNNs erreichen auf MNIST über \textbf{99 Prozent}
-  \item Die Architektur zählt hier mehr als die Trainingsdauer
-\end{itemize}
+\vspace{-1.0cm}
+\begin{column}{0.5\textwidth}
+\includesvg[width=\linewidth]{figures/feature_map_mnist7.svg}
 \end{column}
 \end{columns}
+\source{CNNAktivierung.ipynb}
 \end{frame}
 
 
-
-
-
-
-
+\begin{frame}{Ein Kernel auf mehreren Bildern}
+\medskip
+\footnotesize
+\begin{itemize}
+  \item Wendet man den \textbf{identischen Filter} auf mehrere Bilder an, zeigt sich, was er konkret leistet
+  \item Das Muster der Reaktion bleibt gleich, unabhängig von der dargestellten Ziffer
+\end{itemize}
+\begin{center}
+\includesvg[width=0.7\linewidth]{figures/mnist_aktivierung_1}
+\end{center}
+\source{CNNAktivierung.ipynb}
+\end{frame}
 
 
 

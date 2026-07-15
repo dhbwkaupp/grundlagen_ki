@@ -18,6 +18,8 @@ algorithmen.aux
 *.synctex(busy)
 *.bbl-SAVE-ERROR
 *.bcf-SAVE-ERROR
-*.pdf
 *.nlo
 *.nls
+ki_methoden_und_theorien.pdf
+*svg-tex.pdf
+svg-inkscape/model_plot_svg-raw.pdf
