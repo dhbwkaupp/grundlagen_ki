@@ -2859,7 +2859,7 @@ Verschiedene Filter erkennen verschiedene \textbf{Merkmale}, etwa Kanten, Ecken 
 x_train = x_train.astype("float32") / 255.0
 x_test = x_test.astype("float32") / 255.0
 
-# Farbkanal ergaenzen
+# Farbkanal ergänzen
 print("Ohne Kanal:", x_train.shape)
 x_train = x_train[..., None]
 x_test = x_test[..., None]
@@ -2906,7 +2906,7 @@ model.compile(
 \footnotesize
 \begin{itemize}
   \item \textbf{Input}: erwartet Bilder der Form $(28,28,1)$
-  \item \textbf{Conv2D}: 64 Filter der Groesse $3 \times 3$, extrahiert lokale Merkmale
+  \item \textbf{Conv2D}: 64 Filter der Größe $3 \times 3$, extrahiert lokale Merkmale
   \item \textbf{Flatten}: wandelt Merkmalskarten in einen Vektor
   \item \textbf{Dense}: Klassifikation ueber 256 und 128 Neuronen
   \item \textbf{Softmax}: 10 Ausgaben als Wahrscheinlichkeitsverteilung
@@ -3146,7 +3146,7 @@ model.evaluate(x_test, y_test)
   \item Wenden Sie die \textbf{gelernten Kernel} nach dem Training auf einzelne Fashion-Bilder an und stellen Sie die Feature Maps dar
   \item Bewerten Sie deren Funktion: welche Struktur hebt ein Kernel jeweils hervor, etwa Kanten, Kontraste oder Texturen?
 \end{itemize}
-\source{Lösung: CNNActivierung\_Fashion.ipynb}
+\source{Lösung: CNNAktivierung\_Fashion.ipynb}
 \end{column}
 \begin{column}{0.25\linewidth}
 \begin{center}
@@ -3853,7 +3853,7 @@ model.fit(X_train, y_train,
   \item Verdoppeln Sie die \textbf{Filterzahl} nach jedem Pooling
   \item Ergänzen Sie \textbf{Dropout} auch im \texttt{Dense}-Kopf, dort mit höherer Rate
   \item Trainieren Sie mit \textbf{Early Stopping} auf \texttt{val\_loss} und lassen Sie die besten Gewichte wiederherstellen
-  \item Bestimmen Sie die \textbf{Klassifikationsgüte} und die \textbf{Parameterzahl}. Vergleichen Sie beides mit dem Netz ohne Pooling und Dropout
+  \item Bestimmen Sie die \textbf{Klassifikationsgüte} und die \textbf{Parameterzahl}. Vergleichen Sie beides mit dem Netz ohne Pooling und Dropout. (Realistisch sind Werte um die 93 \%.)
 \end{itemize}
 \source{Lösung: CNNOptimiert\_Fashion2.ipynb}
 \end{column}
@@ -3865,5 +3865,102 @@ model.fit(X_train, y_train,
 \end{columns}
 \end{frame}
 
+
+\makesubsectionpage{Transfer Learning}
+
+\begin{frame}{Transfer Learning: Grundidee}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+  \item Training neuronaler Netze ist sehr aufwändig
+  \item Komplexe Netze erfordern viele Trainingsdaten
+  \item Kleine Datenmengen reichen für Deep-Learning-Modelle nicht aus
+\end{itemize}
+\vfill
+\textbf{Lösung:} Vortrainiertes Netz eines ähnlichen Problems verwenden und Teile davon weiternutzen, um den Datenbedarf zu reduzieren.
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\twemoji[width=0.9\linewidth]{bulb}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+\begin{frame}{Transfer Learning: ImageNet Challenge}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+  \item ImageNet enthält \textbf{14.197.122} annotierte Bilder
+  \item Bilder stammen aus sehr unterschiedlichen Kategorien
+  \item Seit 2010: \textbf{ImageNet Large Scale Visual Recognition Challenge} (ILSVRC)
+  \item Siegernetze erkennen Objekte auf Bildern mit sehr hoher Güte
+  \item Diese Netze eignen sich als Basis für Transfer Learning
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/imagenet.jpg}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}, Bildquelle: \cite{paperswithcode_imagenet}}
+\end{frame}
+
+\begin{frame}{Transfer Learning: ImageNet Challenge -- Fehlerrate}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.95\textwidth,
+  height=0.62\textheight,
+  ybar,
+  bar width=18pt,
+  bar shift=0pt,
+  xmin=0.4, xmax=8.6,
+  ymin=0, ymax=30,
+  ytick={0,7.5,15,22.5,30},
+  yticklabels={0\%,7{,}5\%,15\%,22{,}5\%,30\%},
+  ymajorgrids=true,
+  grid style={gray!30},
+  axis x line*=bottom,
+  axis y line*=left,
+  xtick={1,2,3,4,5,6,7,8},
+  xticklabels={2011 (XRCE),2012 (AlexNet),2013 (ZF),2014 (VGG),2014 (GoogLeNet),Mensch,2015 (ResNet),2016 (GoogLeNet-v4)},
+  x tick label style={rotate=30,anchor=east,font=\footnotesize},
+  y tick label style={font=\footnotesize}
+]
+\addplot[draw=PrimaryColor,fill=PrimaryColor] coordinates {
+  (1,25.8) (2,16.4) (3,11.7) (4,7.3) (5,6.7) (7,3.6) (8,3.1)
+};
+\addplot[draw=AlertColor,fill=AlertColor] coordinates {(6,5.1)};
+\draw[ExampleColor,line width=2pt]
+  (axis cs:3.7,0) rectangle (axis cs:4.3,9.5);
+\end{axis}
+\end{tikzpicture}
+\end{center}
+\textbf{Das VGG-Netz eignet sich gut als Basis für Bilderkennungsmodelle.}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Transfer Learning: VGG16}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+  \item Im \textbf{Model Zoo von Keras} enthalten
+  \item Vorverarbeitung durch mehrere \textbf{Convolutional-} und \textbf{MaxPooling-Layer}
+  \item Klassifikation durch die \textbf{Dense-Layer} (Fully Connected) am Ende
+  \item Größe der Gewichte: ca. \textbf{530 MB}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/vgg16_aufbau.png}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{simonyan2014vgg}, Bildquelle: \cite{le2021vgg16_nin}}
+\end{frame}
 
 \makequestionspage{\FRAGENIMAGE}

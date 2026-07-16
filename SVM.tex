@@ -60,7 +60,7 @@ Datenpunkten \textbf{maximal} wird.
 % Rahmen
 \draw[thick] (0,0) rectangle (6,7);
 
-% Entscheidungsgrenze (schraeg)
+% Entscheidungsgrenze (schräg)
 \draw[AlertTitle, line width=1.5pt] (2.6,0.0) -- (3.2,7.0);
 \node[AlertTitle, font=\footnotesize\itshape, anchor=south west]
   at (2.2,7.1) {Entscheidungsgrenze};
@@ -638,11 +638,11 @@ für alle Trainingspunkte $\mathbf{x}$.
 \note{
 Die Fixierung $\rho \cdot \lVert\mathbf{w}\rVert = 1$ ist keine geometrische
 Umrechnung, sondern eine Eichung: Da jedes Vielfache von $\mathbf{w}$
-dieselbe Ebene beschreibt, waehlt man gezielt das $\mathbf{w}$, bei dem der
-naechstgelegene Punkt genau den Funktionswert $g = 1$ erhaelt. Ohne diese
-Festlegung waere die Maximierung von $\rho = g / \lVert\mathbf{w}\rVert$
-nicht wohldefiniert, da man Zaehler und Nenner beliebig mitskalieren
-koennte. Mit fixiertem Zaehler wird der Margin zu $\rho = 1/\lVert\mathbf{w}
+dieselbe Ebene beschreibt, wählt man gezielt das $\mathbf{w}$, bei dem der
+nächstgelegene Punkt genau den Funktionswert $g = 1$ erhält. Ohne diese
+Festlegung wäre die Maximierung von $\rho = g / \lVert\mathbf{w}\rVert$
+nicht wohldefiniert, da man Zähler und Nenner beliebig mitskalieren
+koennte. Mit fixiertem Zähler wird der Margin zu $\rho = 1/\lVert\mathbf{w}
 \rVert$; ihn zu maximieren ist damit gleichbedeutend mit der Minimierung von
 $\lVert\mathbf{w}\rVert$ bzw. $\tfrac{1}{2}\lVert\mathbf{w}\rVert^2$. Das ist
 der Schritt, der die SVM-Optimierung handhabbar macht.
@@ -1773,7 +1773,7 @@ Ergebnisse.
   draw=AccentTitle}, mark size=2pt]
   coordinates {(0,0,0) (0.6,0.3,0.45) (-0.5,0.4,0.41)
                (0.3,-0.6,0.45) (0.7,-0.2,0.53)};
-% aeussere Punkte (blau, hoch)
+% äussere Punkte (blau, hoch)
 \addplot3[only marks, mark=*, mark options={fill=SecondaryColor,
   draw=SecondaryTitle}, mark size=2pt]
   coordinates {(1.7,1.2,4.33) (-1.6,1.4,4.52) (1.5,-1.5,4.5)
@@ -1973,7 +1973,7 @@ Beispiel $d = 2$, $c = 0$ im $\mathbb{R}^2$:
 \foreach \a in {0,60,...,300} {
   \node[pink] at ({0.9*cos(\a)},{0.9*sin(\a)}) {};
 }
-% aeusserer Kreis: blaue Punkte
+% äusserer Kreis: blaue Punkte
 \foreach \a in {30,90,...,330} {
   \node[blau] at ({2.3*cos(\a)},{2.3*sin(\a)}) {};
 }
