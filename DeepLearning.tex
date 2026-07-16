@@ -951,7 +951,7 @@ plt.show()
 \includesvg[width=\linewidth]{figures/mlp_confusion_matrix.svg}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\source{Binäre Klassifikation Metriken.ipynb}
 \end{frame}
 
 
@@ -987,7 +987,7 @@ So wird der scheinbare Vorteil hoher Accuracy sofort \textbf{entlarvt}.
 Unser Modell erreicht eine \textbf{BER von 0{,}1663}, also deutlich besser als die Baseline, aber klar schlechter als die 95\% Accuracy vermuten lassen.
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\source{Binäre Klassifikation Metriken.ipynb}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
@@ -1037,7 +1037,7 @@ print(y_train[0])
 Die \textbf{1} steht an Position \textbf{5}, das Bild zeigt also die Ziffer \textbf{5}.
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Multiclass Klassifikation.ipynb}
+\source{\cite{seemann_deeplearning}, Multiclass Klassifikation.ipynb}
 \end{frame}
 
 
@@ -1133,7 +1133,7 @@ Bei \textbf{mehr als zwei} Klassen verwenden wir die \textbf{Categorical Crossen
 \end{block}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}}
+\source{\cite{seemann_deeplearning}}
 \end{frame}
 
 \begin{frame}{Categorical Crossentropy: Formel}
@@ -2415,7 +2415,7 @@ Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jed
 \end{itemize}
 \end{column}
 \end{columns}
-\source{\cite{Goodfellow2016}}
+\source{\cite{goodfellow2016deep}}
 \end{frame}
 % ---------------------------------------------------------
 \begin{frame}{Faltung anschaulich: Gleitendes Fenster}
@@ -2494,7 +2494,7 @@ Ein kleiner \textbf{Filter} (Kernel) gleitet über das Bild und berechnet an jed
 \end{itemize}
 \end{column}
 \end{columns}
-\source{\cite{Goodfellow2016}}
+\source{\cite{goodfellow2016deep}}
 \end{frame}
 
 % ---------------------------------------------------------
@@ -2934,6 +2934,7 @@ model.compile(
 \end{itemize}
 \end{column}
 \end{columns}
+\source{\cite{goodfellow2016deep}}
 \end{frame}
 
 \begin{frame}{Flatten: Übergang zu Dense}
@@ -2955,6 +2956,7 @@ model.compile(
 \end{itemize}
 \end{column}
 \end{columns}
+\source{\cite{goodfellow2016deep}}
 \end{frame}
 
 \begin{frame}[fragile]{CNN auf MNIST: model.summary()}
@@ -3130,71 +3132,207 @@ model.evaluate(x_test, y_test)
 
 
 
+\makequestionspage{\FRAGENIMAGE}
 
-\begin{frame}{Pooling: Verkleinern der Feature Maps}
+
+\begin{frame}{Aufgabe: CNN auf Fashion-MNIST}
+\footnotesize
 \begin{columns}
-\begin{column}{0.47\textwidth}
-Nach der Faltung folgt oft eine \textbf{Pooling}-Schicht, die die Feature Map \textbf{verkleinert}.
+\begin{column}{0.7\linewidth}
 \begin{itemize}
-\item \textbf{Max-Pooling} nimmt je Bereich den \textbf{größten} Wert.
-\item Das reduziert die \textbf{Datenmenge} und die Rechenlast.
-\item Es macht die Erkennung \textbf{robuster} gegen kleine Verschiebungen.
+  \item Nehmen Sie das Notebook \textbf{Multiclass Klassifikation Komplexeres Netz.ipynb} als Vorlage.
+  \item Ändern Sie die Architektur und fügen die einen  \textbf{Convolutional Layer} ein. Die Bilder bleiben im Format 28x28, die Kanaldimension wird ergänzt
+  \item Trainieren Sie das Netz und bestimmen Sie die erreichte \textbf{Klassifikationsgüte} auf den Testdaten. Vergleichen Sie mit der Vorlage ohne Conv2D-Layer
+  \item Wenden Sie die \textbf{gelernten Kernel} nach dem Training auf einzelne Fashion-Bilder an und stellen Sie die Feature Maps dar
+  \item Bewerten Sie deren Funktion: welche Struktur hebt ein Kernel jeweils hervor, etwa Kanten, Kontraste oder Texturen?
 \end{itemize}
+\source{Lösung: CNNActivierung\_Fashion.ipynb}
 \end{column}
-\begin{column}{0.48\textwidth}
-\centering
-\resizebox{0.85\linewidth}{!}{%
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
-% 4x4 Eingabe
-\foreach \x/\y/\v in {0/1/3, 1/1/1, 0/0/2, 1/0/0,
-                      2/1/5, 3/1/4, 2/0/1, 3/0/2} {
-  \draw[gray!50] (\x*0.5,\y*0.5) rectangle (\x*0.5+0.5,\y*0.5+0.5);
-  \node at (\x*0.5+0.25,\y*0.5+0.25) {\v};
-}
-% Hervorhebung 2x2
-\draw[AlertColor, very thick] (0,0) rectangle (1,1);
-\draw[AccentColor, very thick] (1,0) rectangle (2,1);
-% Ausgabe
-\begin{scope}[shift={(3.0,0.25)}]
-  \filldraw[fill=AlertColor!25, draw=AlertColor, very thick] (0,0) rectangle (0.5,0.5);
-  \node at (0.25,0.25) {3};
-  \filldraw[fill=AccentColor!25, draw=AccentColor, very thick] (0.5,0) rectangle (1,0.5);
-  \node at (0.75,0.25) {5};
-\end{scope}
-\draw[->, very thick] (2.1,0.5) -- (2.8,0.5);
-\node at (0.5,-0.4) {$2\times2$ Max-Pool};
-\end{tikzpicture}%
-}
+\begin{column}{0.25\linewidth}
+\begin{center}
+\twemoji[width=0.9\linewidth]{laptop}
+\end{center}
 \end{column}
+
 \end{columns}
-\source{\cite{Frochte2020}}
 \end{frame}
 
-\begin{frame}{Aufbau eines CNN}
-\begin{columns}
-\begin{column}{0.35\textwidth}
-Ein CNN staffelt mehrere Blöcke:
+
+
+\begin{frame}{Wo lässt sich unser MNIST-Netz verbessern?}
+\small
+\begin{columns}[T]
+\begin{column}{0.47\linewidth}
+\begin{blockC2}{\small Mehr Netzfunktionen}
+Das Netz soll \textbf{bessere Merkmale} lernen.
 \begin{itemize}
-\item \textbf{Convolution} und \textbf{Pooling} extrahieren Merkmale.
-\item Am Ende \textbf{plättet} man die Karten (Flatten).
-\item \textbf{Dense}-Schichten treffen die Klassenentscheidung.
+  \item \emph{Mehrschichtige Faltungen} für hierarchische Muster
+  \item \emph{MaxPooling} für Verdichtung und Translationsinvarianz
+  \item \emph{Mehr Filter} in tieferen Blöcken
+\end{itemize}
+Wirkung: höhere \textbf{Trainings}- und Testgüte.
+\end{blockC2}
+\end{column}
+\begin{column}{0.48\linewidth}
+
+\begin{blockC1}{\small Weniger Overfitting}
+Das Gelernte soll auf \textbf{neue Daten} übertragbar sein.
+\begin{itemize}
+  \item \emph{Dropout} gegen Auswendiglernen
+  \item \emph{Early Stopping} am Wendepunkt des Validierungsverlusts
+  \item \emph{Weniger Parameter} im \texttt{Dense}-Kopf
+\end{itemize}
+Wirkung: kleinerer \textbf{Abstand} zwischen Trainings- und Testgüte.
+\end{blockC1}
+
+\end{column}
+\end{columns}
+\medskip
+\begin{itemize}
+  \item Beide Angriffspunkte greifen \textbf{gemeinsam}: ein stärkeres Netz ohne Regularisierung würde schneller overfitten. 
+\end{itemize}
+\note{Mehr Filter in tieferen Blöcken: In jedem Conv-Block die Filterzahl verdoppeln}
+\end{frame}
+
+
+
+\begin{frame}{Mehrschichtige Faltungen: Idee}
+\begin{columns}
+\begin{column}{0.75\linewidth}
+\begin{itemize}
+  \item Ein Filter sieht nur ein \textbf{3x3-Fenster}. Das genügt für eine Kante, nicht für eine Ziffer
+  \item Eine Ziffer ist \textbf{kein lokales Muster}, sondern eine \textbf{Anordnung} vieler lokaler Muster
+  \item Lösung: Faltungen \textbf{stapeln}. Jede Schicht arbeitet auf der Ausgabe der vorherigen
+  \item Schicht 2 sieht damit keine Pixel mehr, sondern \textbf{Merkmale}, und faltet Kanten zu Formen
+  \item \textbf{Tiefe ersetzt Größe}: viele kleine Fenster hintereinander schlagen ein großes
 \end{itemize}
 \end{column}
-\begin{column}{0.60\textwidth}
-\centering
+\begin{column}{0.25\linewidth}
+\begin{block}{Kernaussage}
+Nicht der einzelne Filter wird größer, sondern der \textbf{Weg} durch das Netz länger.
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Das rezeptive Feld}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\linewidth}
+
+\begin{blockDef}{\footnotesize Rezeptives Feld}
+Das \textbf{rezeptive Feld} eines Neurons ist der Bereich im \textbf{Originalbild}, der seinen Wert beeinflusst.
+\end{blockDef}
+
+\begin{itemize}
+  \item Nach erster 3x3-Faltung: Größe \textbf{3x3}
+  \item Ein Neuron der zweiten Faltung liest neun Werte der ersten Schicht. Deren Fenster überlappen sich und decken zusammen \textbf{5x5} Pixel ab
+  \item Regel bei 3x3 und stride 1: jede weitere Schicht vergrößert das Feld um \textbf{zwei} Pixel je Kante
+  \item \textbf{MaxPooling} verdoppelt zusätzlich den Zuwachs pro Schritt
+\end{itemize}
+\end{column}
+\begin{column}{0.48\linewidth}
+\begin{center}
 \resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[cell/.style={draw=black!60, minimum size=0.45cm, inner sep=0pt}]
+
+% Eingabe 5x5
+\fill[black!10] (-0.225,-0.225) rectangle (2.025,2.025);
+\fill[PrimaryColor!35] (-0.225,0.675) rectangle (1.125,2.025);
+\foreach \i in {0,...,4}
+  \foreach \j in {0,...,4}
+    \node[cell] (a\i\j) at (\i*0.45,\j*0.45) {};
+\node[below] at (0.9,-0.45) {Eingabe 5x5};
+
+% Conv 1: Ausgabe 3x3
+\fill[black!10] (2.775,0.225) rectangle (4.125,1.575);
+\fill[PrimaryColor!35] (2.775,1.125) rectangle (3.225,1.575);
+\foreach \i in {0,...,2}
+  \foreach \j in {0,...,2}
+    \node[cell] (b\i\j) at (3+\i*0.45,0.45+\j*0.45) {};
+\node[below] at (3.45,-0.45) {Conv 1: 3x3};
+
+% Conv 2: Ausgabe 1x1
+\fill[PrimaryColor!60] (5.775,0.675) rectangle (6.225,1.125);
+\node[cell] (c) at (6,0.9) {};
+\node[below] at (6,-0.45) {Conv 2: 1x1};
+
+% Fenster 1 auf Zelle b02
+\draw[very thick, PrimaryColor] (-0.225,0.675) rectangle (1.125,2.025);
+\draw[->, thick, PrimaryColor] (1.125,1.35) -- (b02.west);
+
+% Fenster 2 auf Zelle c
+\draw[very thick, PrimaryColor] (2.775,0.225) rectangle (4.125,1.575);
+\draw[->, thick, PrimaryColor] (b22.east) -- (c.west);
+\draw[->, thick, PrimaryColor] (b21.east) -- (c.west);
+\draw[->, thick, PrimaryColor] (b20.east) -- (c.west);
+
+\end{tikzpicture}}
+\end{center}
+\begin{itemize}
+  \item Das \textbf{blaue Fenster} links liefert genau eine Zelle in Conv 1
+  \item Das Fenster in Conv 1 liest neun solcher Zellen, deren Fenster sich \textbf{überlappen}
+  \item Die eine Zelle rechts hängt damit von allen \textbf{25} Eingabepixeln ab
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Zwei 3x3 statt einer 5x5}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+Beide sehen 5x5 Pixel, bei $C$ Ein- und Ausgabekanälen:
+\begin{itemize}
+  \item eine 5x5-Faltung: $25 \cdot C^2$ Gewichte
+  \item zwei 3x3-Faltungen: $18 \cdot C^2$ Gewichte, also rund \textbf{28 Prozent weniger}
+  \item Dazwischen liegt ein zusätzliches \texttt{relu}. Ohne diese \textbf{Nichtlinearität} wären beide Schichten zu einer zusammenfassbar und die Tiefe wertlos
+  \item Ergebnis: weniger Parameter, aber \textbf{mehr} darstellbare Funktionen
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{block}{Merksatz}
+Weniger Gewichte, mehr Nichtlinearität, gleiches rezeptives Feld.
+\end{block}
+Deshalb nutzen moderne Architekturen fast nur noch \textbf{3x3}-Filter.
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Hierarchie der Merkmale}
+    \footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+In der Praxis hängt man mehrere \textbf{Blöcke} aus Conv, Conv und Pool hintereinander, oft drei bis fünf
+\begin{itemize}
+  \item \textbf{Block 1} sieht Pixel und lernt Kanten, Ecken, kurze Striche
+  \item \textbf{Block 2} sieht Kanten und lernt Bögen, Schleifen, Kreuzungen
+  \item Der \texttt{Dense}-Kopf sieht Formen und entscheidet die Ziffer
+  \item Eine \textbf{8} ist zwei geschlossene Schleifen übereinander, eine \textbf{3} zwei offene Bögen rechts
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{blockC2}{\footnotesize Vom Einfachen zum Komplexen}
+Pixel $\rightarrow$ Kanten $\rightarrow$ Formen $\rightarrow$ Ziffer
+\end{blockC2}
+Jede Ebene \textbf{kombiniert} die darunterliegende. MLPs fehlen diese Zwischenstufen, sie sehen nur 784 lose Pixelwerte.
+\end{column}
+\end{columns}\par
+\vspace{2em}
+\centering
+\resizebox{0.7\linewidth}{!}{%
 \begin{tikzpicture}[every node/.style={font=\scriptsize}, >=Stealth]
-\node[draw=SecondaryTitle, fill=SecondaryColor!30, very thick, minimum height=1.6cm, minimum width=0.9cm] (in) at (0,0) {};
+\node[draw=SecondaryTitle, fill=SecondaryColor!30, very thick, minimum height=1.0cm, minimum width=0.9cm] (in) at (0,0) {};
 \node[below=0.1cm of in] {Bild};
-\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=1.3cm, minimum width=0.7cm] (c1) at (1.4,0) {};
+\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=0.8cm, minimum width=0.7cm] (c1) at (2.2,0) {};
 \node[below=0.1cm of c1, align=center] {Conv\\+Pool};
-\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=1.0cm, minimum width=0.7cm] (c2) at (2.8,0) {};
+\node[draw=ExampleTitle, fill=ExampleColor!30, very thick, minimum height=0.6cm, minimum width=0.7cm] (c2) at (4.4,0) {};
 \node[below=0.1cm of c2, align=center] {Conv\\+Pool};
-\node[draw=AccentTitle, fill=AccentColor!30, very thick, minimum height=1.4cm, minimum width=0.3cm] (fl) at (4.0,0) {};
+\node[draw=AccentTitle, fill=AccentColor!30, very thick, minimum height=0.85cm, minimum width=0.3cm] (fl) at (6.4,0) {};
 \node[below=0.1cm of fl] {Flatten};
-\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=1.0cm, minimum width=0.3cm] (d) at (5.0,0) {};
+\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=0.6cm, minimum width=0.3cm] (d) at (8.0,0) {};
 \node[below=0.1cm of d] {Dense};
-\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=0.6cm, minimum width=0.3cm] (o) at (5.9,0) {};
+\node[draw=PrimaryTitle, fill=PrimaryColor!30, very thick, minimum height=0.35cm, minimum width=0.3cm] (o) at (9.5,0) {};
 \node[below=0.1cm of o] {Ausgabe};
 \draw[->, very thick] (in)--(c1);
 \draw[->, very thick] (c1)--(c2);
@@ -3203,9 +3341,528 @@ Ein CNN staffelt mehrere Blöcke:
 \draw[->, very thick] (d)--(o);
 \end{tikzpicture}%
 }
+
+\end{frame}
+
+
+
+
+\begin{frame}{MaxPooling: Prinzip}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item MaxPooling wird \textbf{nach} den Faltungsschichten eingesetzt, es \textbf{verdichtet deren Feature Maps}
+  \item Ein Fenster wird über die Eingabe geschoben. Statt einer Matrixmultiplikation wählt es einfach den \textbf{größten} Wert im Fenster
+  \item Dieser Wert wird zu einem einzelnen Pixel der gepoolten Ausgabe
+  \item Das Fenster wandert mit einer festen \textbf{Schrittweite} (Stride), bis das ganze Bild verarbeitet ist
+  \item Typisch: Fenster \textbf{2x2}, Stride \textbf{2}. Damit überlappen die Fenster nicht. Stride 1 würde die Größe kaum reduzieren.
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{block}{\footnotesize Vorteile}
+\begin{itemize}
+  \item Werte werden um 75\% reduziert, deutlich weniger Rechenlast
+  \item \textbf{Keine Parameter}, es wird nichts gelernt, nur ausgewählt
+  \item Macht die Erkennung \textbf{robuster} gegen kleine Verschiebungen.
+\end{itemize}
+\end{block}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+\begin{frame}{MaxPooling: Ablauf am Beispiel}
+\begin{columns}
+\begin{column}{0.50\linewidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+  cell/.style={draw=SecondaryTitle, fill=SecondaryColor!25, minimum size=0.7cm, inner sep=0pt, font=\normalsize},
+  pcell/.style={draw=ExampleTitle, fill=ExampleColor!25, minimum size=0.7cm, inner sep=0pt, font=\normalsize},
+  win/.style={draw=AccentTitle, very thick, rounded corners=1pt},
+  >=Stealth]
+
+% Eingabe 6x6
+\foreach \row [count=\j from 0] in {{3,3,3,2,1,0},{2,1,3,5,2,1},{0,0,5,1,3,1},{3,1,7,2,2,3},{2,0,1,0,2,2},{2,0,0,0,0,1}}
+  \foreach \val [count=\i from 0] in \row
+    \node[cell] at (\i*0.7,-\j*0.7) {\val};
+\node at (1.75,0.9) {Eingabe 6x6};
+
+% leeres Ausgaberaster
+\foreach \i in {0,1,2}
+  \foreach \j in {0,1,2}
+    \node[pcell] at (6.5+\i*0.7,-1.05-\j*0.7) {};
+\node at (7.2,0.9) {Ausgabe 3x3};
+
+\draw[->, very thick, ExampleTitle] (4.6,-1.75) -- (5.7,-1.75);
+
+% Fenster je Schritt
+\only<1>{\draw[win] (-0.35,0.35) rectangle (1.05,-1.05);}
+\only<2>{\draw[win] (1.05,0.35) rectangle (2.45,-1.05);}
+\only<3>{\draw[win] (2.45,0.35) rectangle (3.85,-1.05);}
+\only<4>{\draw[win] (-0.35,-1.05) rectangle (1.05,-2.45);}
+\only<5>{\draw[win] (1.05,-1.05) rectangle (2.45,-2.45);}
+\only<6>{\draw[win] (2.45,-1.05) rectangle (3.85,-2.45);}
+\only<7>{\draw[win] (-0.35,-2.45) rectangle (1.05,-3.85);}
+\only<8>{\draw[win] (1.05,-2.45) rectangle (2.45,-3.85);}
+\only<9>{\draw[win] (2.45,-2.45) rectangle (3.85,-3.85);}
+
+% Zielzelle je Schritt
+\only<1>{\draw[win] (6.15,-0.7) rectangle (6.85,-1.4);}
+\only<2>{\draw[win] (6.85,-0.7) rectangle (7.55,-1.4);}
+\only<3>{\draw[win] (7.55,-0.7) rectangle (8.25,-1.4);}
+\only<4>{\draw[win] (6.15,-1.4) rectangle (6.85,-2.1);}
+\only<5>{\draw[win] (6.85,-1.4) rectangle (7.55,-2.1);}
+\only<6>{\draw[win] (7.55,-1.4) rectangle (8.25,-2.1);}
+\only<7>{\draw[win] (6.15,-2.1) rectangle (6.85,-2.8);}
+\only<8>{\draw[win] (6.85,-2.1) rectangle (7.55,-2.8);}
+\only<9>{\draw[win] (7.55,-2.1) rectangle (8.25,-2.8);}
+
+% Ergebnisse, bleiben stehen
+\only<1->{\node[font=\normalsize] at (6.5,-1.05) {3};}
+\only<2->{\node[font=\normalsize] at (7.2,-1.05) {5};}
+\only<3->{\node[font=\normalsize] at (7.9,-1.05) {2};}
+\only<4->{\node[font=\normalsize] at (6.5,-1.75) {3};}
+\only<5->{\node[font=\normalsize] at (7.2,-1.75) {7};}
+\only<6->{\node[font=\normalsize] at (7.9,-1.75) {3};}
+\only<7->{\node[font=\normalsize] at (6.5,-2.45) {2};}
+\only<8->{\node[font=\normalsize] at (7.2,-2.45) {1};}
+\only<9->{\node[font=\normalsize] at (7.9,-2.45) {2};}
+
+\end{tikzpicture}}
+\end{column}
+\begin{column}{0.50\linewidth}
+\footnotesize
+Fenster \textbf{2x2}, Stride \textbf{2}, keine Überlappung.
+\begin{itemize}
+  \item<1-> $\max(3,3,2,1) = \textbf{3}$, links oben
+  \item<2-> $\max(3,2,3,5) = \textbf{5}$, zwei Spalten weiter
+  \item<3-> $\max(1,0,2,1) = \textbf{2}$, Zeilenende
+  \item<4-> $\max(0,0,3,1) = \textbf{3}$, zwei Zeilen tiefer
+  \item<5-> $\max(5,1,7,2) = \textbf{7}$, der starke Ausschlag überlebt
+  \item<6-> $\max(3,1,2,3) = \textbf{3}$
+  \item<7-> $\max(2,0,2,0) = \textbf{2}$
+  \item<8-> $\max(1,0,0,0) = \textbf{1}$
+  \item<9-> $\max(2,2,0,1) = \textbf{2}$
+\end{itemize}
+\onslide<9->{Aus 36 Werten sind \textbf{9} geworden, kein Wert wird verrechnet.}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{MaxPooling: Wirkung}
+\small
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Ein hoher Wert in einer Feature Map bedeutet: der Filter hat sein Muster hier \textbf{stark} gefunden
+  \item Das Maximum eines Fensters sagt also aus: das Merkmal war \textbf{irgendwo} in diesem Bereich vorhanden
+  \item Die genaue Position innerhalb des Fensters geht verloren, das ist \textbf{gewollt}
+  \item Folge ist eine \textbf{lokale Translationsinvarianz}: ein um ein Pixel verschobener Strich liefert dieselbe Ausgabe
+  \item Zusätzlich wächst das \textbf{rezeptive Feld} sprunghaft, jede folgende Schicht sieht doppelt so viel Originalbild
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{itemize}
+  \item \texttt{AveragePooling} mittelt statt zu maximieren, verwischt aber Kanten
+  \item Bei Ziffern zählt die \textbf{Anwesenheit} eines Merkmals, nicht dessen exakte Lage
+  \item Preis: feine Positionsinformation ist unwiederbringlich weg
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+\begin{frame}{Dropout: Idee}
+\begin{columns}
+\begin{column}{0.55\linewidth}
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=Stealth,
+  input/.style={circle, fill=SecondaryColor, draw=SecondaryTitle,
+                very thick, minimum size=12pt, inner sep=0pt, text=white},
+  hidden/.style={circle, fill=ExampleColor, draw=ExampleTitle,
+                 very thick, minimum size=12pt, inner sep=0pt, text=white},
+  outp/.style={circle, fill=PrimaryColor, draw=PrimaryTitle,
+               very thick, minimum size=12pt, inner sep=0pt, text=white},
+  gone/.style={circle, fill=black!8, draw=black!35, 
+               very thick, minimum size=12pt, inner sep=0pt},
+  link/.style={->, black!55}
+]
+% Schichttitel
+\node[font=\scriptsize\bfseries, align=center] at (0,5.6) {Input};
+\node[font=\scriptsize\bfseries, align=center] at (2.4,5.6) {Hidden 1};
+\node[font=\scriptsize\bfseries, align=center] at (4.8,5.6) {Hidden 2};
+\node[font=\scriptsize\bfseries, align=center] at (7.2,5.6) {Output};
+
+% Positionen
+\coordinate (px1) at (0,4.2); \coordinate (px2) at (0,3.2);
+\coordinate (px3) at (0,2.2); \coordinate (px4) at (0,1.2);
+\coordinate (ph1) at (2.4,4.6); \coordinate (ph2) at (2.4,3.7);
+\coordinate (ph3) at (2.4,2.8); \coordinate (ph4) at (2.4,1.9);
+\coordinate (ph5) at (2.4,1.0);
+\coordinate (pg1) at (4.8,4.6); \coordinate (pg2) at (4.8,3.7);
+\coordinate (pg3) at (4.8,2.8); \coordinate (pg4) at (4.8,1.9);
+\coordinate (pg5) at (4.8,1.0);
+\coordinate (po1) at (7.2,3.7); \coordinate (po2) at (7.2,2.8);
+\coordinate (po3) at (7.2,1.9);
+
+% Kanten je Overlay
+\only<1>{
+  \foreach \i in {px1,px2,px3,px4} \foreach \h in {ph1,ph2,ph3,ph4,ph5} \draw[link] (\i) -- (\h);
+  \foreach \h in {ph1,ph2,ph3,ph4,ph5} \foreach \g in {pg1,pg2,pg3,pg4,pg5} \draw[link] (\h) -- (\g);
+  \foreach \g in {pg1,pg2,pg3,pg4,pg5} \foreach \o in {po1,po2,po3} \draw[link] (\g) -- (\o);
+}
+\only<2>{
+  \foreach \i in {px1,px2,px3,px4} \foreach \h in {ph1,ph3,ph5} \draw[link] (\i) -- (\h);
+  \foreach \h in {ph1,ph3,ph5} \foreach \g in {pg2,pg3,pg4} \draw[link] (\h) -- (\g);
+  \foreach \g in {pg2,pg3,pg4} \foreach \o in {po1,po2,po3} \draw[link] (\g) -- (\o);
+}
+\only<3>{
+  \foreach \i in {px1,px2,px3,px4} \foreach \h in {ph2,ph3,ph4} \draw[link] (\i) -- (\h);
+  \foreach \h in {ph2,ph3,ph4} \foreach \g in {pg1,pg2,pg5} \draw[link] (\h) -- (\g);
+  \foreach \g in {pg1,pg2,pg5} \foreach \o in {po1,po2,po3} \draw[link] (\g) -- (\o);
+}
+
+% Neuronen
+\foreach \p in {px1,px2,px3,px4} \node[input] at (\p) {};
+\foreach \p in {ph1,ph2,ph3,ph4,ph5} \node[hidden] at (\p) {};
+\foreach \p in {pg1,pg2,pg3,pg4,pg5} \node[hidden] at (\p) {};
+\foreach \p in {po1,po2,po3} \node[outp] at (\p) {};
+
+% Ausgefallene Neuronen
+\only<2>{
+  \foreach \p in {ph2,ph4,pg1,pg5} \node[gone] at (\p) {};
+}
+\only<3>{
+  \foreach \p in {ph1,ph5,pg3,pg4} \node[gone] at (\p) {};
+}
+
+\node[font=\scriptsize\bfseries, align=center] at (3.6,0.1)
+  {\only<1>{volles Netz}\only<2>{Batch 1}\only<3>{Batch 2}};
+\end{tikzpicture}}
+\end{column}
+\begin{column}{0.45\linewidth}
+    \small
+\begin{itemize}
+  \item<1-> Ein großes Netz neigt dazu, Trainingsbeispiele \textbf{auswendig} zu lernen
+  \item<2-> Dropout schaltet bei jedem Trainingsschritt zufällige  Neuronen \textbf{ab}, ihre Aktivierung wird 0
+  \item<3-> Beim nächsten Batch trifft es \textbf{andere} Neuronen, die Auswahl wird jedes Mal neu gewürfelt
+\end{itemize}
+\onslide<3->{Ausgegraut: in diesem Schritt \textbf{deaktiviert}, inklusive aller ein- und ausgehenden Verbindungen.}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+\begin{frame}[fragile]{Dropout: Wie es rechnet}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item \texttt{Dropout(0.25)} bedeutet: \textbf{25 Prozent} der Aktivierungen werden auf 0 gesetzt, unabhängig für jeden Wert
+  \item Dropout ist eine \textbf{eigene Schicht} und hat keine Parameter, es wird nichts gelernt
+  \item Die überlebenden Werte werden mit $1/(1-p)$ \textbf{hochskaliert}, bei $p = 0{,}25$ also mit dem Faktor $1{,}33$
+  \item Grund: die Summe der Eingänge eines Neurons soll im Mittel \textbf{gleich groß} bleiben wie ohne Dropout
+  \item \textbf{Dropout ist nur beim Training aktiv}, \texttt{model.predict} und \texttt{model.evaluate} schalten Dropout ab
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.add(
+  Dropout(0.25))
+\end{minted}
+\vspace{0.3cm}
+Beispiel mit vier Werten und $p = 0{,}5$:
+\begin{itemize}
+  \item vorher: $2{,}0 \quad 4{,}0 \quad 1{,}0 \quad 3{,}0$
+  \item nachher: $0 \quad 8{,}0 \quad 0 \quad 6{,}0$
+\end{itemize}
+Zwei Werte fallen aus, die anderen werden \textbf{verdoppelt}.
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+\begin{frame}{Dropout: Wirkung}
+    \footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Kein Neuron darf sich auf einen \textbf{festen Partner} verlassen, denn der kann jederzeit fehlen
+  \item Das Netz muss jedes Merkmal \textbf{mehrfach} und auf verschiedenen Wegen codieren, es entsteht \textbf{Redundanz}
+  \item Damit verhindert Dropout \textbf{Co-Adaption}, also spezialisierte Neuronengruppen, die nur gemeinsam funktionieren
+  \item \textbf{Auswendiglernen} einzelner Beispiele wird \textbf{unmöglich}, da die Netzstruktur ständig wechselt
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{block}{\footnotesize Faustregel}
+\textbf{0,25} nach Faltungsblöcken. \textbf{0,5} vor der Ausgabeschicht.
+\end{block}
+\begin{itemize}
+  \item Höhere Rate im \texttt{Dense}-Kopf, dort sitzen die meisten Parameter
+  \item Training wird \textbf{langsamer}, die Generalisierung besser
+  \item Die Trainingsgüte liegt oft \textbf{unter} der Validierungsgüte, das ist bei Dropout normal
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}}
+\end{frame}
+
+
+\begin{frame}{Reihenfolge der Bausteine}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+Jede Position folgt aus einer Frage: was darf wann verloren gehen?
+\begin{itemize}
+  \item \textbf{Conv vor Pool}: erst sehen, dann verdichten. Umgekehrt wäre die Information weg, bevor sie genutzt wird
+  \item \textbf{Zwei Conv vor einem Pool}: die zweite Faltung kombiniert die Ausgaben der ersten, das rezeptive Feld wächst
+  \item \textbf{Dropout nach Pool}: davor wirkungslos, \texttt{max} wählt einfach einen überlebenden Wert
+  \item \textbf{Filter verdoppeln nach jedem Pool}: die Fläche schrumpft, die Zahl der Muster wächst
+  \item \textbf{Flatten möglichst spät}: je kleiner die Karten, desto billiger der \texttt{Dense}-Kopf
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{blockC2}{\footnotesize Merkregeln}
+\begin{itemize}
+  \item Je Block: \textbf{Conv, Conv, Pool, Dropout}
+  \item Vom \textbf{Ort} zur \textbf{Bedeutung}: Fläche kleiner, Tiefe größer
+  \item Dropout im Kopf höher als in den Blöcken, dort sitzen die meisten Parameter
+\end{itemize}
+\end{blockC2}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Optimiertes CNN: Aufbau}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{minted}[fontsize=\scriptsize]{python}
+model = Sequential()
+model.add(Input(shape=(28, 28, 1)))
+
+model.add(Conv2D(32, (3, 3), activation="relu"))
+model.add(Conv2D(32, (3, 3), activation="relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3), activation="relu"))
+model.add(Conv2D(64, (3, 3), activation="relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+model.add(Dense(128, activation="relu"))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation="softmax"))
+\end{minted}
+\end{column}
+\begin{column}{0.35\linewidth}
+
+Dieses Netz wendet die Optimierungsprinzipen an:
+\begin{itemize}
+  \item Shapes der Daten: 26x26x32, 24x24x32, 12x12x32, 10x10x64, 8x8x64, \textbf{4x4x64}
+  \item \texttt{Flatten}: 1.024 Werte
+  \item Gesamt rund \textbf{197.000} Parameter (Zum Vergleich: Unser erstes CNN hatte 5,5 Mio. Parameter!)
+  \item Trefferquote: \textbf{99,49  Prozent} auf den Testdaten
+\end{itemize}
+\end{column}
+\end{columns}
+\source{mnist cnn optimiert.ipynb}
+\end{frame}
+
+
+\begin{frame}{Optimiertes CNN: Struktur im Überblick}
+\begin{columns}
+\begin{column}{0.47\linewidth}
+\begin{itemize}
+  \item \textbf{Block 1}: zwei Faltungen mit 32 Filtern, danach Pooling und Dropout
+  \item Auflösung sinkt von 28x28 auf \textbf{12x12}
+  \item Gelernt werden Kanten und Ecken
+\end{itemize}
+\end{column}
+\begin{column}{0.48\linewidth}
+\begin{itemize}
+  \item \textbf{Block 2}: zwei Faltungen mit 64 Filtern, danach Pooling und Dropout
+  \item Auflösung sinkt weiter auf \textbf{4x4}
+  \item \textbf{Kopf}: Flatten, Dense mit 128, Dropout, Softmax mit 10
+\end{itemize}
+\end{column}
+\end{columns}
+\vfill
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/cnn_visual_keras.png}
+\scriptsize Darstellung der Netzstruktur mit \emph{visualkeras}
+\end{figure}
+\source{mnist cnn optimiert.ipynb}
+\end{frame}
+
+
+\begin{frame}{Optimiertes CNN: model.summary()}
+\begin{columns}
+\begin{column}{0.47\linewidth}
+{\ttfamily\tiny
+\definecolor{jupytertype}{HTML}{2196F3}
+\definecolor{jupyternum}{HTML}{00AA00}
+\noindent\textbf{Model: "sequential"}
+\setlength{\arrayrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|r|}
+\hline
+\textbf{Layer (type)} & \textbf{Output Shape} & \textbf{Param \#}\\
+\hline
+conv2d (\textcolor{jupytertype}{Conv2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{26}, \textcolor{jupyternum}{26}, \textcolor{jupyternum}{32}) & \textcolor{jupyternum}{320}\\
+\hline
+conv2d\_1 (\textcolor{jupytertype}{Conv2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{24}, \textcolor{jupyternum}{24}, \textcolor{jupyternum}{32}) & \textcolor{jupyternum}{9,248}\\
+\hline
+max\_pooling2d (\textcolor{jupytertype}{MaxPooling2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{12}, \textcolor{jupyternum}{12}, \textcolor{jupyternum}{32}) & \textcolor{jupyternum}{0}\\
+\hline
+dropout (\textcolor{jupytertype}{Dropout}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{12}, \textcolor{jupyternum}{12}, \textcolor{jupyternum}{32}) & \textcolor{jupyternum}{0}\\
+\hline
+conv2d\_2 (\textcolor{jupytertype}{Conv2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{10}, \textcolor{jupyternum}{10}, \textcolor{jupyternum}{64}) & \textcolor{jupyternum}{18,496}\\
+\hline
+conv2d\_3 (\textcolor{jupytertype}{Conv2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{8}, \textcolor{jupyternum}{8}, \textcolor{jupyternum}{64}) & \textcolor{jupyternum}{36,928}\\
+\hline
+max\_pooling2d\_1 (\textcolor{jupytertype}{MaxPooling2D}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{4}, \textcolor{jupyternum}{4}, \textcolor{jupyternum}{64}) & \textcolor{jupyternum}{0}\\
+\hline
+dropout\_1 (\textcolor{jupytertype}{Dropout}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{4}, \textcolor{jupyternum}{4}, \textcolor{jupyternum}{64}) & \textcolor{jupyternum}{0}\\
+\hline
+flatten (\textcolor{jupytertype}{Flatten}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{1024}) & \textcolor{jupyternum}{0}\\
+\hline
+dense (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{128}) & \textcolor{jupyternum}{131,200}\\
+\hline
+dropout\_2 (\textcolor{jupytertype}{Dropout}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{128}) & \textcolor{jupyternum}{0}\\
+\hline
+dense\_1 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \textcolor{jupyternum}{10}) & \textcolor{jupyternum}{1,290}\\
+\hline
+\end{tabular}
+
+\vspace{0.5em}
+\noindent\textbf{Total params:} \textcolor{jupyternum}{197,482} (771.41 KB)\\
+\textbf{Trainable params:} \textcolor{jupyternum}{197,482} (771.41 KB)\\
+\textbf{Non-trainable params:} \textcolor{jupyternum}{0} (0.00 B)
+}
+\end{column}
+\begin{column}{0.48\linewidth}
+    \footnotesize
+\begin{itemize}
+  \item Alle vier \texttt{Conv2D} zusammen: \textbf{64.992} Parameter, rund \textbf{33 Prozent}
+  \item Allein \texttt{dense}: \textbf{131.200} Parameter, also \textbf{66 Prozent}
+  \item \texttt{MaxPooling2D}, \texttt{Dropout} und \texttt{Flatten} haben \textbf{keine} Parameter
+  \item Faltungen sind billig, weil jeder Filter überall dieselben $3 \cdot 3$ Gewichte nutzt
+  \item \texttt{Dense} ist teuer, weil jeder der 1.024 Eingänge mit jedem der 128 Neuronen verbunden ist
+\end{itemize}
+\end{column}
+\end{columns}
+\source{mnist cnn optimiert.ipynb}
+\end{frame}
+
+\begin{frame}{Wann soll das Training enden?}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Die Zahl der Epochen muss \textbf{passend} gewählt werden. Zu wenig $\rightarrow$ Underfitting, zu viele $\rightarrow$ Overfitting
+  \item \textbf{Trainingsverlust} fällt  immer weiter, das Netz lernt die Beispiele auswendig
+  \item \textbf{Validierungsverlust} fällt zunächst, steigt aber irgendwann. Ab hier verschlechtert sich die Prognose auf neuen Daten
+  \item Dieser \textbf{Wendepunkt} ist der richtige Abbruchzeitpunkt
+  \item Keras bietet dafür \textbf{Early Stopping} als Callback, also als Funktion, die nach jeder Epoche aufgerufen wird.
+  \item \textbf{Ziel:} Den Wendepunkt \textbf{automatisch} erkennen und genau dort stoppen.
+\end{itemize}
+\end{column}
+\begin{column}{0.4\linewidth}
+\centering
+\includesvg[width=\linewidth]{figures/mlp_binary_history_overfitting.svg}
+\end{column}
+\end{columns}
+\source{\cite{goodfellow2016deep}, Binäre Klassifikation mit Keras.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Early Stopping}
+\footnotesize
+\begin{columns}
+\begin{column}{0.5\linewidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.callbacks import 
+    EarlyStopping
+
+es = EarlyStopping(
+    monitor="val_loss",
+    patience=3,
+    restore_best_weights=True)
+
+model.fit(X_train, y_train,
+    epochs=50,
+    batch_size=128,
+    validation_split=0.25,
+    callbacks=[es])
+\end{minted}
+\end{column}
+\begin{column}{0.45\linewidth}
+\begin{itemize}
+  \item \texttt{monitor}: beobachtet den \textbf{Validierungsverlust} nach jeder Epoche
+  \item \texttt{patience=3}: Abbruch erst nach drei Epochen ohne neues Minimum, kurze Ausreißer sind erlaubt
+  \item \texttt{restore\_best\_weights}: das Netz wird auf den Stand der \textbf{besten} Epoche zurückgesetzt
+  \item \texttt{epochs=50} ist nur noch eine \textbf{Obergrenze}
+  \item Überwacht wird \texttt{val\_loss}, nicht \texttt{val\_accuracy}, da der Verlust feiner reagiert
+  \item Ohne \texttt{restore\_best\_weights} behielte man die \textbf{schlechteren} Gewichte der letzten Epoche
+\end{itemize}
+\end{column}
+\end{columns}
+\source{mnist cnn optimiert.ipynb}
+\end{frame}
+
+\begin{frame}{Early Stopping im Verlauf}
+\footnotesize
+\begin{columns}
+\begin{column}{0.5\linewidth}
+\begin{figure}
+\centering
+\includesvg[width=\linewidth]{figures/cnn_early_stopping_history.svg}
+\end{figure}
+\end{column}
+\begin{column}{0.45\linewidth}
+\begin{itemize}
+  \item Der Validierungsverlust erreicht in Epoche \textbf{11} sein Minimum
+  \item Die Epochen 12, 13 und 14 bringen \textbf{kein neues Minimum}, der Zähler läuft auf 3
+  \item Damit ist die \texttt{patience} erschöpft, das Training \textbf{bricht ab}
+  \item Verwendet werden die Gewichte aus Epoche \textbf{11}, nicht die der letzten Epoche
+  \item Gezählt werden Epochen \textbf{ohne Verbesserung}, nicht Epochen mit steigendem Verlust
+\end{itemize}
+\end{column}
+\end{columns}
+\source{mnist cnn optimiert.ipynb}
+\end{frame}
+
+
+\makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+\makequestionspage{\FRAGENIMAGE}
+
+\begin{frame}{Aufgabe: Optimiertes CNN auf Fashion-MNIST}
+\footnotesize
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item Bauen Sie Ihr Netz aus der letzten Aufgabe mit \textbf{mehreren Conv/Pool/Dropout-Blöcken} aus.
+  \item Verdoppeln Sie die \textbf{Filterzahl} nach jedem Pooling
+  \item Ergänzen Sie \textbf{Dropout} auch im \texttt{Dense}-Kopf, dort mit höherer Rate
+  \item Trainieren Sie mit \textbf{Early Stopping} auf \texttt{val\_loss} und lassen Sie die besten Gewichte wiederherstellen
+  \item Bestimmen Sie die \textbf{Klassifikationsgüte} und die \textbf{Parameterzahl}. Vergleichen Sie beides mit dem Netz ohne Pooling und Dropout
+\end{itemize}
+\source{Lösung: CNNOptimiert\_Fashion2.ipynb}
+\end{column}
+\begin{column}{0.35\linewidth}
+\begin{center}
+\twemoji[width=0.9\linewidth]{laptop}
+\end{center}
+\end{column}
+\end{columns}
 \end{frame}
 
 
