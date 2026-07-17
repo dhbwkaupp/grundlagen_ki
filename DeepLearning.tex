@@ -3964,4 +3964,624 @@ model.fit(X_train, y_train,
 \source{\cite{simonyan2014vgg}, Bildquelle: \cite{le2021vgg16_nin}}
 \end{frame}
 
+
+\begin{frame}{Wir testen VGG16}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+  \item Wir fragen VGG16, was für ein \textbf{Tier} auf dem Bild zu sehen ist
+  \item Das Bild stammt aus dem Internet
+  \item VGG16 hat dieses Bild \textbf{noch nie gesehen}
+  \item Es hat nicht einmal das \textbf{Format}, das VGG16 erwartet
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/tier.jpg}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{VGG16: Bild laden und vorverarbeiten}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.preprocessing.image \
+    import load_img, img_to_array
+from tensorflow.keras.applications.vgg16 \
+    import preprocess_input, VGG16, \
+           decode_predictions
+
+image = load_img("tier.jpg",
+                 target_size=(224, 224))
+image = img_to_array(image)
+image = image.reshape((1, 224, 224, 3))
+image = preprocess_input(image)
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Skalierung auf \textbf{224x224} Pixel, das erwartete Eingabeformat
+  \item Umwandlung in ein \textbf{NumPy-Array}
+  \item Erweiterung um die \textbf{Batch-Dimension}
+  \item \textbf{preprocess\_input} normiert die Farbkanäle wie beim Training
+\end{itemize}
+\end{column}
+\end{columns}
+\source{Beispiel VGG16.ipynb}
+\end{frame} 
+
+\begin{frame}[fragile]{VGG16: Modell laden und klassifizieren}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+model = VGG16()
+pred = model.predict(image)
+decode_predictions(pred)
+
+[[('n02099712', 'Labrador_retriever', 0.5909556),
+  ('n02099601', 'golden_retriever', 0.1774584),
+  ('n02089973', 'English_foxhound', 0.0602750),
+  ('n02100735', 'English_setter', 0.0540381),
+  ('n02089867', 'Walker_hound', 0.0302031)]]
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item \textbf{VGG16()} lädt Architektur und vortrainierte Gewichte aus dem Keras Model Zoo
+  \item \textbf{predict} liefert einen Vektor mit 1000 Wahrscheinlichkeiten
+  \item \textbf{decode\_predictions} übersetzt diesen in die Top-5-Klassen
+\end{itemize}
+\end{column}
+\end{columns}
+\source{Beispiel VGG16.ipynb}
+\end{frame}
+
+
+\begin{frame}{Wir testen VGG16: Zweites Beispiel}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+  \item Auch dieser \textbf{Gegenstand} wird klassifiziert
+  \item Das Objekt stammt aus meinem \textbf{Privatbesitz}
+  \item Es handelt sich um eine \textbf{eigene Handyaufnahme}
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/gegenstand.jpg}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Ergebnis: Klassifikation des Gegenstands}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+decode_predictions(pred)
+
+[[('n03970156', 'plunger', 0.9883963),
+  ('n02906734', 'broom', 0.0043178014),
+  ('n04208210', 'shovel', 0.003093995),
+  ('n04367480', 'swab', 0.0009887926),
+  ('n04277352', 'spindle', 0.0007578958)]]
+\end{minted}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \item Top-1: \textbf{plunger} (Klo-Plömpel) mit ca. \textbf{98,8\%}
+  \item Alle weiteren Klassen unter 0,5\%
+  \item Das Netz ist sich sehr sicher
+  \item Klassifikation gelingt trotz unbekannter Aufnahme
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Transfer Learning: VGG16 -- Übung}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+  \item Nehmen Sie ein \textbf{beliebiges Foto} und klassifizieren Sie den Inhalt mit VGG16
+  \item Laden Sie das Bild mit \textbf{load\_img} und skalieren Sie es auf 224x224 Pixel
+  \item Wenden Sie \textbf{preprocess\_input} an
+  \item Lassen Sie sich mit \textbf{decode\_predictions} die Top-5-Klassen ausgeben
+  \item Bewerten Sie das Ergebnis: Ist die Vorhersage plausibel?
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\twemoji[width=0.9\linewidth]{laptop}
+\end{center}
+\end{column}
+\note{Einige Gegenstände kennt VGG16 nicht. DIXI-Klos werden z.B. in der Regel als Briefkästen klassifiziert.}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{VGG16 in der Keras-API}
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\footnotesize
+\begin{itemize}
+  \item VGG16 ist fester Bestandteil von \textbf{keras.applications}
+  \item Dokumentation nennt alle Parameter, z.~ B. \textbf{weights} und \textbf{include\_top}
+  \item \textbf{weights="imagenet"} lädt die vortrainierten Gewichte
+  \item \textbf{include\_top=False} entfernt die Dense-Layer für eigene Klassifikation
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/keras_api_vgg16.jpg}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{keras_vgg16}}
+\end{frame}
+
+\begin{frame}{Keras Model Zoo: Was steckt dahinter?}
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Name als \textbf{Metapher}: wie im Zoo stehen viele verschiedene Arten nebeneinander, fertig zur Besichtigung
+  \item Jedes Modell ist eine eigene \textbf{Spezies} mit eigener Architektur, Größe und Stärke
+  \item Begriff stammt ursprünglich aus dem \textbf{Caffe Model Zoo} und hat sich als Sammelbegriff durchgesetzt
+  \item In Keras: \textbf{keras.applications} mit VGG, ResNet, Inception, MobileNet, EfficientNet
+  \item Geliefert werden \textbf{Architektur und vortrainierte Gewichte}, meist auf ImageNet trainiert
+  \item Gewichte werden beim ersten Aufruf \textbf{automatisch heruntergeladen} und lokal zwischengespeichert
+  \item Nutzen: kein Training von Grund auf, dafür \textbf{reproduzierbare Baselines} und schneller Einstieg
+\end{itemize}
+\end{column}
+\begin{column}{0.25\textwidth}
+\begin{center}
+\twemoji[width=0.9\linewidth]{elephant}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{keras_vgg16}}
+\end{frame}
+
+
+\begin{frame}{  Anwendungsfall Hunde und Katzen}
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\textbf{Anwendungsfall}
+\begin{itemize}
+  \item Ein Netz soll \textbf{Hunde und Katzen} unterscheiden
+  \item Es stehen \textbf{zu wenig Trainingsdaten} bereit, um ein komplettes CNN sinnvoll zu trainieren
+\end{itemize}
+\vfill
+\textbf{Lösung: Transfer Learning}
+\begin{itemize}
+  \item VGG16 hat auf den ImageNet-Daten die gesamte \textbf{Bildvorverarbeitung} bereits gelernt
+  \item Wir übernehmen die \textbf{Vorverarbeitungslayer} dieses Netzes
+  \item Nur der Klassifikationsteil wird für die zwei Klassen \textbf{neu trainiert}
+\end{itemize}
+\end{column}
+\begin{column}{0.25\textwidth}
+\begin{center}
+\twemoji[width=0.7\linewidth]{dog}\\[1em]
+\twemoji[width=0.7\linewidth]{cat}
+\end{center}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Transfer Learning: Umsetzung mit VGG16}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.9, transform shape,
+  conv/.style={draw=blue!70!black, fill=blue!25, minimum width=5pt, inner sep=0pt},
+  pool/.style={draw=red!70!black, fill=red!30, minimum width=6pt, inner sep=0pt},
+  fcl/.style={draw=green!50!black, fill=green!35, minimum height=6pt, minimum width=24pt, inner sep=0pt},
+  lbl/.style={font=\tiny},
+  capt/.style={font=\scriptsize}
+]
+% Eingabebild
+\node[draw=gray!70, fill=gray!25, minimum width=8pt, minimum height=100pt, inner sep=0pt] at (0,0) {};
+\node[lbl, anchor=north] at (0,-1.85) {224 x 224 x 3};
+% conv1
+\foreach \x in {0.5,0.8} \node[conv, minimum height=92pt] at (\x,0) {};
+\node[lbl, anchor=north] at (0.65,-1.68) {224 x 224 x 64};
+\node[capt, anchor=south] at (0.65,1.68) {conv1};
+\node[pool, minimum height=76pt] at (1.15,0) {};
+% conv2
+\foreach \x in {1.5,1.8} \node[conv, minimum height=70pt] at (\x,0) {};
+\node[lbl, anchor=north] at (1.65,-1.32) {112 x 112 x 128};
+\node[capt, anchor=south] at (1.65,1.32) {conv2};
+\node[pool, minimum height=56pt] at (2.15,0) {};
+% conv3
+\foreach \x in {2.5,2.8,3.1} \node[conv, minimum height=50pt] at (\x,0) {};
+\node[lbl, anchor=north] at (2.8,-0.96) {56 x 56 x 256};
+\node[capt, anchor=south] at (2.8,0.96) {conv3};
+\node[pool, minimum height=38pt] at (3.45,0) {};
+% conv4
+\foreach \x in {3.8,4.1,4.4} \node[conv, minimum height=32pt] at (\x,0) {};
+\node[lbl, anchor=north] at (4.1,-0.66) {28 x 28 x 512};
+\node[capt, anchor=south] at (4.1,0.66) {conv4};
+\node[pool, minimum height=24pt] at (4.75,0) {};
+% conv5
+\foreach \x in {5.1,5.4,5.7} \node[conv, minimum height=20pt] at (\x,0) {};
+\node[lbl, anchor=north] at (5.4,-0.44) {14 x 14 x 512};
+\node[capt, anchor=south] at (5.4,0.44) {conv5};
+\node[pool, minimum height=14pt] at (6.05,0) {};
+\node[lbl, anchor=north] at (6.05,-0.33) {7 x 7 x 512};
+% Fully Connected
+\node[fcl] at (7.1,0) {};
+\node[fcl] at (8.05,0) {};
+\node[fcl] at (9.0,0) {};
+\node[capt, anchor=south] at (7.1,0.14) {fc6};
+\node[capt, anchor=south] at (8.05,0.14) {fc7};
+\node[capt, anchor=south] at (9.0,0.14) {fc8};
+\node[lbl, anchor=north] at (7.1,-0.14) {1 x 1 x 4096};
+\node[lbl, anchor=north] at (9.0,-0.14) {1 x 1 x 1000};
+% Bereiche
+\draw[PrimaryColor, thick] (-0.3,-2.4) rectangle (6.35,2.4);
+\draw[AlertColor, thick] (6.5,-2.4) rectangle (9.5,2.4);
+\node[capt, anchor=north east, PrimaryColor] at (6.2,2.3) {\textbf{Vorverarbeitung}};
+\node[capt, anchor=north, AlertColor] at (8.0,2.3) {\textbf{Klassifikation}};
+% Legende
+\node[conv, minimum height=7pt, minimum width=7pt] at (2.6,-1.95) {};
+\node[lbl, anchor=west] at (2.7,-1.95) {convolution + ReLU};
+\node[pool, minimum height=7pt, minimum width=7pt] at (2.6,-2.2) {};
+\node[lbl, anchor=west] at (2.7,-2.2) {max pooling};
+\node[fcl, minimum height=7pt, minimum width=7pt] at (4.7,-1.95) {};
+\node[lbl, anchor=west] at (4.8,-1.95) {fully connected + ReLU};
+\end{tikzpicture}
+\end{center}
+Übernommen wird die Vorverarbeitung, neu trainiert wird nur die Klassifikation.
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+\begin{frame}{Transfer Learning: Umsetzung mit VGG16}
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.9, transform shape,
+  conv/.style={draw=blue!70!black, fill=blue!25, minimum width=5pt, inner sep=0pt},
+  pool/.style={draw=red!70!black, fill=red!30, minimum width=6pt, inner sep=0pt},
+  fcl/.style={draw=green!50!black, fill=green!35, minimum height=6pt, minimum width=24pt, inner sep=0pt},
+  lbl/.style={font=\tiny},
+  capt/.style={font=\scriptsize}
+]
+% Eingabebild
+\node[draw=gray!70, fill=gray!25, minimum width=8pt, minimum height=100pt, inner sep=0pt] at (0,0) {};
+\node[lbl, anchor=north] at (0,-1.85) {224 x 224 x 3};
+% conv1
+\foreach \x in {0.5,0.8} \node[conv, minimum height=92pt] at (\x,0) {};
+\node[lbl, anchor=north] at (0.65,-1.68) {224 x 224 x 64};
+\node[capt, anchor=south] at (0.65,1.68) {conv1};
+\node[pool, minimum height=76pt] at (1.15,0) {};
+% conv2
+\foreach \x in {1.5,1.8} \node[conv, minimum height=70pt] at (\x,0) {};
+\node[lbl, anchor=north] at (1.65,-1.32) {112 x 112 x 128};
+\node[capt, anchor=south] at (1.65,1.32) {conv2};
+\node[pool, minimum height=56pt] at (2.15,0) {};
+% conv3
+\foreach \x in {2.5,2.8,3.1} \node[conv, minimum height=50pt] at (\x,0) {};
+\node[lbl, anchor=north] at (2.8,-0.96) {56 x 56 x 256};
+\node[capt, anchor=south] at (2.8,0.96) {conv3};
+\node[pool, minimum height=38pt] at (3.45,0) {};
+% conv4
+\foreach \x in {3.8,4.1,4.4} \node[conv, minimum height=32pt] at (\x,0) {};
+\node[lbl, anchor=north] at (4.1,-0.66) {28 x 28 x 512};
+\node[capt, anchor=south] at (4.1,0.66) {conv4};
+\node[pool, minimum height=24pt] at (4.75,0) {};
+% conv5
+\foreach \x in {5.1,5.4,5.7} \node[conv, minimum height=20pt] at (\x,0) {};
+\node[lbl, anchor=north] at (5.4,-0.44) {14 x 14 x 512};
+\node[capt, anchor=south] at (5.4,0.44) {conv5};
+\node[pool, minimum height=14pt] at (6.05,0) {};
+\node[lbl, anchor=north] at (6.05,-0.33) {7 x 7 x 512};
+% Fully Connected
+\node[fcl] at (7.1,0) {};
+\node[fcl] at (8.05,0) {};
+\node[fcl] at (9.0,0) {};
+\node[capt, anchor=south] at (7.1,0.14) {fc6};
+\node[capt, anchor=south] at (8.05,0.14) {fc7};
+\node[capt, anchor=south] at (9.0,0.14) {fc8};
+\node[lbl, anchor=north] at (7.1,-0.14) {1 x 1 x 4096};
+\node[lbl, anchor=north] at (9.0,-0.14) {1 x 1 x 1000};
+% Bereich Vorverarbeitung
+\draw[PrimaryColor, thick] (-0.3,-2.4) rectangle (6.35,2.4);
+\node[capt, anchor=north east, PrimaryColor] at (6.2,2.3) {\textbf{Vorverarbeitung}};
+% Klassifikation verworfen
+\draw[AlertColor, line width=5pt] (6.7,-1.1) -- (9.4,1.1);
+\draw[AlertColor, line width=5pt] (6.7,1.1) -- (9.4,-1.1);
+% Legende
+\node[conv, minimum height=7pt, minimum width=7pt] at (2.6,-1.95) {};
+\node[lbl, anchor=west] at (2.7,-1.95) {convolution + ReLU};
+\node[pool, minimum height=7pt, minimum width=7pt] at (2.6,-2.2) {};
+\node[lbl, anchor=west] at (2.7,-2.2) {max pooling};
+\node[fcl, minimum height=7pt, minimum width=7pt] at (4.7,-1.95) {};
+\node[lbl, anchor=west] at (4.8,-1.95) {fully connected + ReLU};
+\end{tikzpicture} \par\medskip
+Wir verwerfen die bisherige Klassifikation und ersetzen sie durch eigene Dense-Layer.
+
+
+\end{center}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+\begin{frame}[fragile]{Transfer Learning: Daten aufbereiten}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+image = Image.open(
+    os.path.join(base_path, file))
+
+# Groesse und Farbschema an
+# ImageNet-Bilder anpassen
+image = image.resize((224, 224),
+                     Image.LANCZOS)
+image = image.convert("RGB")
+
+# Bild an Bilderliste anhaengen
+image = np.asarray(image)
+image_array.append(image)
+\end{minted}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \item Zwei Verzeichnisse mit je \textbf{12.500} Hunde- und Katzenfotos
+  \item Dateien einlesen und in ein \textbf{VGG16-konformes Format} bringen
+  \item Skalierung auf \textbf{224x224}, Farbschema \textbf{RGB}
+  \item Aufbereitete Fotos bilden die Eingabedaten \textbf{X}
+  \item Zusätzlich Labels vergeben und in das Feld \textbf{y} schreiben
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{chollet2023imageclassification,seemann_deeplearning}, Transfer Learning.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Transfer Learning VGG16: Modellaufbau Variante 1}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+vgg16_model = VGG16(
+    include_top=False,
+    input_shape=(224, 224, 3))
+vgg16_model.trainable = False
+vgg16_model.summary()
+
+=========================================
+Total params:         14,714,688
+Trainable params:              0
+Non-trainable params: 14,714,688
+\end{minted}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \item \textbf{include\_top=False} entfernt die Dense-Layer, nur die Vorverarbeitung bleibt
+  \item \textbf{input\_shape} legt das Eingabeformat fest
+  \item \textbf{trainable=False} friert alle Gewichte ein
+  \item Alle 14,7 Mio. Parameter sind \textbf{nicht trainierbar}
+  \item Die gelernte Vorverarbeitung bleibt damit unverändert erhalten
+\end{itemize}
+\end{column}
+\end{columns}
+\source{Transfer Learning.ipynb}
+\end{frame}
+
+\begin{frame}{Transfer Learning mit VGG16: Modell ohne Top}
+  \footnotesize
+  \begin{itemize}
+  \item \textbf{VisualKeras} zeigt das importierte \textbf{vgg16\_model} mit \textbf{include\_top=False}
+  \item Enthalten sind nur \textbf{Convolutional-} und \textbf{MaxPooling-Layer}, also die Vorverarbeitung
+  \item Aus 224x224x3 wird schrittweise \textbf{7x7x512}
+  \item Diese Merkmalskarte ist die Eingabe für unsere eigenen Schichten
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{figures/vgg16_ohne_top.png}
+\end{center}
+\source{Transfer Learning.ipynb}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Transfer Learning mit VGG16: Eigene Dense-Layer}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+
+model = Sequential()
+model.add(vgg16_model)
+model.add(Flatten())
+model.add(Dense(4096, activation="relu"))
+model.add(Dense(1024, activation="relu"))
+model.add(Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+\footnotesize
+\begin{itemize}
+  \item Das eingefrorene \textbf{vgg16\_model} wird wie ein einzelner Layer eingesetzt
+  \item \textbf{Flatten} überführt die Merkmalskarten in einen Vektor
+  \item Zwei \textbf{Dense-Layer} lernen die neue Klassifikation
+  \item Ein Ausgabeneuron mit \textbf{sigmoid} für die zwei Klassen
+  \item \textbf{binary\_crossentropy} als passende Verlustfunktion
+\end{itemize}
+\end{column}
+\end{columns}
+\source{Transfer Learning.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Transfer Learning mit VGG16: Modell mit neuem Top}
+\begin{itemize}
+  \item \textbf{VisualKeras} zeigt das Gesamtmodell nach dem Einbinden von VGG16
+  \item \textbf{vgg16\_model} wird praktisch wie eine \textbf{Eingabeschicht} behandelt
+  \item Die inneren Layer von VGG16 erscheinen nicht mehr einzeln
+  \item Angezeigt werden \textbf{Flatten} und die eigenen \textbf{Dense-Layer}
+  \item Flatten überführt die Merkmalskarte 7x7x512 in einen Vektor
+  \item Nur diese neuen Schichten werden \textbf{trainiert}
+\end{itemize} \par\medskip
+\begin{center}
+\includegraphics[width=0.85\textwidth]{figures/vgg16_neues_top.png}
+\end{center}
+\par\bigskip
+\begin{minted}[fontsize=\footnotesize]{python}
+model.fit(X, y, epochs=10, batch_size=300)
+\end{minted}
+
+\source{Transfer Learning.ipynb}
+\end{frame}
+
+
+\begin{frame}[fragile]{Transfer Learning mit VGG16: Variante 2}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+vgg16_model = VGG16(
+    include_top=False,
+    input_shape=(224, 224, 3))
+vgg16_model.trainable = False
+
+X_nach_vgg = vgg16_model.predict(
+  X, verbose=1)
+\end{minted}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+  \item Daten \textbf{einmal} durch VGG16 schicken
+  \item Zwischenergebnis \textbf{speichern}
+  \item Ausgabe von VGG16 dient als Eingabe für das Dense-Netz
+  \item Die Vorverarbeitung wird nicht in jeder Epoche erneut berechnet
+  \item Das Training wird dadurch deutlich \textbf{beschleunigt}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{TransferLearning beschleunigt.ipynb}
+\end{frame}
+
+\begin{frame}[fragile]{Variante 2: Modell nur aus Dense-Layern}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{minted}[fontsize=\footnotesize]{python}
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten
+
+model = Sequential()
+model.add(Flatten())
+model.add(Dense(1024, activation="relu"))
+model.add(Dense(16, activation="relu"))
+model.add(Dense(1, activation="sigmoid"))
+
+model.compile(optimizer="rmsprop",
+              loss="binary_crossentropy",
+              metrics=["accuracy"])
+\end{minted}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Im Modell wird \textbf{kein VGG16 mehr} benötigt
+  \item Trainiert wird mit \textbf{X\_nach\_vgg} als Eingabe
+  \item \textbf{Flatten} überführt die Merkmalskarte 7x7x512 in einen Vektor
+  \item Zwei Dense-Layer und ein Ausgabeneuron mit \textbf{sigmoid}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{TransferLearning beschleunigt.ipynb}
+\end{frame}
+
+
+\begin{frame}{Transfer Learning mit VGG16: Vergleich der Varianten}
+\begin{columns}[T ]
+\begin{column}{0.47\textwidth}
+\begin{blockC1}{Variante 1}
+\begin{itemize}
+  \item VGG16 ist fester Bestandteil des Modells
+  \item Die Trainingsdaten durchlaufen in \textbf{jedem Trainingsschritt} das gesamte VGG16-Netz
+  \item Die Vorverarbeitung wird immer wieder neu berechnet
+  \item Aufwändig, dafür flexibel
+\end{itemize}
+\end{blockC1}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{blockC2}{Variante 2}
+\begin{itemize}
+  \item VGG16 und das zu trainierende Netz sind \textbf{getrennt}
+  \item Die Daten werden vor dem Training \textbf{einmalig} von VGG16 bearbeitet
+  \item Trainiert wird nur noch auf den gespeicherten Zwischenergebnissen
+  \item Die einmalige Bearbeitung spart deutlich \textbf{Zeit}
+\end{itemize}
+\end{blockC2}
+\end{column}
+\end{columns}
+\source{\cite{seemann_deeplearning}}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Transfer Learning: Modell auf andere Rechner deployen}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{Speichern nach dem Training}
+\begin{minted}[fontsize=\footnotesize]{python}
+model.save("ErkennungHundKatze.keras")
+\end{minted}
+\vfill
+\textbf{Laden auf einem beliebigen Rechner}
+\begin{minted}[fontsize=\footnotesize]{python}
+from keras.models import load_model
+
+model = load_model("ErkennungHundKatze.keras")
+model.predict(X_nach_vgg)
+\end{minted}
+\end{column}
+\begin{column}{0.40\textwidth}
+\footnotesize
+\begin{itemize}
+  \item \textbf{model.save()} schreibt das fertig trainierte Modell in eine Datei
+  \item Gespeichert werden \textbf{Architektur und Gewichte}
+  \item Die Datei lässt sich auf jeden beliebigen Rechner übertragen
+  \item \textbf{load\_model()} importiert sie dort wieder in Keras
+  \item Auf dem Zielrechner ist \textbf{kein Training} mehr nötig
+  \item Bei Variante 2 muss die VGG16-Vorverarbeitung dort ebenfalls erfolgen
+\end{itemize}
+\end{column}
+\end{columns}
+\source{AnwendungTrainiertesNetz.ipynb, TransferLearning beschleunigt.ipynb}
+\end{frame}
+
+
+\begin{frame}{Transfer Learning: Übung}
+\begin{columns}
+\begin{column}{0.7\textwidth}
+
+\textbf{Daten vorbereiten}
+\begin{itemize}
+  \item Laden Sie ein beliebiges Bild eines Hundes oder einer Katze
+  \item Bringen Sie das Bild in das passende Format \textbf{224x224}, Farbschema \textbf{RGB}
+  \item Bereiten Sie das Bild für VGG16 vor und schicken Sie es durch das VGG16-Netz
+\end{itemize}
+\vfill
+\textbf{Modell laden und anwenden}
+\begin{itemize}
+  \item Laden Sie das Modell aus der Datei \textbf{ErkennungHundKatze.keras}
+  \item Klassifizieren Sie das Bild mit dem geladenen Modell
+  \item Bewerten Sie das Ergebnis: Ist die Vorhersage korrekt?
+\end{itemize}
+\end{column}
+\begin{column}{0.25\textwidth}
+\begin{center}
+\twemoji[width=1.0\linewidth]{laptop}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
 \makequestionspage{\FRAGENIMAGE}
