@@ -615,14 +615,14 @@ mit $u_0, \dots , u_n \in \mathbb{R}^n$. \medskip
 
 Man schreibt das typischerweise als Skalarprodukt
 \[
-    f(\mathbf{x} ) = u_0 + \mathbf{b}^T \cdot \mathbf{x}  
+    f(\mathbf{x} ) = u_0 + \mathbf{b} \cdot \mathbf{x}  
 \]
 mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^T \in \mathbb{R}^n$. 
 
 
 \column{0.47\textwidth}
 \begin{block}{\footnotesize Ebenengleichung}
-Aus der Schule kennen Sie die Darstellung bereits als \textbf{Koordinatenform} einer Ebene. Man im  2D-Eingangsraum schreibt man
+Aus der Schule kennen Sie die Darstellung bereits als \textbf{Koordinatenform} einer Ebene. Im  2D-Eingangsraum schreibt man
 \[
 z=ax+ay+c
 \]
@@ -643,7 +643,7 @@ Lineare Modelle beschreiben im 2D-Eingangsraum \textbf{Ebenen}, im 1D-Eingangsra
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Beispiel: Boston Housing Dataset}
 
-
+\footnotesize
     
     \begin{columns}
 \column{0.35\textwidth}
@@ -652,7 +652,7 @@ Wir berechnen ein Regressionsmodell für den \textbf{Boston Housing Dataset}.
 
 \textbf{Aufgabe:}
 \begin{itemize}
-\item 13 Eingangsmerkmale
+\item 12 Eingangsmerkmale
 \item $\rightarrow$ Vorhersage des Medianpreises
 \end{itemize}
 \centering
@@ -677,7 +677,7 @@ Wir berechnen ein Regressionsmodell für den \textbf{Boston Housing Dataset}.
 \end{frame}
 
 \begin{frame}[fragile]{Boston Housing Dataset in Python}
-
+\footnotesize
 Wir betrachten den Datensatz mit pandas:
 
 \begin{minted}[fontsize=\small]{python}
@@ -701,7 +701,7 @@ df.head()
 4 & 0.06905 & 0.0 & 2.18 & 0 & 0.458 & 7.147 & 54.2 & 6.0622 & 3 & 222 & 18.7 & 5.33 & 36.2 & 1 \\
 \end{tabular}
 } \par \bigskip
-\textbf{MEDV} ist unsere Zielgröße. Die anderen 13 Werte bilden unseren Merkmalsraum $X\subseteq\mathbb{R}^{13}$.
+\textbf{MEDV} ist unsere Zielgröße. \textbf{CAT. MEDV} ist eine von \textbf{MEDV} abgeleitete Kategorie, die wir verwerfen. Die anderen 12 Werte bilden unseren Merkmalsraum $X\subseteq\mathbb{R}^{12}$.
 
 \end{frame}
 
@@ -713,10 +713,10 @@ df.head()
 \column{0.35\textwidth}
 \begin{itemize}
 \item Die Hyperebene ist durch ihre Koeffizienten $u_i$ definiert.
-\item  Im Boston Housing Dataset: 13 Merkmale + Offset $u_0$ $\Rightarrow$ 14 unbekannte Parameter
+\item  Im Boston Housing Dataset: 12 Merkmale + Offset $u_0$ $\Rightarrow$ 13 unbekannte Parameter
 \item Wir setzen die erste Datenzeile in das Modell ein:
 \[
-y = u_0 + \sum_{i=1}^{13} u_i x_i
+y = u_0 + \sum_{i=1}^{12} u_i x_i
 \]
 \end{itemize}
 
@@ -743,7 +743,6 @@ y = u_0 + \sum_{i=1}^{13} u_i x_i
 &+ u_{10} \cdot 296
 + u_{11} \cdot 15.3
 + u_{12} \cdot 4.98
-+ u_{13} \cdot 0
 \end{aligned}
 \]
 
@@ -770,7 +769,7 @@ Es ergibt sich ein lineares Gleichungssystem:
 \begin{itemize}
 \item Pro Zeile eine Gleichung
 \item Insgesamt: 506 Gleichungen
-\item Unbekannt: 14 Parameter $u_0, \dots, u_{13}$
+\item Unbekannt: 13 Parameter $u_0, \dots, u_{12}$
 \item Mehr Gleichungen als Unbekannte
 \item $\Rightarrow$ überbestimmtes System
 \end{itemize}
@@ -789,10 +788,10 @@ Es ergibt sich ein lineares Gleichungssystem:
 
 \[
 \begin{aligned}
-u_0 &+ u_1 \cdot 6.3\cdot 10^{-3} + u_2 \cdot 1.8\cdot 10^{1} + \cdots + u_{13} \cdot 4.9\cdot 10^{0} = 24.0 \\
-u_0 &+ u_1 \cdot 2.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{13} \cdot 9.1\cdot 10^{0} = 21.6 \\
+u_0 &+ u_1 \cdot 6.3\cdot 10^{-3} + u_2 \cdot 1.8\cdot 10^{1} + \cdots + u_{12} \cdot 4.9\cdot 10^{0} = 24.0 \\
+u_0 &+ u_1 \cdot 2.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{12} \cdot 9.1\cdot 10^{0} = 21.6 \\
 &\vdots \\
-u_0 &+ u_1 \cdot 4.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{13} \cdot 7.8\cdot 10^{0} = 11.9
+u_0 &+ u_1 \cdot 4.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{12} \cdot 7.8\cdot 10^{0} = 11.9
 \end{aligned}
 \]
 
@@ -821,14 +820,14 @@ u_0 &+ u_1 \cdot 4.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{13} 
 \[
 A =
 \begin{pmatrix}
-1 & 6.3\cdot 10^{-3} & 1.8\cdot 10^1 & \dots & 3.9\cdot 10^2 & 4.9\cdot 10^0 \\
-1 & 2.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots & 3.9\cdot 10^2 & 9.1\cdot 10^0 \\
-\vdots & \vdots & \vdots & & \vdots & \vdots \\
-1 & 4.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots & 3.9\cdot 10^2 & 7.8\cdot 10^0
+1 & 6.3\cdot 10^{-3} & 1.8\cdot 10^1 & \dots &  4.9\cdot 10^0 \\
+1 & 2.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots &  9.1\cdot 10^0 \\
+\vdots & \vdots & \vdots & &  \vdots \\
+1 & 4.7\cdot 10^{-2} & 0.0\cdot 10^0 & \dots &  7.8\cdot 10^0
 \end{pmatrix}
 \]
 
-\item Dann hat unser Gleichungssystem für \(\mathbf{u} = (u_0, \ldots, u_{13})^T\) die Form 
+\item Dann hat unser Gleichungssystem für \(\mathbf{u} = (u_0, \ldots, u_{12})^T\) die Form 
 \[
 A \mathbf{u} = \mathbf{y}
 \]
@@ -1390,20 +1389,18 @@ y_pred = A_test @ u
 \begin{tabular}{lr}
 Feature & Koeff. \\
 \hline
-Intercept & 40.3401\\
-CRIM & -0.127 \\
-ZN & -0.025 \\
-INDUS & 0.131 \\
-CHAS & 2.628 \\
-NOX & -14.930 \\
-RM & 1.347 \\
-AGE & -0.014 \\
-DIS & -0.638 \\
-RAD & 0.145 \\
-TAX & -0.007 \\
-PTRATIO & -0.552 \\
-LSTAT & -0.467 \\
-CAT. MEDV & 11.863 \\
+CRIM & -0.127196\\
+ZN & 0.030795\\
+INDUS & 0.025248\\
+CHAS & 3.049477\\
+NOX & -18.183246\\
+RM & 4.240098\\
+AGE & -0.003594\\
+DIS & -1.465507\\
+RAD & 0.239990\\
+TAX & -0.011275\\
+PTRATIO & -0.894845\\
+LSTAT & -0.537770\\
 \end{tabular}
 }
 
@@ -1414,20 +1411,18 @@ CAT. MEDV & 11.863 \\
 \begin{tabular}{lr}
 Feature & Koeff. \\
 \hline
-Intercept & 40.3401\\
-CRIM & -0.127 \\
-ZN & -0.025 \\
-INDUS & 0.131 \\
-CHAS & 2.628 \\
-NOX & -14.930 \\
-RM & 1.347 \\
-AGE & -0.014 \\
-DIS & -0.638 \\
-RAD & 0.145 \\
-TAX & -0.007 \\
-PTRATIO & -0.552 \\
-LSTAT & -0.467 \\
-CAT. MEDV & 11.863 \\
+CRIM & -0.127196\\
+ZN & 0.030795\\
+INDUS & 0.025248\\
+CHAS & 3.049477\\
+NOX & -18.183246\\
+RM & 4.240098\\
+AGE & -0.003594\\
+DIS & -1.465507\\
+RAD & 0.239990\\
+TAX & -0.011275\\
+PTRATIO & -0.894845\\
+LSTAT & -0.537770\\
 \end{tabular}
 }
 
@@ -1441,26 +1436,28 @@ Identische Ergebnisse beider Methoden;  \texttt{LinearRegression} verwendet inte
 
 \begin{frame}[fragile]{Pandas DataFrames: Feature-Auswahl}
 \begin{columns}
-\column{0.47\textwidth}
+\column{0.50\textwidth}
 \begin{itemize}
 \item Regression mit genau einer Spalte;
-\begin{minted}{python}
+\begin{minted}[fontsize=\footnotesize]{python}
 X = df[['Quadratmeter']]
 y = df['Kaltmiete']
 \end{minted}
 
-\item Hier jetzt alle Spalten bis auf eine:
-\begin{minted}{python}
-X = df.drop(columns=['MEDV'])
+\item Hier jetzt alle Spalten bis auf zwei:
+\begin{minted}[fontsize=\footnotesize]{python}
+X = df.drop(
+    columns=['MEDV', 'CAT. MEDV']
+)
 y = df['MEDV']
 \end{minted}
 \end{itemize}
 
-\column{0.48\textwidth}
+\column{0.50\textwidth}
 
 \begin{itemize}
 \item Die Auswahlund auch \texttt{{drop()}} akzeptieren auch Listen von Spalten.
-\begin{minted}{python}
+\begin{minted}[fontsize=\footnotesize]{python}
 # Mehrere Spalten auswählen
 X = df[['CRIM', 'CHAS',
         'AGE', 'PTRATIO']]

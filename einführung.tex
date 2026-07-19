@@ -144,12 +144,12 @@ Analperlen: 2022
       \end{itemize}
     \end{column}
     \begin{column}{0.35\linewidth}
-      \begin{block}{Typische Algorithmen}
+      \begin{block}{Gängige Algorithmen}
         \begin{itemize}
           \item Lineare und logistische Regression
-          \item Statistische Modelle (Nayes),
+          \item Statistische Modelle (Bayes),
           \item Entscheidungsbäume, Random Forests, 
-          \item k-NN, SVM, einfache neuronale Netze
+          \item Support Vector Machines, einfache neuronale Netze
         \end{itemize}
       \end{block}
 
@@ -811,10 +811,10 @@ benötigen wir \textbf{unterschiedliche Algorithmen}.
 \node[block, right=2.2cm of features, draw=orange, thick] (model) {Modell};
 \node[block, right=1.5cm of model, draw=green!60!black, thick] (pred) {Vorhersage};
 
-\draw[line] (source) -- node[right] {phys.\ Größen} (sensor);
-\draw[line] (sensor) -- node[right] {Signale/Bilder} (signal);
-\draw[line] (signal) -- node[right] {gefiltert,\ verstärkt} (features);
-\draw[line] (features) -- node[above] {Kenngrößen} (model);
+\draw[line] (source) -- node[right] {\emph{phys.\ Größen}} (sensor);
+\draw[line] (sensor) -- node[right] {\emph{Signale/Bilder}} (signal);
+\draw[line] (signal) -- node[right] {\emph{gefiltert,\ verstärkt}} (features);
+\draw[line] (features) -- node[above] {\emph{Kenngrößen}} (model);
 \draw[line] (model) -- (pred);
 
 \end{tikzpicture}

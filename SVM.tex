@@ -1246,6 +1246,11 @@ Ansatz. Es treten zwei Probleme auf:
   \draw[->] (0,0) -- (1050,0) node[right] {\scriptsize $x_1$};
   \draw[->] (0,0) -- (0,1.15) node[above] {\scriptsize $x_2$};
 
+
+    \draw (0,0.02) -- (0,-0.02) node[below] {\scriptsize 0};
+    \draw (500,0.02) -- (500,-0.02) node[below] {\scriptsize 5000};
+    \draw (1000,0.02) -- (1000,-0.02) node[below] {\scriptsize 10.000};
+
   \foreach \x in {0,5000,10000}
     \draw (\x,0.02) -- (\x,-0.02) node[below] {\scriptsize \x};
 
