@@ -1056,7 +1056,7 @@ $\boldsymbol{\lambda}$ \textbf{maximiert}. Die Daten treten nur als
 {\footnotesize\itshape Nicht linear trennbare Probleme lösen Soft-Margin
 und Kernel-Ansätze.}
 \end{columns}
-\source{\cite{scholkopf2002learning}, SVM\_Linear\_Synthetisch.ipynb}
+\source{\cite{scholkopf2002learning}, SvmLinearSynthetisch.ipynb}
 
 \end{frame}
 
@@ -1231,7 +1231,7 @@ Ansatz. Es treten zwei Probleme auf:
 \end{center}
 
 \end{columns}
-\source{\cite{Frochte2020}, SVM\_Linear.ipynb}
+\source{\cite{Frochte2020}, SvmLinear.ipynb}
 
 \end{frame}
 
@@ -1331,7 +1331,7 @@ X_test = scaler.transform(X_test)
 \includesvg[width=.83\linewidth]{figures/scaler_nachher.svg}
 \end{columns}
 
-\source{SVM\_Linear.ipynb}
+\source{SvmLinear.ipynb}
 \end{frame}
 
 
@@ -1359,7 +1359,7 @@ Trennebene, also genau die Hyperebene aus der Herleitung.
 \centering
 \includesvg[width=\linewidth]{figures/scatter_svm.svg}
 \end{columns}
-\source{SVM\_Linear.ipynb}
+\source{SvmLinear.ipynb}
 \end{frame}
 
 
@@ -1661,7 +1661,7 @@ Einfluss auf die Klassifikationsgüte.
 \centering
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
-\source{Lösung: SVM Iris.ipynb, HeartDisease SVM.ipynb}
+\source{Lösung: LösungSvmIris.ipynb, LösungHeartDiseaseSvm.ipynb}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
@@ -2036,7 +2036,7 @@ Ausdruck zu $(a\cdot x)^{\texttt{degree}}$.
 \includesvg[width=\linewidth]{figures/scatter_svm_poly_2_train.svg}
 \footnotesize $d=2$
 \end{columns}
-\source{\cite{seemann2024mlaz}, SVM Poly.ipynb}
+\source{\cite{seemann2024mlaz}, SvmPoly.ipynb}
 \end{frame}
 
 \begin{frame}{SVM: Polynomialer Kernel -- Überanpassung}
@@ -2064,7 +2064,7 @@ Trainingsdaten.
 \textbf{Testdaten}\\[2pt]
 \includesvg[width=0.9\linewidth]{figures/scatter_svm_poly_10_test.svg}
 \end{columns}
-\source{\cite{seemann2024mlaz}, SVM Poly.ipynb}
+\source{\cite{seemann2024mlaz}, SvmPoly.ipynb}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
@@ -2089,7 +2089,7 @@ Polynoms im Kernel und vergleichen Sie die Ergebnisse.
 \centering
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
-\source{Lösung: SVM Poly Iris.ipynb, HeartDisease SVM Poly.ipynb}
+\source{Lösung: LösungSvmPolyIris.ipynb, LösungHeartDiseaseSvmPoly.ipynb}
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
@@ -2480,7 +2480,7 @@ $\gamma = \frac{1}{n_{\text{features}} \cdot \text{Var}(X)}$.
 \centering
 \includesvg[width=\linewidth]{figures/scatter_svm_rbf_gamma_default.svg}
 \end{columns}
-\source{SVM RBF.ipynb}
+\source{SvmRBF.ipynb}
 \end{frame}
 
 \begin{frame}{SVM: RBF-Kernel -- Überanpassung durch großes $\gamma$}
@@ -2499,7 +2499,7 @@ $\gamma = \frac{1}{n_{\text{features}} \cdot \text{Var}(X)}$.
 \includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_train.svg}\\[1pt]
 \includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_test.svg}\\[1pt]
 \end{columns}
-\source{SVM RBF.ipynb}
+\source{SvmRBF.ipynb}
 \end{frame}
 
 \begin{frame}{SVM: RBF-Kernel -- Parameter $C$ und $\gamma$}
@@ -2553,7 +2553,7 @@ vergleichen Sie die Ergebnisse.
 \centering
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
-\source{Lösung: SVM RBF Iris.ipynb, HeartDisease SVM RBF.ipynb}
+\source{Lösung: LösungSvmRbfIris.ipynb, LösungHeartDiseaseSvmRbf.ipynb}
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
