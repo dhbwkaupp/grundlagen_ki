@@ -1,4 +1,4 @@
-\makesectionpage[figures/quiz.png]{Klassifikation}
+\makesectionpage[figures/Klassifikation.png]{Klassifikation}
 
 \makesubsectionpage{Grundidee}
 
@@ -2405,7 +2405,8 @@ importieren.
 \begin{minted}[fontsize=\footnotesize]{python}
 # Modell laden
 file_name = "modell.pickle"
-loaded_model = pickle.load(open(file_name, "rb"))
+loaded_model = pickle.load(
+  open(file_name, "rb"))
 ...
 
 # Vorhersage machen und als Text ausgeben

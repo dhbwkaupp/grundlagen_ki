@@ -1,4 +1,4 @@
-\makesectionpage{Unüberwachtes Lernen}
+\makesectionpage[figures/UnüberwachtesLernen.png]{Unüberwachtes\\Lernen}
 
 \makesubsectionpage{Abstandserhaltende Projektionen}
 
@@ -674,7 +674,7 @@ Ohne Skalierung würden Merkmale mit \textbf{großen Werten} die Abstände
 \textbf{dominieren} und das Ergebnis verzerren.
 \end{block}
 \end{columns}
-\source{One Hot Fahrzeugdaten.ipynb}
+\source{OneHotFahrzeugdaten.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{MDS in Python: Projektion}
@@ -702,7 +702,7 @@ X_2d = mds.fit_transform(X_transformed)
 \includesvg[width=\linewidth]{figures/scatter_mds_auto_mpg.svg}
 
 \end{columns}
-\source{One Hot Fahrzeugdaten.ipynb}
+\source{OneHotFahrzeugdaten.ipynb}
 \end{frame}
 
 
@@ -720,7 +720,7 @@ X_2d = mds.fit_transform(X_transformed)
 \includesvg[width=\linewidth]{figures/scatter_mds_iris.svg}
 
 \end{columns}
-\source{MDS Iris mit Klassen.ipynb}
+\source{MdsIrisKlassen.ipynb}
 \end{frame}
 
 \begin{frame}{Dimensionsreduktion: Grenzen von MDS}
@@ -740,7 +740,7 @@ X_2d = mds.fit_transform(X_transformed)
 \centering
 \includesvg[width=\linewidth]{figures/scatter_mds_mnist.svg}
 \end{columns}
-\source{MDS MNIST.ipynb}
+\source{MdsMnist.ipynb}
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
@@ -1303,7 +1303,7 @@ X_2d = tsne.fit_transform(X)
   \item \texttt{perplexity}: effektive \textbf{Nachbarzahl}.
 \end{itemize}
 \end{columns}
-\source{t-SNE MNIST.ipynb}
+\source{TsneMnist.ipynb}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
@@ -1324,7 +1324,7 @@ Führen Sie auf dem \textbf{Iris-Datensatz} eine Dimensionsreduktion mit
 \centering
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
-\source{Lösung: t-SNE.ipynb}
+\source{Lösung: LösungTSneIris.ipynb}
 \end{frame}
 \makequestionspage{\FRAGENIMAGE}
 
@@ -1607,7 +1607,7 @@ model.fit(X_transformed)
 Sie muss vorab bekannt sein.
 \end{block}
 \end{columns}
-\source{K-Means Fahrzeugdaten Mit Centroids.ipynb}
+\source{KMeansFahrzeugdatenMitCentroids.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{k-Means in Python: Labels und Centroiden}
@@ -1634,7 +1634,7 @@ sie \textbf{zurücktransformiert}.
 \centering
 \includesvg[width=\linewidth]{figures/kmeans_fahrzeuge.svg}
 \end{columns}
-\source{K-Means Fahrzeugdaten Mit Centroids.ipynb}
+\source{KMeansFahrzeugdatenMitCentroids.ipynb}
 \end{frame}
 
 
@@ -1923,7 +1923,7 @@ Abstände} jedes Punktes zu seinem Clusterzentrum, also die Zielfunktion
 $J(k)$.
 \end{blockC1}
 \end{columns}
-\source{KMeans Iris Elbow.ipynb}
+\source{KMeansIrisElbow.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{k-Means: Elbow-Graph zeichnen}
@@ -1950,7 +1950,7 @@ Oft ist der Ellbogen nicht eindeutig. Zeigt die Kurve mehrere Knicke, testet man
 \centering
 \includesvg[width=\linewidth]{figures/elbow_iris.svg}
 \end{columns}
-\source{KMeans Iris Elbow.ipynb}
+\source{KMeansIrisElbow.ipynb}
 \end{frame}
 
 \begin{frame}{k-Means: Iris-Cluster mit $k = 3$}
@@ -1990,7 +1990,7 @@ Untersuchen Sie den \textbf{Heart-Disease}-Datensatz mit k-Means:
 \centering
 \twemoji[width=0.9\linewidth]{laptop}
 \end{columns}
-\source{Lösung: KMeans Heart Disease.ipynb}
+\source{Lösung: LösungKMeansHeartDisease.ipynb}
 
 \note{Alter und Cholesterinwert sind wohl die Haupteinflussfaktoren.}
 

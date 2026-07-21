@@ -758,7 +758,7 @@ Epoch 30/30
 
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\source{\cite{Frochte2020}, BinäreKlassifikationKeras.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Training: Verlauf speichern und plotten}
@@ -782,7 +782,7 @@ Aus \texttt{history.history} lassen sich \textbf{loss} und \textbf{val\_loss} ü
 \includesvg[width=\linewidth]{figures/mlp_binary_history.svg}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\source{\cite{Frochte2020}, BinäreKlassifikationKeras.ipynb}
 \end{frame}
 
 \begin{frame}{Training: Overfitting}
@@ -806,7 +806,7 @@ Der Punkt, an dem der Testfehler wieder steigt, markiert das \textbf{Ende des si
 \end{block}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation mit Keras.ipynb}
+\source{\cite{Frochte2020}, BinäreKlassifikationKeras.ipynb}
 \end{frame}
 
 
@@ -855,7 +855,7 @@ zugeordnet.
 \end{uncoverenv}
 \end{column}
 \end{columns}
-\source{\cite{seemann_deeplearning}, Binäre Klassifikation mit Keras.ipynb}
+\source{\cite{seemann_deeplearning}, BinäreKlassifikationKeras.ipynb}
 \end{frame}
 
   \begin{frame}[fragile]{Prognosegüte ermitteln}
@@ -894,7 +894,7 @@ Ist eine Trefferquote von \textbf{95{,}42\%} hier wirklich gut?
 \end{block}
 \end{column}
 \end{columns}
-\source{\cite{Frochte2020}, Binäre Klassifikation Metriken.ipynb}
+\source{\cite{Frochte2020}, BinäreKlassifikationMetriken.ipynb}
 \end{frame}
 
 \begin{frame}{Auflösung: Warum 95\% täuschen können}
@@ -951,7 +951,7 @@ plt.show()
 \includesvg[width=\linewidth]{figures/mlp_confusion_matrix.svg}
 \end{column}
 \end{columns}
-\source{Binäre Klassifikation Metriken.ipynb}
+\source{BinäreKlassifikationMetriken.ipynb}
 \end{frame}
 
 
@@ -987,7 +987,7 @@ So wird der scheinbare Vorteil hoher Accuracy sofort \textbf{entlarvt}.
 Unser Modell erreicht eine \textbf{BER von 0{,}1663}, also deutlich besser als die Baseline, aber klar schlechter als die 95\% Accuracy vermuten lassen.
 \end{column}
 \end{columns}
-\source{Binäre Klassifikation Metriken.ipynb}
+\source{BinäreKlassifikationMetriken.ipynb}
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
@@ -1006,7 +1006,7 @@ Unser Modell erreicht eine \textbf{BER von 0{,}1663}, also deutlich besser als d
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: mnist\_binär.ipynb}
+\source{Lösung: LösungMnistBinär.ipynb}
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
@@ -1037,7 +1037,7 @@ print(y_train[0])
 Die \textbf{1} steht an Position \textbf{5}, das Bild zeigt also die Ziffer \textbf{5}.
 \end{column}
 \end{columns}
-\source{\cite{seemann_deeplearning}, Multiclass Klassifikation.ipynb}
+\source{\cite{seemann_deeplearning}, MulticlassKlassifikation.ipynb}
 \end{frame}
 
 
@@ -1353,7 +1353,7 @@ Gegenüber der binären Variante ändern sich drei Dinge:
 \end{itemize}
 \end{column}
 \end{columns}
-\source{Multiclass Klassifikation.ipynb}  
+\source{MulticlassKlassifikation.ipynb}  
 \end{frame}
 
 \begin{frame}[fragile]{Multiclass: Vorhersage auswerten}
@@ -1380,7 +1380,7 @@ Das Netz gibt einen \textbf{Vektor} mit 10 Wahrscheinlichkeiten aus, eine je Kla
 Mit \textbf{argmax} findet man den Index der \textbf{höchsten} Wahrscheinlichkeit, hier die Klasse \textbf{9}.
 \end{column}
 \end{columns}
-\source{Multiclass Klassifikation.ipynb}
+\source{MulticlassKlassifikation.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Multiclass: Validierung mit Testdaten}
@@ -1407,7 +1407,7 @@ Anteil korrekt erkannter Ziffern.
 Das Netz erkennt rund \textbf{85\%} der Ziffern korrekt. \textbf{Das geht noch besser!}
 \end{column}
 \end{columns}
-\source{Multiclass Klassifikation.ipynb}
+\source{MulticlassKlassifikation.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Multiclass: Konfusionsmatrix}
@@ -1440,7 +1440,7 @@ plt.show()
 \includesvg[width=\linewidth]{figures/multiclass_confusion_matrix.svg}
 \end{column}
 \end{columns}
-\source{Multiclass Klassifikation Confusion Matrix.ipynb}
+\source{MulticlassKlassifikationConfusionMatrix.ipynb}
 \end{frame}
 
 \begin{frame}{Übung: Multiclass-Klassifikation mit MNIST}
@@ -1457,7 +1457,7 @@ plt.show()
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{L\"osung: mnist\_multiclass.ipynb}
+\source{Lösung: LösungMnistMulticlass.ipynb}
 \end{frame}
 
 \makesubsubsectionpage{Optimizer}
@@ -1898,7 +1898,7 @@ Experimentieren Sie mit Ihrem \textbf{MNIST-Multiclass-Notebook}:
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: mnist\_multiclass\_optimiert.ipynb}
+\source{Lösung: LösungMnistMulticlassOptimiert.ipynb}
 \end{frame}
 
 
@@ -2655,7 +2655,7 @@ kernel = np.array([
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: Bildfilter\_emboss.ipynb}
+\source{Lösung: LösungBildfilter.ipynb}
 \end{frame}
 
 
@@ -2882,7 +2882,7 @@ y_test = to_categorical(y_test)
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn.ipynb}
+\source{MnistCnn.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Modellaufbau}
@@ -2917,7 +2917,7 @@ model.compile(
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn.ipynb}
+\source{MnistCnn.ipynb}
 \end{frame}
 
 \begin{frame}{Conv2D: Faltungsschicht}
@@ -3010,7 +3010,7 @@ dense\_30 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \te
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn.ipynb}
+\source{MnistCnn.ipynb}
 \end{frame}
 
 
@@ -3062,7 +3062,7 @@ model.fit(
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn.ipynb}
+\source{MnistCnn.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{CNN auf MNIST: Evaluation}
@@ -3093,7 +3093,7 @@ model.evaluate(x_test, y_test)
 \end{block}
 \end{column}
 \end{columns}
-\source{mnist cnn.ipynb}
+\source{MnistCnn.ipynb}
 \end{frame}
 
 
@@ -3149,7 +3149,7 @@ model.evaluate(x_test, y_test)
   \item Wenden Sie die \textbf{gelernten Kernel} nach dem Training auf einzelne Fashion-Bilder an und stellen Sie die Feature Maps dar
   \item Bewerten Sie deren Funktion: welche Struktur hebt ein Kernel jeweils hervor, etwa Kanten, Kontraste oder Texturen?
 \end{itemize}
-\source{Lösung: CNNAktivierung\_Fashion.ipynb}
+\source{Lösung: LösungCnnAktivierungFashion.ipynb}
 \end{column}
 \begin{column}{0.25\linewidth}
 \begin{center}
@@ -3676,7 +3676,7 @@ Dieses Netz wendet die Optimierungsprinzipen an:
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn optimiert.ipynb}
+\source{MnistCnnOptimiert.ipynb}
 \end{frame}
 
 
@@ -3703,7 +3703,7 @@ Dieses Netz wendet die Optimierungsprinzipen an:
 \includegraphics[width=\linewidth]{figures/cnn_visual_keras.png}
 \scriptsize Darstellung der Netzstruktur mit \emph{visualkeras}
 \end{figure}
-\source{mnist cnn optimiert.ipynb}
+\source{MnistCnnOptimiert.ipynb}
 \end{frame}
 
 
@@ -3763,7 +3763,7 @@ dense\_1 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \tex
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn optimiert.ipynb}
+\source{MnistCnnOptimiert.ipynb}
 \end{frame}
 
 \begin{frame}{Wann soll das Training enden?}
@@ -3784,7 +3784,7 @@ dense\_1 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \tex
 \includesvg[width=\linewidth]{figures/mlp_binary_history_overfitting.svg}
 \end{column}
 \end{columns}
-\source{\cite{goodfellow2016deep}, Binäre Klassifikation mit Keras.ipynb}
+\source{\cite{goodfellow2016deep}, BinäreKlassifikationKeras.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Early Stopping}
@@ -3818,7 +3818,7 @@ model.fit(X_train, y_train,
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn optimiert.ipynb}
+\source{MnistCnnOptimiert.ipynb}
 \end{frame}
 
 \begin{frame}{Early Stopping im Verlauf}
@@ -3840,7 +3840,7 @@ model.fit(X_train, y_train,
 \end{itemize}
 \end{column}
 \end{columns}
-\source{mnist cnn optimiert.ipynb}
+\source{MnistCnnOptimiert.ipynb}
 \end{frame}
 
 
@@ -3858,7 +3858,7 @@ model.fit(X_train, y_train,
   \item Trainieren Sie mit \textbf{Early Stopping} auf \texttt{val\_loss} und lassen Sie die besten Gewichte wiederherstellen
   \item Bestimmen Sie die \textbf{Klassifikationsgüte} und die \textbf{Parameterzahl}. Vergleichen Sie beides mit dem Netz ohne Pooling und Dropout. (Realistisch sind Werte um die 93 \%.)
 \end{itemize}
-\source{Lösung: CNNOptimiert\_Fashion2.ipynb}
+\source{Lösung: LösungFashionMnistCnnOptimiert.ipynb}
 \end{column}
 \begin{column}{0.35\linewidth}
 \begin{center}
@@ -4038,7 +4038,7 @@ decode_predictions(pred)
 \end{itemize}
 \end{column}
 \end{columns}
-\source{Beispiel VGG16.ipynb}
+\source{BeispielVGG16.ipynb}
 \end{frame}
 
 
@@ -4342,7 +4342,7 @@ image_array.append(image)
 \end{itemize}
 \end{column}
 \end{columns}
-\source{\cite{chollet2023imageclassification,seemann_deeplearning}, Transfer Learning.ipynb}
+\source{\cite{chollet2023imageclassification,seemann_deeplearning}, TransferLearning.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Transfer Learning VGG16: Modellaufbau Variante 1}
@@ -4371,7 +4371,7 @@ Non-trainable params: 14,714,688
 \end{itemize}
 \end{column}
 \end{columns}
-\source{Transfer Learning.ipynb}
+\source{TransferLearning.ipynb}
 \end{frame}
 
 \begin{frame}{Transfer Learning mit VGG16: Modell ohne Top}
@@ -4385,7 +4385,7 @@ Non-trainable params: 14,714,688
 \begin{center}
 \includegraphics[width=0.9\textwidth]{figures/vgg16_ohne_top.png}
 \end{center}
-\source{Transfer Learning.ipynb}
+\source{TransferLearning.ipynb}
 \end{frame}
 
 
@@ -4420,7 +4420,7 @@ model.compile(optimizer="rmsprop",
 \end{itemize}
 \end{column}
 \end{columns}
-\source{Transfer Learning.ipynb}
+\source{TransferLearning.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Transfer Learning mit VGG16: Modell mit neuem Top}
@@ -4440,7 +4440,7 @@ model.compile(optimizer="rmsprop",
 model.fit(X, y, epochs=10, batch_size=300)
 \end{minted}
 
-\source{Transfer Learning.ipynb}
+\source{TransferLearning.ipynb}
 \end{frame}
 
 
@@ -4467,7 +4467,7 @@ X_nach_vgg = vgg16_model.predict(
 \end{itemize}
 \end{column}
 \end{columns}
-\source{TransferLearning beschleunigt.ipynb}
+\source{TransferLearningBeschleunigt.ipynb}
 \end{frame}
 
 \begin{frame}[fragile]{Variante 2: Modell nur aus Dense-Layern}
@@ -4497,7 +4497,7 @@ model.compile(optimizer="rmsprop",
 \end{itemize}
 \end{column}
 \end{columns}
-\source{TransferLearning beschleunigt.ipynb}
+\source{TransferLearningBeschleunigt.ipynb}
 \end{frame}
 
 
@@ -4557,7 +4557,7 @@ model.predict(X_nach_vgg)
 \end{itemize}
 \end{column}
 \end{columns}
-\source{AnwendungTrainiertesNetz.ipynb, TransferLearning beschleunigt.ipynb}
+\source{AnwendungTrainiertesNetz.ipynb, TransferLearningBeschleunigt.ipynb}
 \end{frame}
 
 

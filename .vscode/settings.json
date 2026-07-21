@@ -40,5 +40,7 @@
   ],
 
   "latex-workshop.latex.recipe.default": "lastUsed",
-  "latex-workshop.latex.autoBibtex": false
+  "latex-workshop.latex.autoBibtex": false,
+  "python-envs.defaultEnvManager": "ms-python.python:conda",
+  "python-envs.defaultPackageManager": "ms-python.python:conda"
 }
