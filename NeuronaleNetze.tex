@@ -498,7 +498,7 @@ Trenngerade mit seed=100
     \tikzset{
         axis/.style={->, draw=black, line width=0.5pt},
         helper/.style={draw=black!28, line width=0.4pt},
-        sep/.style={draw=AlertColor, line width=1.2pt},
+        sep/.style={draw=AlertTitle, line width=1.2pt},
         one/.style={circle, minimum size=2*\Rad, inner sep=0pt, draw=PrimaryTitle, fill=PrimaryColor, line width=1.0pt},
         zero/.style={circle, minimum size=2*\Rad, inner sep=0pt, draw=AccentTitle, fill=AccentColor, line width=1.0pt},
         lab/.style={font=\scriptsize, text=black},
@@ -721,6 +721,7 @@ die Heaviside-Funktion.
 \end{frame}
 
 \begin{frame}{Mehrschichtige Netze: Aktivierungsfunktionen}
+\small
 \begin{columns}
 \column{0.60\textwidth}
 Zwei differenzierbare Alternativen zur Heaviside-Funktion:
@@ -741,7 +742,7 @@ Zwei differenzierbare Alternativen zur Heaviside-Funktion:
 
 \column{0.35\textwidth}
 \centering
-\resizebox{\linewidth}{!}{%
+\resizebox{0.9\linewidth}{!}{%
 \begin{tikzpicture}[>=Stealth]
 % ===== Sigmoid (y-Achse doppelt skaliert) =====
 \begin{scope}[yshift=2.7cm]
@@ -1757,41 +1758,26 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \begin{frame}{Naiver Ansatz: Direkt ableiten}
 \small
 \begin{columns}
-\column{0.47\textwidth}
+\column{0.45\textwidth}
 
 \begin{itemize}
     \item Für jedes Trainingsbeispiel müsste man $x_i$ in \textbf{die Netzfunktion
           einsetzen}.
 
-    \item Anschließend würde man die Netzfunktion in die Fehlerfunktion
-          einsetzen.
+    \item Alle Netzfunktionen setzt man in die \textbf{Fehlerfunktion} ein.
 
-    \item Danach müssten die Richtungsableitungen bzw. \textbf{partiellen Ableitungen
-          nach allen Gewichten} gebildet werden.
+    \item Danach bildet man die \textbf{partiellen Ableitungen
+          nach allen Gewichten}.
 
     \item Bei vielen Schichten und Gewichten wird dieser Weg schnell
           \textbf{unübersichtlich}.
 \end{itemize}
 
-\column{0.48\textwidth}
+\column{0.50\textwidth}
 \footnotesize
 \begin{blockC3}{\footnotesize Einsetzen in die Loss Function}
 \[
-\begin{aligned}
-L
-&=
-\sum_{(x_i,y_i)\in D}
-\Bigl(
-W^{(3)}
-\operatorname{sig}\bigl(
-W^{(2)}
-\operatorname{sig}(W^{(1)}x_i)
-\bigr)
-\\
-&\hspace{2.2cm}
-- y_i
-\Bigr)^2
-\end{aligned}
+L=\sum_{(x_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname{sig}(W^{(1)}x_i)\bigr)- y_i\Bigr)^2
 \]
 \end{blockC3}
 
@@ -1802,7 +1788,7 @@ W^{(2)}
     \frac{\partial L}{\partial w_{1,1}^{(1)}},
     \frac{\partial L}{\partial w_{1,2}^{(1)}},
     \dots,
-    \frac{\partial L}{\partial w_{1,4}^{(3)}},
+    \frac{\partial L}{\partial w_{m,n}^{(3)}}
 \]
 \end{blockC4}
 
