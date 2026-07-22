@@ -1305,8 +1305,8 @@ für die Parameter $\mathbf{u}$:
 \end{itemize}
 
 \begin{block}{Numerisch stabile Verfahren}
-Statt der direkten Inversion verwendet man stabilere Verfahren (QR-Zerlegung, Singular Value Decomposition). 
-Diese liefern robuste Ergebnisse.
+Statt der direkten Inversion verwendet in der Praxis oft stabilere Verfahren (QR-Zerlegung, Singular Value Decomposition). 
+
 \end{block}
 
 \medskip
@@ -1320,7 +1320,161 @@ np.linalg.lstsq(A, y)
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+\setbeamertemplate{background canvas}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[step=0.5cm,gray!35,very thin]
+      (current page.south west) grid (current page.north east);
+  \end{tikzpicture}
+}
 
+\begin{frame}{Lineare Regression: Übung}
+
+%================= Overlay 1: Aufgabe =================
+\only<1>{
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.47\textwidth}
+Betrachtet wird der folgende Datensatz mit den Merkmalswerten $x_i$ und den zugehörigen Zielwerten $y_i$:
+
+\[
+\{(0,2),\,(1,2),\,(2,4),\,(3,8)\}.
+\]
+Das lineare Modell lautet $y = u_0 + u_1 x$.
+
+\vspace{1.6em}
+\textbf{Hinweis:} Für eine $2\times 2$-Matrix gilt
+\[
+\begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1}
+= \frac{1}{ad-bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}.
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\item[a)] Stellen Sie die Matrix $A$ und den Vektor $\mathbf{y}$ auf.
+\item[b)] Berechnen Sie $A^T A$.
+\item[c)] Invertieren Sie $A^T A$.
+\item[d)] Bestimmen Sie den Gewichtsvektor
+          $\mathbf{u} = (A^T A)^{-1} A^T \mathbf{y}$.
+\item[e)] Stellen Sie die Datenpunkte und die Regressionsgerade graphisch dar.
+\end{itemize}
+\end{column}
+
+\end{columns}
+}
+
+%================= Overlay 2: leer (Karo) =================
+\only<2>{}
+
+%================= Overlay 3: leer (Karo) =================
+\only<3>{}
+
+%================= Overlay 4: Lösung =================
+\only<4>{
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.48\textwidth}
+\footnotesize
+\textbf{a) Matrix und Zielvektor}
+\[
+A = \begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix},
+\qquad
+\mathbf{y} = \begin{pmatrix} 2 \\ 2 \\ 4 \\ 8 \end{pmatrix}.
+\]
+
+\textbf{b)} $A^T A$:
+\[
+\begin{pmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{pmatrix}
+\begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix}
+= \begin{pmatrix} 4 & 6 \\ 6 & 14 \end{pmatrix}.
+\]
+
+\textbf{c) Inverse:} $\det = 4\cdot 14 - 6\cdot 6 = 20$
+\[
+(A^T A)^{-1}
+= \frac{1}{20}\begin{pmatrix} 14 & -6 \\ -6 & 4 \end{pmatrix}.
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\footnotesize
+\textbf{d) Gewichtsvektor}
+\[
+A^T \mathbf{y}
+= \begin{pmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{pmatrix}
+  \begin{pmatrix} 2 \\ 2 \\ 4 \\ 8 \end{pmatrix}
+= \begin{pmatrix} 16 \\ 34 \end{pmatrix}.
+\]
+\[
+\mathbf{u}
+= \frac{1}{20}\begin{pmatrix} 14 & -6 \\ -6 & 4 \end{pmatrix}
+  \begin{pmatrix} 16 \\ 34 \end{pmatrix}
+= \frac{1}{20}\begin{pmatrix} 20 \\ 40 \end{pmatrix}
+= \begin{pmatrix} 1 \\ 2 \end{pmatrix}.
+\]
+
+\vspace{0.4em}
+Das Modell lautet also
+\[
+\boxed{f(x) = 1 + 2x.}
+\]
+\end{column}
+
+\end{columns}
+}
+
+%================= Overlay 5: Visualisierung =================
+\only<5>{
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.6\textwidth}
+\centering
+\begin{tikzpicture}
+  \begin{axis}[
+    width=8cm,
+    height=8cm,
+    xlabel={$x$},
+    ylabel={$y$},
+    xmin=-0.0, xmax=9,
+    ymin=0, ymax=9,
+    xtick={0,1,2,3,4,5,6,7,8},
+    ytick={0,1,2,3,4,5,6,7,8},
+    grid=none,
+    axis lines=left,
+    legend pos=north east,
+    legend cell align=left
+  ]
+    \addplot[only marks, mark=*, mark size=2.5pt, blue]
+      coordinates {(0,2) (1,2) (2,4) (3,8)};
+    \addplot[red, thick, domain=0.0:8.0, samples=2] {1 + 2*x};
+    \legend{Datenpunkte, $f(x)=1+2x$}
+  \end{axis}
+\end{tikzpicture}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+\footnotesize
+\textbf{Interpretation}
+
+Die Regressionsgerade minimiert die Summe der quadrierten Abstände zu den Datenpunkten.
+
+\vspace{0.6em}
+\textbf{Achsenabschnitt} $u_0 = 1$
+
+\textbf{Steigung} $u_1 = 2$
+
+\vspace{0.6em}
+Kein Punkt liegt exakt auf der Geraden, da die Daten nicht perfekt linear sind.
+\end{column}
+
+\end{columns}
+}
+
+\end{frame}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]{Least Squares in Python mit NumPy}
 
