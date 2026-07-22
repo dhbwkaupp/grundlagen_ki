@@ -34,9 +34,9 @@
         Jahren.
   \item Ziel: einfaches \textbf{mathematisches Modell} für das
         Verhalten der Neuronen im Gehirn.
-  \item In Medien werden Netze oft mit einem \textbf{künstlichen Gehirn} gleichgesetzt --
-        das ist irreführend.
-  \item Das Gehirn ist als Ganzes \textbf{nicht verstanden}; Netze lassen
+  \item In Medien werden Netze oft mit einem \textbf{künstlichen Gehirn} gleichgesetzt.
+        Das ist irreführend.
+  \item Das Gehirn ist als Ganzes \textbf{nicht verstanden}. Netze lassen
         sich daher nicht über das Gehirn erklären.
   \item Hilfreicher ist der Blick auf die \textbf{Verkettung von
         Funktionen}.
@@ -163,7 +163,7 @@ die echte Nervenzelle.
 \source{\cite{Frochte2020}}
 \end{frame}
 
-\begin{frame}{Einlagiges Perzeptron: Schwellwertfunktion}
+\begin{frame}{Einlagiges Perzeptron: Schwellenwertfunktion}
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
@@ -190,7 +190,7 @@ die echte Nervenzelle.
 % Ticks
 \draw (0.08,1.6) -- (-0.08,1.6) node[left, font=\footnotesize] {$1$};
 \draw (0.8,0.08) -- (0.8,-0.08) node[below, font=\footnotesize] {$\theta$};
-% Schwellwertfunktion mit Schwelle theta
+% Schwellenwertfunktion mit Schwelle theta
 \draw[PrimaryColor, line width=1.2pt] (-2.5,0) -- (0.8,0);
 \draw[PrimaryColor, line width=1.2pt] (0.8,1.6) -- (2.8,1.6);
 \draw[PrimaryColor, line width=1.2pt, dashed] (0.8,0) -- (0.8,1.6);
@@ -232,12 +232,12 @@ einem Ausdruck zusammenfasst.
 \end{frame}
 
 
-\begin{frame}{Perzeptron: Schwellwert als Trenngerade}
+\begin{frame}{Perzeptron: Schwellenwert als Trenngerade}
 \small
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item Wir nehmen jetzt noch den den Schwellwert $\theta$ hinzu und stellen um:
+  \item Wir nehmen jetzt noch den den Schwellenwert $\theta$ hinzu und stellen um:
         \[
           h(\mathbf{x}) - \theta = \mathbf{w}\cdot\mathbf{x} - \theta = 0
         \]
@@ -344,7 +344,7 @@ einem Ausdruck zusammenfasst.
         \]
         gilt $\mathbf{h} = W\cdot\mathbf{x}$ und
         $\mathbf{y} = g(\mathbf{h}(\mathbf{x}))$.
-  \item $g$ wird \textbf{komponentenweise} angewandt (Schwellwert-/%
+  \item $g$ wird \textbf{komponentenweise} angewandt (Schwellenwert-/%
         Heaviside-Funktion).
   \item Am Beispiel $y_1$ zeigt sich die Rolle des Bias-Neurons:
         \[
