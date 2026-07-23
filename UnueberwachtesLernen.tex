@@ -203,10 +203,10 @@ Die Konfiguration $X$ wird als \textbf{Matrix} dargestellt:
 \[
 X=
 \begin{pmatrix}
-\mathbf{x}_1^T\\
-\mathbf{x}_2^T\\
+\mathbf{x}_1^{\mathsf{T}}\\
+\mathbf{x}_2^{\mathsf{T}}\\
 \vdots\\
-\mathbf{x}_n^T
+\mathbf{x}_n^{\mathsf{T}}
 \end{pmatrix}
 \in \mathbb{R}^{n\times p}.
 \]
@@ -330,7 +330,7 @@ Summe ihrer \textbf{Diagonalelemente}:
   \item Sie erlaubt es, \textbf{Summen von Quadraten} kompakt als
         Matrixausdruck zu schreiben.
   \item Die Abstände lassen sich damit darstellen als
-        $\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^T V X)$.
+        $\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^{\mathsf{T}} V X)$.
   \item So werden die vielen \textbf{paarweisen} Terme in \textbf{eine}
         Matrixformel gebündelt.
 \end{itemize}
@@ -358,14 +358,14 @@ seine \textbf{quadratische} Struktur in $X$.
 \begin{columns}
 \column{0.60\textwidth}
 Wir zeigen
-$\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^T V X)$.
+$\sum_{i<j} w_{ij}\, d_{ij}^2(X) = \operatorname{tr}(X^{\mathsf{T}} V X)$.
 
 \vspace{0.3em}
 Mit $d_{ij}^2(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert^2$ und der
 Definition von $V$ rechnet man:
 \[
   \begin{aligned}
-    \operatorname{tr}(X^T V X)
+    \operatorname{tr}(X^{\mathsf{T}} V X)
       &= \sum_{i,j} v_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_j\\
       &= \sum_{i} \Bigl(\sum_{k\neq i} w_{ik}\Bigr)\mathbf{x}_i \cdot \mathbf{x}_i
          - \sum_{i\neq j} w_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_j\\
@@ -409,7 +409,7 @@ Die drei Summen sind der \textbf{konstante}, der \textbf{Problem}- und der
 \[
   \sigma(X) = \underbrace{\sum_{i<j} w_{ij}\,\delta_{ij}^2}_{\text{konstant}}
   - 2\underbrace{\sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)}_{\text{Problemterm $\rho(X)$}}
-  + \underbrace{\operatorname{tr}(X^T V X)}_{\text{quadratisch}}
+  + \underbrace{\operatorname{tr}(X^{\mathsf{T}} V X)}_{\text{quadratisch}}
 \]
 
 \column{0.40\textwidth}
@@ -419,7 +419,7 @@ Die drei Summen sind der \textbf{konstante}, der \textbf{Problem}- und der
         \textbf{konstant}.
   \item $\sum_{i<j} w_{ij}\,\delta_{ij}\,d_{ij}(X)$: enthält $d_{ij}$,
         \textbf{nicht konvex}.
-  \item $\sum_{i<j} w_{ij}\,d_{ij}^2(X) = \operatorname{tr}(X^T V X)$:
+  \item $\sum_{i<j} w_{ij}\,d_{ij}^2(X) = \operatorname{tr}(X^{\mathsf{T}} V X)$:
         \textbf{quadratisch}.
 \end{itemize}
 \end{block}
@@ -506,7 +506,7 @@ aktuellen Punkt überein!
 Wendet man die Schranke auf alle Paare an, wird der Problemterm nach unten
 beschränkt:
 \[
-  \rho(X) \geq \operatorname{tr}\bigl(X^T B(Z)\,Z\bigr)
+  \rho(X) \geq \operatorname{tr}\bigl(X^{\mathsf{T}} B(Z)\,Z\bigr)
 \]
 Setzt man das in den Stress ein, entsteht eine \textbf{quadratische
 Majorante}. Ihr Minimum findet man durch Nullsetzen des Gradienten:

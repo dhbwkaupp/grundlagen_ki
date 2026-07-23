@@ -161,7 +161,7 @@ Ebene. Dabei sind:
 \vspace{0.3em}
 \begin{itemize}
   \item $a, b, c$: die Komponenten des \textbf{Normalenvektors}
-        $\mathbf{n} = (a, b, c)^T$. Er steht \textbf{senkrecht} auf der
+        $\mathbf{n} = (a, b, c)^{\mathsf{T}}$. Er steht \textbf{senkrecht} auf der
         Ebene und bestimmt ihre Ausrichtung.
   \item $d$: bestimmt die \textbf{Lage} der Ebene. Der Abstand vom
         Ursprung (entlang $\mathbf{n}$), multipliziert mit der Länge von
@@ -172,7 +172,7 @@ Ebene. Dabei sind:
 \centering
 \includesvg[width=\linewidth]{figures/svm_normalenvektor.svg}\\[4pt]
 {\footnotesize\itshape Die Ebene $2x_1 - 3x_2 + x_3 = 6$ mit Normalenvektor
-$(2, -3, 1)^T$.}
+$(2, -3, 1)^{\mathsf{T}}$.}
 \end{columns}
 \source{\cite{Frochte2020}}
 \end{frame}
@@ -221,7 +221,7 @@ Ebene. Jeder Punkt $P$ liegt in einer Parallelebene zur unseren.
         \[
           w_1 x_1 + w_2 x_2 + \dots + w_n x_n = d
         \]
-  \item Der Normalenvektor $(w_1, w_2, \dots, w_n)^T$ bestimmt die
+  \item Der Normalenvektor $(w_1, w_2, \dots, w_n)^{\mathsf{T}}$ bestimmt die
         \textbf{Orientierung}.
 \end{itemize}
 
@@ -691,7 +691,7 @@ Es gibt genau ein globales Minimum.
 \begin{itemize}
   \item Bei einer Optimierung minimiert man eine \textbf{Zielfunktion}
         (hier $\tfrac{1}{2}\lVert\mathbf{w}\rVert^2$).
-  \item \textbf{Nebenbedingungen} schränken die zulässigen Lösungen ein --
+  \item \textbf{Nebenbedingungen} schränken die zulässigen Lösungen ein $\Rightarrow$
         nur Lösungen, die sie erfüllen, sind erlaubt.
   \item Hier: $y \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}) \geq +1$ für
         \textbf{jeden} Trainingspunkt.
@@ -765,7 +765,7 @@ bestimmen lässt.
         ($y \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}) \geq 1$).
   \item Dann liefert nicht mehr das Nullsetzen der Ableitung die Lösung.
   \item Stattdessen muss jede Lösung die \textbf{KKT-Bedingungen} erfüllen
-        -- eine Verallgemeinerung des Lagrange-Ansatzes auf Ungleichungen.
+        $\Rightarrow$ eine Verallgemeinerung des Lagrange-Ansatzes auf Ungleichungen.
 \end{itemize}
 
 
@@ -774,33 +774,32 @@ bestimmen lässt.
 \end{frame}
 
 \begin{frame}{SVM: Die KKT-Bedingungen}
-\small
+\footnotesize
+\setcounter{equation}{0}
+\begin{columns}[T]
+\column{0.35\textwidth}
 
-\begin{columns}
+\begin{blockDef}{\footnotesize KKT-Bedingungen}
+Für das SVM-Optimierungsproblem gelten im Optimum ($*$) die KKT-Bedingungen:
+\begin{align}
+  \frac{\partial L}{\partial \mathbf{w}} = 0, \qquad
+  \frac{\partial L}{\partial w_0} &= 0 \label{eq:kkt-stat}\\
+  1 - y_i(\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*}) &\leq 0 \label{eq:kkt-neben}\\
+  \lambda_i^{*} &\geq 0 \label{eq:kkt-dual}\\
+  \lambda_i^{*}\Bigl(1 - y_i(\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*})\Bigr) &= 0
+    \label{eq:kkt-komplement}
+\end{align}
+\end{blockDef}
 
-\column{0.47\textwidth}
-Für unser \textbf{spezifisches Problem} lauten die KKT-Bedingungen ($*$
-markiert das Optimum):
-\[
-  \begin{aligned}
-    \tfrac{\partial L}{\partial \mathbf{w}} = 0,\quad
-    \tfrac{\partial L}{\partial w_0} &= 0\\[4pt]
-    \lambda_i^{*}\bigl(1 - y_i \cdot (\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*})\bigr) &= 0\\[2pt]
-    1 - y_i \cdot (\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*}) &\leq 0\\[2pt]
-    \lambda_i^{*} &\geq 0
-  \end{aligned}
-\]
-
-\column{0.48\textwidth}
-\begin{blockC1}{\small Deutung}
+\column{0.60\textwidth}
+\begin{blockC1}{\footnotesize Bedeutung}
 \begin{itemize}
-  \item Die erste Zeile ist die \textbf{Stationarität}: Im Optimum werden
-        die Ableitungen null.
-  \item Die dritte Zeile ist die umgestellte \textbf{Nebenbedingung}.
-  \item Die zweite Zeile ist ein Produkt: null, wenn $\lambda_i^{*} = 0$
-        \textbf{oder} der Punkt auf der Grenze ($\pm 1$) liegt.
-  \item Letzteres gilt nur für die \textbf{Support Vectors}.
-  \item $\Rightarrow$ Sehr viele $\lambda_i^{*}$ sind \textbf{null}.
+  \item \eqref{eq:kkt-stat} Im Optimum werden die Ableitungen null.
+  \item \eqref{eq:kkt-neben} \textbf{Ursprüngliche Nebenbedingung}: Alle Trainingspunkte liegen auf oder außerhalb des Margins.
+  \item \eqref{eq:kkt-dual} \textbf{Lagrange-Nebenbedingung}: nichtnegative Multiplikatoren.
+  \item \eqref{eq:kkt-komplement} Produktbedingung: null, wenn $\lambda_i^{*} = 0$ \textbf{oder} der Punkt auf der Grenze ($\pm 1$) liegt.
+  \item Die Punkte auf der Grenze sind genau die \textbf{Support Vectors}.
+  \item $\Rightarrow$ Für alle anderen Datenpunkte muss $\lambda_i^{*} = 0$ gelten.
 \end{itemize}
 \end{blockC1}
 \end{columns}
@@ -809,21 +808,19 @@ markiert das Optimum):
 
 
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{SVM: Ableiten nach einem Vektor}
 \footnotesize
 \begin{columns}
 \column{0.60\textwidth}
-\par\bigskip
-Wir suchen das Minimum von $L$ $\Rightarrow$ Ableitung $=0$ setzen.\\
-\medskip
-Da $L$ mehrdimensional ist, müssen wir partiell ableiten: nach $w_0$ und $\textbf{w}$.\\
-\medskip
-Die Ableitung nach $\mathbf{w}$ ist der \textbf{Gradient}: man leitet nach
-jeder Komponente $w_1, \dots, w_n$ ab und fasst sie zum Vektor zusammen.\\
-\medskip
-Zwei Regeln genügen für die SVM:
 \begin{itemize}
+\item Wir suchen das Minimum von $L$ $\Rightarrow$ Ableitung $=0$ setzen.
+\item Da $L$ mehrdimensional ist, müssen wir partiell ableiten: nach $w_0$ und $\mathbf{w}$.\\
+\item Zwei Regeln genügen für die SVM:
+\begin{itemize}
+  \footnotesize
   \item $\frac{1}{2}\lVert\mathbf{w}\rVert^2 = \frac{1}{2}\sum_k w_k^2$
         liefert komponentenweise $w_k$:
         \[
@@ -836,6 +833,7 @@ Zwei Regeln genügen für die SVM:
           \frac{\partial}{\partial \mathbf{w}}(\mathbf{w}\cdot\mathbf{x})
           = \mathbf{x}
         \]
+\end{itemize}
 \end{itemize}
 
 \column{0.35\textwidth}
@@ -856,7 +854,11 @@ weg.
 \source{\cite{scholkopf2002learning}}
 
 \note{
-$ \frac{\partial}{\partial \mathbf{w}}\Bigl(\tfrac{1}{2}\lVert\mathbf{w}\rVert^2\Bigr)$ ist partielle Ableitung des Terms in der Klammer.
+\begin{itemize}  
+\item Die Ableitung nach $\mathbf{w}$ ist der \textbf{Gradient}: man leitet nach
+jeder Komponente $w_1, \dots, w_n$ ab und fasst sie zum Vektor zusammen.\\
+\item $ \frac{\partial}{\partial \mathbf{w}}\Bigl(\tfrac{1}{2}\lVert\mathbf{w}\rVert^2\Bigr)$ ist partielle Ableitung des Terms in der Klammer.
+\end{itemize}
 }
 
 \end{frame}
@@ -877,8 +879,7 @@ von $\mathbf{w}$ ab und fallen weg:
 \]
 
 \vspace{0.3em}
-Im \textbf{Optimum} müssen beide Ableitungen \textbf{null} sein
-(Stationarität). Setzt man sie null, ergeben sich:
+Im \textbf{Optimum} müssen beide Ableitungen \textbf{null} sein. Setzt man sie null, ergeben sich:
 \[
   \mathbf{w}^{*} = \sum_{i=1}^{n} \lambda_i y_i \mathbf{x}_i
   \qquad
@@ -888,7 +889,7 @@ Im \textbf{Optimum} müssen beide Ableitungen \textbf{null} sein
 \column{0.35\textwidth}
 \begin{block}{\small Warum null?} 
     An einem Optimum ist die Steigung waagerecht $\rightarrow$ die
-Ableitung wird null. Das ist die \textbf{Stationaritätsbedingung} der KKT.
+Ableitung wird null. Das ist die Bedingung \eqref{eq:kkt-stat} der KKT.
 \end{block}
 
 \vspace{0.3em}
@@ -907,8 +908,7 @@ $\lambda_i$ gewichteten Klassenlabels zu null auf. Da $y_i$ nur $+1$
   \sum_{i:\, y_i = +1} \lambda_i = \sum_{i:\, y_i = -1} \lambda_i
 \]
 Die Gewichte der Support Vectors sind also zwischen beiden Klassen
-\textbf{ausbalanciert}. Keine Klasse dominiert die Lage der Trennebene --
-beide Seiten ziehen mit gleichem Gesamtgewicht.
+\textbf{ausbalanciert}. Keine Klasse dominiert die Lage der Trennebene. Beide Seiten ziehen mit gleichem Gesamtgewicht.
 }
 
 \end{frame}
@@ -1074,10 +1074,11 @@ Sample $\mathbf{z}$ über das \textbf{Vorzeichen} der Entscheidungsfunktion:
 \begin{itemize}
   \item $g(\mathbf{z}) > 0 \;\Rightarrow\;$ Klasse A ($y = +1$).
   \item $g(\mathbf{z}) < 0 \;\Rightarrow\;$ Klasse B ($y = -1$).
-  \item Mit $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$:
+  \item Mit $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$ ergibt sich:
         \[
+        \boxed{
           g(\mathbf{z}) = \sum_{i=1}^{n}\lambda_i \cdot y_i\cdot 
-          (\mathbf{x}_i\!\cdot\mathbf{z}) + w_0^{*}
+          (\mathbf{x}_i\!\cdot\mathbf{z}) + w_0^{*}}
         \]
 \end{itemize}
 
@@ -1095,7 +1096,218 @@ auf.
 
 \end{columns}
 \source{\cite{scholkopf2002learning}}
+\note{
+\begin{itemize}  
+\item Die Formel in der Box ist die tatschsächliche Berechnungsformel für die Lage.
+\item Das $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$ kommt aus der Baleitung gleich 0 fünf Folien weiter vorne.
+\end{itemize}
+}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{
+\setbeamertemplate{background canvas}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[step=0.5cm,gray!35,very thin]
+      (current page.south west) grid (current page.north east);
+  \end{tikzpicture}
+}
+
+\begin{frame}{Support Vector Machine: Übung}
+
+%================= Overlay 1: Aufgabe =================
+\only<1>{
+\footnotesize
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.47\textwidth}
+Eine SVM hat folgende drei Support Vectors:
+\[
+\begin{aligned}
+\mathbf{x}_1 &= \begin{pmatrix} 1 \\ 3 \end{pmatrix}, & y_1 &= +1, & \lambda_1 &= 0{,}5\\
+\mathbf{x}_2 &= \begin{pmatrix} 3 \\ 1 \end{pmatrix}, & y_2 &= +1, & \lambda_2 &= 0{,}5\\
+\mathbf{x}_3 &= \begin{pmatrix} 1 \\ 1 \end{pmatrix}, & y_3 &= -1, & \lambda_3 &= 1
+\end{aligned}
+\]
+
+\vspace{0.8em}
+\textbf{Hinweis:} Für jeden Support Vector gilt die Bedingung mit Gleichheit:
+\[
+y_i\,(\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*}) = 1.
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\item[a)] Prüfen Sie die duale Nebenbedingung $\sum_i \lambda_i y_i = 0$ 
+\item[b)] Berechnen Sie           $\mathbf{w}^{*} = \sum_i \lambda_i y_i \mathbf{x}_i$.
+\item[c)] Bestimmen Sie $w_0^{*}$ und den Margin
+          $\rho = \frac{1}{\lVert\mathbf{w}^{*}\rVert}$.
+\item[d)] Klassifizieren Sie die Punkte
+          $\mathbf{z}_1 = \begin{pmatrix} 4 \\ 2 \end{pmatrix}$ und
+          $\mathbf{z}_2 = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ mit
+          \[
+            \boxed{
+            g(\mathbf{z}) = \sum_{i=1}^{n}\lambda_i \cdot y_i\cdot
+            (\mathbf{x}_i\!\cdot\mathbf{z}) + w_0^{*}}
+          \]
+\item[e)] Zeichnen Sie Trenngerade und Margin.
+\end{itemize}
+\end{column}
+
+\end{columns}
+}
+
+%================= Overlay 2: leer (Karo) =================
+\only<2>{}
+
+%================= Overlay 3: leer (Karo) =================
+\only<3>{}
+
+%================= Overlay 4: Lösung =================
+\only<4>{
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.48\textwidth}
+\footnotesize
+\textbf{a) Nebenbedingung und Normalenvektor}
+\[
+\sum_i \lambda_i y_i = 0{,}5 + 0{,}5 - 1 = 0. \quad\checkmark
+\]
+\textbf{b)  Normalenvektor}
+\[
+\mathbf{w}^{*}
+= 0{,}5\begin{pmatrix} 1 \\ 3 \end{pmatrix}
++ 0{,}5\begin{pmatrix} 3 \\ 1 \end{pmatrix}
+- 1\begin{pmatrix} 1 \\ 1 \end{pmatrix}
+= \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+\]
+
+\textbf{c) Achsenabschnitt und Margin}
+
+Mit $\mathbf{x}_1$ und $y_1 = +1$:
+\[
+\mathbf{w}^{*}\!\cdot\mathbf{x}_1 = 1 + 3 = 4
+\;\Rightarrow\; 4 + w_0^{*} = 1
+\;\Rightarrow\; w_0^{*} = -3.
+\]
+Kontrolle mit $\mathbf{x}_3$, $y_3 = -1$:
+$-(2 - 3) = 1 \quad\checkmark$
+\[
+\rho = \frac{1}{\lVert\mathbf{w}^{*}\rVert} = \frac{1}{\sqrt{2}} \approx 0{,}707.
+\]
+\end{column}
+
+\begin{column}{0.48\textwidth}
+\footnotesize
+\textbf{d) Klassifikation}
+
+Skalarprodukte mit $\mathbf{z}_1 = (4,2)^{\mathsf{T}}$:
+\[
+\mathbf{x}_1\!\cdot\mathbf{z}_1 = 10,\quad
+\mathbf{x}_2\!\cdot\mathbf{z}_1 = 14,\quad
+\mathbf{x}_3\!\cdot\mathbf{z}_1 = 6.
+\]
+\[
+g(\mathbf{z}_1) = 0{,}5\cdot 10 + 0{,}5\cdot 14 - 1\cdot 6 - 3 = 3 > 0
+\]
+$\Rightarrow$ \textbf{Klasse A}.
+
+\vspace{0.4em}
+Skalarprodukte mit $\mathbf{z}_2 = (1,0)^{\mathsf{T}}$:
+\[
+\mathbf{x}_1\!\cdot\mathbf{z}_2 = 1,\quad
+\mathbf{x}_2\!\cdot\mathbf{z}_2 = 3,\quad
+\mathbf{x}_3\!\cdot\mathbf{z}_2 = 1.
+\]
+\[
+g(\mathbf{z}_2) = 0{,}5\cdot 1 + 0{,}5\cdot 3 - 1\cdot 1 - 3 = -2 < 0
+\]
+$\Rightarrow$ \textbf{Klasse B}.
+
+\vspace{0.4em}
+Trenngerade:
+\[
+\boxed{x_1 + x_2 = 3.}
+\]
+\end{column}
+
+\end{columns}
+}
+
+%================= Overlay 5: Visualisierung =================
+\only<5>{
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.45\textwidth}
+\centering
+\resizebox{1.0\linewidth}{!}{%
+\begin{tikzpicture}
+  \begin{axis}[
+    width=8cm,
+    height=8cm,
+    xlabel={$x_1$},
+    ylabel={$x_2$},
+    xmin=0, xmax=5,
+    ymin=0, ymax=5,
+    xtick={0,1,2,3,4,5},
+    ytick={0,1,2,3,4,5},
+    grid=none,
+    axis lines=left,
+    legend pos=north east,
+    legend cell align=left,
+    legend style={font=\scriptsize}
+  ]
+    \addplot[red, thick, domain=0:5, samples=2] {3-x};
+    \addlegendentry{$g=0$}
+
+    \addplot[gray, dashed, domain=0:5, samples=2] {4-x};
+    \addlegendentry{Margin}
+
+    \addplot[gray, dashed, domain=0:5, samples=2, forget plot] {2-x};
+
+    \addplot[only marks, mark=*, mark size=2.5pt, blue]
+      coordinates {(1,3) (3,1)};
+    \addlegendentry{SV Klasse A}
+
+    \addplot[only marks, mark=square*, mark size=2.5pt, orange]
+      coordinates {(1,1)};
+    \addlegendentry{SV Klasse B}
+
+    \addplot[only marks, mark=triangle*, mark size=3.5pt, black]
+      coordinates {(4,2) (1,0)};
+    \addlegendentry{$\mathbf{z}_1$, $\mathbf{z}_2$}
+  \end{axis}
+\end{tikzpicture}}
+\end{column}
+
+\begin{column}{0.35\textwidth}
+\footnotesize
+\textbf{Interpretation}
+
+Die Trenngerade $x_1 + x_2 = 3$ verläuft mittig zwischen den Margin-Geraden
+$x_1 + x_2 = 4$ und $x_1 + x_2 = 2$.
+
+\vspace{0.6em}
+\textbf{Normalenvektor} $\mathbf{w}^{*} = (1,1)^{\mathsf{T}}$
+
+\textbf{Margin} $\rho = \frac{1}{\sqrt{2}} \approx 0{,}707$
+
+\vspace{0.6em}
+Alle drei Support Vectors liegen exakt auf den Margin-Geraden. $\mathbf{z}_1$
+liegt oberhalb, $\mathbf{z}_2$ unterhalb der Trenngeraden.
+\end{column}
+
+\end{columns}
+}
+
+\end{frame}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{frame}{SVM: Nicht linear separierbare Daten}
 \begin{columns}
@@ -1126,7 +1338,7 @@ Ansatz. Es treten zwei Probleme auf:
           y_i \cdot (w_0 + \mathbf{w}\cdot\mathbf{x}_i) \geq 1 - \xi_i
         \]
   \item Die $\xi_i$ sollen dabei möglichst \textbf{klein} bleiben.
-  \item   \item Die Schlupfvariablen gehen später als \textbf{Fehlerterm} in die
+  \item Die Schlupfvariablen gehen später als \textbf{Fehlerterm} in die
         Optimierung ein.
 \end{itemize}
 
@@ -1867,6 +2079,7 @@ coordinates {
 \end{frame}
 
 \begin{frame}{SVM: Der Kernel-Trick}
+  \footnotesize
 \begin{columns}
 \column{0.35\textwidth}
 Angenommen, wir hätten eine Abbildung
@@ -1880,7 +2093,7 @@ einen höherdimensionalen Raum $\mathbb{R}^m$ überführt.
 \end{itemize}
 
 \column{0.60\textwidth}
-\begin{block}{Beobachtung}
+\begin{block}{\footnotesize Beobachtung}
 Wir haben bereits gesehen, dass die Datenpunkte \textbf{nie direkt} auftreten, sondern stets
 als \textbf{Skalarprodukt} mit einem anderen Vektor:
 \[
@@ -1890,7 +2103,8 @@ als \textbf{Skalarprodukt} mit einem anderen Vektor:
 \]
 bei der Optimierung, und
 \[
-  \mathbf{w}^{*}\!\cdot\mathbf{z} + w_0^{*}
+   g(\mathbf{z}) = \sum_{i=1}^{n}\lambda_i \cdot y_i\cdot 
+          (\mathbf{x}_i\!\cdot\mathbf{z}) + w_0^{*}
 \]
 bei der Klassifikation.
 \end{block}
@@ -1904,36 +2118,28 @@ bei der Klassifikation.
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item Die hochdimensionalen Datenpunkte treten nur als 
-\textbf{Skalarprodukt} $\mathbf{x}_i\!\cdot\mathbf{x}_j$ auf. 
-  \item Hier setzt der Kerneltrick an:  
-   \begin{itemize}
-    \footnotesize
-\item Man bildet die Punkte \textbf{nicht} erst mit $\Phi$ ab
-        und berechnet dann das Skalarprodukt,
-        \item sondern man definiert eine Kernelfunktion $K:\mathbb{R^n}\times \mathbb{R^n}\to \mathbb{R}$, 
-        die beides in einem Schritt macht. 
-        \item Es gilt dann:  
+  \item Die Daten treten nur als \textbf{Skalarprodukt}
+        $\mathbf{x}_i\!\cdot\mathbf{x}_j$ auf.
+  \item \textbf{Kernel-Trick:} statt erst $\Phi$ anzuwenden und dann das
+        Skalarprodukt zu bilden, erledigt eine \textbf{Kernelfunktion}
+        $K: \mathbb{R}^n \times \mathbb{R}^n \to \mathbb{R}$ beides in einem
+        Schritt:
         \[
           K(\mathbf{x}_i, \mathbf{x}_j) = \Phi(\mathbf{x}_i)\cdot\Phi(\mathbf{x}_j)
         \]
-        \end{itemize}
-  \item Im dualen Problem und bei der Klassifikation ersetzt man jedes
-        $\mathbf{x}_i\!\cdot\mathbf{x}_j$ durch
-        $K(\mathbf{x}_i, \mathbf{x}_j)$.
+  \item Im dualen Problem und bei der Klassifikation ersetzt jedes
+        $K(\mathbf{x}_i, \mathbf{x}_j)$ das Skalarprodukt.
 \end{itemize}
 
 \column{0.48\textwidth}
 \begin{blockC1}{\footnotesize Warum das genial ist}
 \begin{itemize}
-  \item $\Phi$ muss \textbf{nie explizit} berechnet werden. Man kennt nur
-        das Ergebnis des Skalarprodukts.
-  \item So sind selbst \textbf{unendlichdimensionale} Zielräume möglich
-        (z.\,B. beim RBF-Kernel).
-  \item Der \textbf{Curse of Dimensionality} wird vermieden, da die
-        Rechnung im ursprünglichen Raum bleibt.
-  \item Ergebnis: \textbf{komplexe, nichtlineare} Entscheidungsgrenzen bei
-        geringem Aufwand.
+  \item $\Phi$ wird \textbf{nie explizit} berechnet.
+  \item Selbst \textbf{unendlichdimensionale} Zielräume sind möglich
+        (RBF-Kernel).
+  \item Kein \textbf{Curse of Dimensionality}, da die Rechnung im
+        Ursprungsraum bleibt.
+  \item \textbf{Nichtlineare} Entscheidungsgrenzen bei geringem Aufwand.
 \end{itemize}
 \end{blockC1}
 \end{columns}

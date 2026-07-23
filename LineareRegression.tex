@@ -617,7 +617,7 @@ Man schreibt das typischerweise als Skalarprodukt
 \[
     f(\mathbf{x} ) = u_0 + \mathbf{b} \cdot \mathbf{x}  
 \]
-mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^T \in \mathbb{R}^n$. 
+mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^{\mathsf{T}} \in \mathbb{R}^n$. 
 
 
 \column{0.47\textwidth}
@@ -812,7 +812,7 @@ u_0 &+ u_1 \cdot 4.7\cdot 10^{-2} + u_2 \cdot 0.0\cdot 10^{0} + \cdots + u_{12} 
 \begin{itemize}
 \item Aus den Zielwerten bilden wir den Vektor
 \[
-\mathbf{y} = (24.0, 21.6, \ldots, 11.9)^T
+\mathbf{y} = (24.0, 21.6, \ldots, 11.9)^{\mathsf{T}}
 \]
 
 \item Die übrigen Werte (Merkmale) fassen wir in einer Matrix $A$ zusammen:
@@ -827,7 +827,7 @@ A =
 \end{pmatrix}
 \]
 
-\item Dann hat unser Gleichungssystem für \(\mathbf{u} = (u_0, \ldots, u_{12})^T\) die Form 
+\item Dann hat unser Gleichungssystem für \(\mathbf{u} = (u_0, \ldots, u_{12})^{\mathsf{T}}\) die Form 
 \[
 A \mathbf{u} = \mathbf{y}
 \]
@@ -964,7 +964,7 @@ f: D \subseteq \mathbb{R}^n \to \mathbb{R}, \quad (x_1, \dots, x_n) \mapsto f(x_
 \item Zielraum: $\mathbb{R}$
 \item Vektorschreibweise:
 \[
-\mathbf{x} = (x_1, \dots, x_n)^T
+\mathbf{x} = (x_1, \dots, x_n)^{\mathsf{T}}
 \]
 \item Kurznotation:
 \[
@@ -1094,7 +1094,7 @@ Alle partiellen Ableitungen zusammen bilden den \textbf{Gradienten}:
 
 \begin{itemize}
 \item Der Gradient ist ein Vektor von Funktionen. In unserem Beispiel:
-$\nabla f = (2x_1, 2x_2)^T$
+$\nabla f = (2x_1, 2x_2)^{\mathsf{T}}$
 \item Zeigt in Richtung des \textbf{steilsten Anstiegs}: In welche Richtung muss ich mich von einem Punkt $(x_1,x_2)\in \mathbb{R}^2$ bewegen, um den höchsten Zuwachs im Funktionswert zu haben?
 \item An \textbf{Extremstellen} gilt $\nabla f=\mathbf{0}$
 \end{itemize}
@@ -1169,7 +1169,7 @@ E(\mathbf{u}) = \|A\mathbf{u} - \mathbf{y}\|^2
 
 \textbf{Umformung:}
 \[
-E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
+E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^{\mathsf{T}} (A\mathbf{u} - \mathbf{y})
 \]
 
 \medskip
@@ -1202,7 +1202,7 @@ E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
 \textbf{Ableitung:}
 \[
 \nabla E(\mathbf{u}) 
-= 2 A^T (A\mathbf{u} - \mathbf{y})
+= 2 A^{\mathsf{T}} (A\mathbf{u} - \mathbf{y})
 \]
 
 \medskip
@@ -1211,14 +1211,14 @@ E(\mathbf{u}) = (A\mathbf{u} - \mathbf{y})^T (A\mathbf{u} - \mathbf{y})
 \[
 \nabla E(\mathbf{u}) = 0
 \quad \Rightarrow \quad
-2 A^T (A\mathbf{u} - \mathbf{y}) = 0
+2 A^{\mathsf{T}} (A\mathbf{u} - \mathbf{y}) = 0
 \]
 
 \medskip
 
 \textbf{Ergebnis:}
 \[
-A^T (A\mathbf{u} - \mathbf{y}) = 0
+A^{\mathsf{T}} (A\mathbf{u} - \mathbf{y}) = 0
 \]
 
 \medskip
@@ -1243,13 +1243,13 @@ A^T (A\mathbf{u} - \mathbf{y}) = 0
 
 \textbf{Umformen:}
 \[
-A^T (A\mathbf{u} - \mathbf{y}) = 0
+A^{\mathsf{T}} (A\mathbf{u} - \mathbf{y}) = 0
 \]
 
 \medskip
 
 \[
-A^T A \mathbf{u} = A^T \mathbf{y}
+A^{\mathsf{T}} A \mathbf{u} = A^{\mathsf{T}} \mathbf{y}
 \]
 
 \medskip
@@ -1262,7 +1262,7 @@ Zentrales Gleichungssystem der linearen Regression
 
 \textbf{Eigenschaften:}
 \begin{itemize}
-\item $A^T A$ ist eine quadratische Matrix
+\item $A^{\mathsf{T}} A$ ist eine quadratische Matrix
 \item gleich viele Gleichungen wie Unbekannte
 \item Standardverfahren der linearen Algebra anwendbar
 \end{itemize}
@@ -1286,21 +1286,21 @@ Zentrales Gleichungssystem der linearen Regression
 Aus der Normalgleichung erhält man durch Umformen eine \textbf{geschlossene Formel}
 für die Parameter $\mathbf{u}$:
 \[
-\mathbf{u} = (A^T A)^{-1} A^T \mathbf{y}
+\mathbf{u} = (A^{\mathsf{T}} A)^{-1} A^{\mathsf{T}} \mathbf{y}
 \]
 
 \medskip
 
 \begin{itemize}
 \item Diese Formel liefert direkt die optimalen Parameter.
-\item Setzt Invertierbarkeit von $(A^T A)$ voraus
+\item Setzt Invertierbarkeit von $(A^{\mathsf{T}} A)$ voraus
 \end{itemize}
 
 \column{0.60\textwidth}
 
 \textbf{Problem:}
 \begin{itemize}
-\item $(A^T A)$ kann schlecht konditioniert sein
+\item $(A^{\mathsf{T}} A)$ kann schlecht konditioniert sein
 \item Inversion ist numerisch empfindlich
 \end{itemize}
 
@@ -1354,10 +1354,10 @@ Das lineare Modell lautet $y = u_0 + u_1 x$.
 \begin{column}{0.48\textwidth}
 \begin{itemize}
 \item[a)] Stellen Sie die Matrix $A$ und den Vektor $\mathbf{y}$ auf.
-\item[b)] Berechnen Sie $A^T A$.
-\item[c)] Invertieren Sie $A^T A$.
+\item[b)] Berechnen Sie $A^{\mathsf{T}} A$.
+\item[c)] Invertieren Sie $A^{\mathsf{T}} A$.
 \item[d)] Bestimmen Sie den Gewichtsvektor
-          $\mathbf{u} = (A^T A)^{-1} A^T \mathbf{y}$.
+          $\mathbf{u} = (A^{\mathsf{T}} A)^{-1} A^{\mathsf{T}} \mathbf{y}$.
 \item[e)] Stellen Sie die Datenpunkte und die Regressionsgerade graphisch dar.
 \end{itemize}
 \end{column}
@@ -1384,7 +1384,7 @@ A = \begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix},
 \mathbf{y} = \begin{pmatrix} 2 \\ 2 \\ 4 \\ 8 \end{pmatrix}.
 \]
 
-\textbf{b)} $A^T A$:
+\textbf{b)} $A^{\mathsf{T}} A$:
 \[
 \begin{pmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{pmatrix}
 \begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix}
@@ -1393,7 +1393,7 @@ A = \begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix},
 
 \textbf{c) Inverse:} $\det = 4\cdot 14 - 6\cdot 6 = 20$
 \[
-(A^T A)^{-1}
+(A^{\mathsf{T}} A)^{-1}
 = \frac{1}{20}\begin{pmatrix} 14 & -6 \\ -6 & 4 \end{pmatrix}.
 \]
 \end{column}
@@ -1402,7 +1402,7 @@ A = \begin{pmatrix} 1 & 0 \\ 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix},
 \footnotesize
 \textbf{d) Gewichtsvektor}
 \[
-A^T \mathbf{y}
+A^{\mathsf{T}} \mathbf{y}
 = \begin{pmatrix} 1 & 1 & 1 & 1 \\ 0 & 1 & 2 & 3 \end{pmatrix}
   \begin{pmatrix} 2 \\ 2 \\ 4 \\ 8 \end{pmatrix}
 = \begin{pmatrix} 16 \\ 34 \end{pmatrix}.
