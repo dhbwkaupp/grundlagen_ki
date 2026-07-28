@@ -275,7 +275,105 @@
   \newenvironment{blockExample}[1]{%
   \begin{blockC4}{#1}}{\end{blockC4}}
 
+% ==========================================================
+% Gleich hohe Blöcke nebeneinander: blockrow / blockcol
+%
+% Ersetzt \begin{columns}...\end{columns} wenn die Spalten aus
+% je genau einer Blockumgebung (block, blockC1..4, blockDef,
+% blockExample, ...) bestehen. Die Höhe jedes Blocks wird
+% automatisch (ohne manuelle cm-Angaben) so berechnet, dass am
+% Ende alle Blöcke einer Zeile exakt gleich hoch sind - auch
+% wenn Titel unterschiedlich viele Zeilen brauchen oder der
+% Inhalt unterschiedlich lang ist.
+%
+% Verwendung:
+%   \begin{blockrow}
+%     \blockcol{0.47\linewidth}{blockC2}{Titel A}
+%       Inhalt A ...
+%     \end{blockcol}
+%     \blockcol{0.48\linewidth}{blockC4}{Titel B}
+%       Inhalt B ...
+%     \end{blockcol}
+%   \end{blockrow}
+%
+% Der Titel wird automatisch mit \strut versehen, in \blockcol
+% also ohne \strut angeben. Nicht geeignet fuer Blockinhalte mit
+% \pause / Overlay-Spezifikationen (<2->), da der Inhalt zur
+% Höhenmessung mehrfach gesetzt wird.
+% ==========================================================
+\RequirePackage{environ}
+\makeatletter
 
+\newcounter{blockrow@n}
+\newcounter{blockrow@i}
+\newlength{\blockrow@maxht}
+\newlength{\blockrow@tmpht}
+
+\newenvironment{blockrow}{%
+  \setcounter{blockrow@n}{0}%
+  \setlength{\blockrow@maxht}{0pt}%
+}{%
+  \blockrow@render
+}
+
+\newlength{\blockrow@bottompad}
+
+\NewEnviron{blockcol}[3]{%
+  \stepcounter{blockrow@n}%
+  \setlength{\blockrow@bottompad}{0.6\baselineskip}%
+  \setbox2=\vbox{\begin{minipage}[t]{#1}\raggedright\vskip-1ex\nointerlineskip%
+      \begin{#2}{#3\strut}%
+        \global\setbox1=\hbox{\begin{minipage}[t]{\linewidth}\BODY\vspace{\blockrow@bottompad}\end{minipage}}%
+        \copy1
+      \end{#2}%
+    \end{minipage}}%
+  \setlength{\blockrow@tmpht}{\ht1}%
+  \addtolength{\blockrow@tmpht}{\dp1}%
+  \expandafter\xdef\csname blockrow@bodyht\theblockrow@n\endcsname{\the\blockrow@tmpht}%
+  \setlength{\blockrow@tmpht}{\ht2}%
+  \addtolength{\blockrow@tmpht}{\dp2}%
+  \expandafter\xdef\csname blockrow@totalht\theblockrow@n\endcsname{\the\blockrow@tmpht}%
+  \ifdim\blockrow@tmpht>\blockrow@maxht
+    \global\blockrow@maxht=\blockrow@tmpht
+  \fi
+  \expandafter\xdef\csname blockrow@width\theblockrow@n\endcsname{#1}%
+  \expandafter\xdef\csname blockrow@env\theblockrow@n\endcsname{#2}%
+  \expandafter\gdef\csname blockrow@title\theblockrow@n\endcsname{#3}%
+  \expandafter\global\expandafter\let\csname blockrow@body\theblockrow@n\endcsname\BODY
+}
+
+\newcommand{\blockrow@emit}[1]{%
+  \xdef\blockrow@idx{#1}%
+  \xdef\blockrow@colwidth{\csname blockrow@width\blockrow@idx\endcsname}%
+  \column{\blockrow@colwidth}%
+  \xdef\blockrow@envname{\csname blockrow@env\blockrow@idx\endcsname}%
+  \setlength{\blockrow@tmpht}{\dimexpr\blockrow@maxht
+    - \csname blockrow@totalht\blockrow@idx\endcsname
+    + \csname blockrow@bodyht\blockrow@idx\endcsname\relax}%
+  \expandafter\begin\expandafter{\blockrow@envname}{\csname blockrow@title\blockrow@idx\endcsname\strut}%
+    \begin{minipage}[t][\blockrow@tmpht][t]{\linewidth}%
+      \csname blockrow@body\blockrow@idx\endcsname
+      \vspace{0.6\baselineskip}%
+      \vfill
+    \end{minipage}%
+  \expandafter\end\expandafter{\blockrow@envname}%
+}
+
+\newcommand{\blockrow@loop}{%
+  \ifnum\value{blockrow@i}>\value{blockrow@n}\else
+    \blockrow@emit{\arabic{blockrow@i}}%
+    \stepcounter{blockrow@i}%
+    \blockrow@loop
+  \fi
+}
+
+\newcommand{\blockrow@render}{%
+  \begin{columns}[T]%
+    \setcounter{blockrow@i}{1}%
+    \blockrow@loop
+  \end{columns}%
+}
+\makeatother
 
  % ==========================================================
 % Getrennte Zähler für mathematische Umgebungen

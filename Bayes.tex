@@ -189,7 +189,7 @@ gesamten Einwohnerzahl Deutschlands.
 %================= Overlay 3: Lösung =================
 \only<3>{
 \begin{columns}[T,onlytextwidth]
-
+\footnotesize
 \begin{column}{0.48\textwidth}
 \textbf{Gegebene Größen}
 \[
@@ -346,27 +346,23 @@ Der \textbf{Satz von Bayes} besagt:
 Unsere Beobachtung ist $B = (\text{Helligkeit}=7,\ \text{Länge}=10)$. Damit
 berechnen wir die Klassenzugehörigkeit:
 
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.47\textwidth}
-\begin{blockC1}{Lachs}
+\begin{blockrow}
+  \begin{blockcol}{0.47\textwidth}{blockC1}{Lachs}
 \footnotesize
 \[
   P(\text{Lachs} \mid B) =
   \frac{P(\text{Lachs})\cdot P(B \mid \text{Lachs})}{P(B)}
 \]
-\end{blockC1}
-\end{column}
+  \end{blockcol}
 
-\begin{column}{0.48\textwidth}
-\begin{blockC2}{Barsch}
+  \begin{blockcol}{0.48\textwidth}{blockC2}{Barsch}
 \footnotesize
 \[
   P(\text{Barsch} \mid B) =
   \frac{P(\text{Barsch})\cdot P(B \mid \text{Barsch})}{P(B)}
 \]
-\end{blockC2}
-\end{column}
-\end{columns}
+  \end{blockcol}
+\end{blockrow}
 
 \vspace{0.4em}
 {\itshape Der Nenner $P(B)$ ist für beide Klassen gleich. Für den
@@ -394,6 +390,7 @@ für jede Klasse $K \in \{\text{Lachs}, \text{Barsch}\}$.
 \end{frame}
 
 \begin{frame}{Naive Bayes: die „naive" Annahme}
+  \small
 \textbf{Schritt 3:} Die Wahrscheinlichkeit
 $P(\text{H.}=7,\ \text{L.}=10 \mid \text{Lachs})$ lässt sich nicht einfach
 berechnen, da sie von \textbf{zwei} Zufallsvariablen abhängt.
@@ -414,7 +411,7 @@ einzelner Wahrscheinlichkeiten -- jede pro Merkmal getrennt schätzbar.
 \end{column}
 
 \begin{column}{0.42\textwidth}
-\begin{blockC1}{Entscheidungsregel}
+\begin{blockC1}{\small Entscheidungsregel}
 Wähle die Klasse $K$, die
 \[
   P(K)\cdot \prod_i P(M_i \mid K)
@@ -533,26 +530,24 @@ Der Naive-Bayes-Klassifikator trifft zwei \textbf{vereinfachende Annahmen}:
 \end{frame}
 
 \begin{frame}{Naive Bayes: Vor- und Nachteile}
-\begin{columns}[T]
-\column{0.50\textwidth}
-\begin{blockC1}{Vorteile}
+\begin{blockrow}
+  \begin{blockcol}{0.50\textwidth}{blockC1}{Vorteile}
 \begin{itemize}
   \item Einfaches und \textbf{sehr schnelles} Modell.
   \item Funktioniert gut mit \textbf{wenigen} Trainingsdaten.
   \item Kommt sehr gut mit \textbf{hochdimensionalen} Eingabedaten zurecht.
   \item Gut für \textbf{Mehrklassen}-Probleme geeignet.
 \end{itemize}
-\end{blockC1}
+  \end{blockcol}
 
-\column{0.46\textwidth}
-\begin{blockC2}{Nachteile}
+  \begin{blockcol}{0.46\textwidth}{blockC2}{Nachteile}
 \begin{itemize}
   \item Die vereinfachenden \textbf{Grundannahmen} sind oft nicht gegeben.
   \item Bei \textbf{diskreten} Merkmalswerten und kleinen Stichproben droht Wahrscheinlichkeit
         $0$.
 \end{itemize}
-\end{blockC2}
-\end{columns}
+  \end{blockcol}
+\end{blockrow}
 
 \vspace{0.6em}
 \centering

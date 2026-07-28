@@ -773,13 +773,12 @@ bestimmen lässt.
 \source{\cite{scholkopf2002learning}}
 \end{frame}
 
+
 \begin{frame}{SVM: Die KKT-Bedingungen}
 \footnotesize
 \setcounter{equation}{0}
-\begin{columns}[T]
-\column{0.35\textwidth}
-
-\begin{blockDef}{\footnotesize KKT-Bedingungen}
+\begin{blockrow}
+  \begin{blockcol}{0.35\textwidth}{blockDef}{\footnotesize KKT-Bedingungen}
 Für das SVM-Optimierungsproblem gelten im Optimum ($*$) die KKT-Bedingungen:
 \begin{align}
   \frac{\partial L}{\partial \mathbf{w}} = 0, \qquad
@@ -789,10 +788,8 @@ Für das SVM-Optimierungsproblem gelten im Optimum ($*$) die KKT-Bedingungen:
   \lambda_i^{*}\Bigl(1 - y_i(\mathbf{w}^{*}\!\cdot\mathbf{x}_i + w_0^{*})\Bigr) &= 0
     \label{eq:kkt-komplement}
 \end{align}
-\end{blockDef}
-
-\column{0.60\textwidth}
-\begin{blockC1}{\footnotesize Bedeutung}
+  \end{blockcol}
+  \begin{blockcol}{0.60\textwidth}{blockC1}{\footnotesize Bedeutung}
 \begin{itemize}
   \item \eqref{eq:kkt-stat} Im Optimum werden die Ableitungen null.
   \item \eqref{eq:kkt-neben} \textbf{Ursprüngliche Nebenbedingung}: Alle Trainingspunkte liegen auf oder außerhalb des Margins.
@@ -801,8 +798,8 @@ Für das SVM-Optimierungsproblem gelten im Optimum ($*$) die KKT-Bedingungen:
   \item Die Punkte auf der Grenze sind genau die \textbf{Support Vectors}.
   \item $\Rightarrow$ Für alle anderen Datenpunkte muss $\lambda_i^{*} = 0$ gelten.
 \end{itemize}
-\end{blockC1}
-\end{columns}
+  \end{blockcol}
+\end{blockrow}
 \source{\cite{scholkopf2002learning}}
 \end{frame}
 
@@ -2713,27 +2710,24 @@ Bei RBF-SVMs müssen \textbf{beide} Parameter optimiert werden. Sie wirken an
 \textbf{unterschiedlichen} Stellen:
 
 \vspace{0.6em}
-\begin{columns}[T]
-\column{0.47\textwidth}
-\begin{blockC1}{$C$ -- Erstellung der Trennebene}
+\begin{blockrow}
+  \begin{blockcol}{0.47\textwidth}{blockC1}{$C$ -- Erstellung der Trennebene}
 \begin{itemize}
   \item \textbf{Kleines $C$:} mehr Punkte berücksichtigt, Trend wichtiger
         als einzelne Punkte (\textbf{Underfitting}).
   \item \textbf{Großes $C$:} einzelne Punkte wichtiger als der Trend
         (\textbf{Overfitting}).
 \end{itemize}
-\end{blockC1}
-
-\column{0.48\textwidth}
-\begin{blockC2}{$\gamma$ -- Anstieg der RBF-Hügel}
+  \end{blockcol}
+  \begin{blockcol}{0.48\textwidth}{blockC2}{$\gamma$ -- Anstieg der RBF-Hügel}
 \begin{itemize}
   \item \textbf{Großes $\gamma$:} steile Hügel, einzelne Punkte wichtiger
         (\textbf{Overfitting}).
   \item \textbf{Kleines $\gamma$:} flache Hügel, Trend wichtiger
         (\textbf{Underfitting}).
 \end{itemize}
-\end{blockC2}
-\end{columns}
+  \end{blockcol}
+\end{blockrow}
 \source{\cite{seemann2024mlaz}}
 \end{frame}
 
