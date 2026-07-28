@@ -1018,4 +1018,88 @@ Die Datei \texttt{diamonds.csv} enthält Daten zu mehr als 54\,000 Diamanten und
 \end{frame}
 
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
+
+
+
+
+\begin{frame}{Wie entstehen Labels?}
+\begin{columns}
+\begin{column}{0.35\linewidth}
+\centering
+\twemoji[width=0.9\linewidth]{label}
+\end{column}
+\begin{column}{0.6\linewidth}
+\textbf{Labeling-Pipeline}
+\begin{itemize}
+  \item Rohdaten sammeln: Bilder, Text, Audio
+  \item Annotationsrichtlinien festlegen
+  \item \textbf{Menschliche Annotation} der Beispiele
+  \item Qualitätssicherung durch Mehrfachannotation
+  \item Konsolidierung zum Trainingsdatensatz
+  \item[$\Rightarrow$] \textbf{Jedes Label ist menschliche Arbeit} 
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Arten von Annotationsaufgaben}
+\begin{columns}
+\begin{column}{0.6\linewidth}
+\begin{itemize}
+  \item \textbf{Bildklassifikation}: eine Klasse pro Bild
+  \item \textbf{Objekterkennung}: Bounding Boxes um Objekte
+  \item \textbf{Semantische Segmentierung}: Label pro Pixel
+  \item \textbf{Textannotation}: Klassifikation, Named Entities
+  \item \textbf{LLM-Feedback}: Bewerten von Antworten
+\end{itemize}
+\end{column}
+\begin{column}{0.35\linewidth}
+\centering
+\twemoji[width=0.9\linewidth]{bar_chart}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Der Mensch hinter dem Label}
+\begin{columns}
+\begin{column}{0.35\linewidth}
+\centering
+\twemoji[width=0.9\linewidth]{earth_africa}
+\end{column}
+\begin{column}{0.6\linewidth}
+\textbf{Arbeitsumstände}
+\begin{itemize}
+  \item Auslagerung häufig in den \textbf{Globalen Süden}
+  \item Niedriglöhne, teils \textbf{unter 2 USD pro Stunde}
+  \item Kaum soziale Absicherung oder Verträge
+  \item \textbf{Psychische Belastung} durch verstörende Inhalte
+  \item Intransparente Subunternehmer-Ketten
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{aiweekly2026_datalabor}}
+\end{frame}
+
+\begin{frame}{Wie viele Data Worker weltweit?}
+\begin{columns}
+\begin{column}{0.35\linewidth}
+\centering
+\twemoji[width=0.9\linewidth]{globe_with_meridians}
+\end{column}
+\begin{column}{0.6\linewidth}
+\textbf{Größenordnung}
+\begin{itemize}
+  \item Weltbank 2023: \textbf{154--435 Mio.} Online-Gig-Worker
+  \item Entspricht \textbf{4,4--12,5\,\%} der globalen Erwerbsbevölkerung
+  \item Data Worker für KI-Training sind eine große \textbf{Teilmenge} davon
+  \item \textbf{Exakte Zahl unbekannt}, da über Subunternehmer verschleiert
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{worldbank2023gigwork,somo2026_datalabor}}
+\note{Gig Worker sind Menschen, die statt in einem festen Angestelltenverhältnis \textbf{auftragsweise gegen Bezahlung einzelne, kurze Aufgaben} erledigen, meist als Selbstständige und häufig über digitale Plattformen vermittelt.}
+\end{frame}
+
+
+
 \makequestionspage{\FRAGENIMAGE}
