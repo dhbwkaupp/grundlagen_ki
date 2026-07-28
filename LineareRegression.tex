@@ -601,6 +601,156 @@ Die lineare Regression wählt die \textbf{am besten passenden Parameter} für di
 \source{\cite{Frochte2020}}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Was bedeutet hier ,,möglichst nah''?}
+\begin{columns}
+\begin{column}{0.47\linewidth}
+\textbf{Beobachtung}
+
+,,Möglichst nah'' heißt: Der Abstand zwischen Vorhersage $f(x_i)$ und wahrem Wert $y_i$ soll klein sein für jeden Datenpunkt.
+
+\vspace{0.3cm}
+\textbf{Frage}
+
+Wie misst man den \textbf{Abstand zwischen zwei Vektoren} überhaupt sinnvoll?
+\end{column}
+\begin{column}{0.48\linewidth}
+\begin{block}{Antwort}
+Man braucht einen \textbf{Vektorraum}, auf dem eine \textbf{Norm} definiert ist,  also einen \textbf{normierten Raum}.
+\[
+\text{Abstand}(x,y) = \|x - y\|
+\]
+\end{block}
+
+\vspace{0.2cm}
+Erst mit einer Norm wird ,,nah'' bzw. ,,Fehler'' überhaupt präzise definierbar.
+\end{column}
+\end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Normierte Räume: Begriff der Norm}
+
+\begin{columns}[T]
+
+\begin{column}{0.47\linewidth}
+
+\begin{blockC1}{Idee}
+Eine Norm misst die \textbf{Länge} bzw. \textbf{Größe} eines Vektors.
+\end{blockC1}
+
+\begin{blockDef}{Definition}
+Sei $V$ ein $\mathbb{K}$-Vektorraum.
+Eine Abbildung
+\[
+\|\cdot\| : V \to \mathbb{R}_{\geq 0}
+\]
+heißt \textbf{Norm}, falls die Norm-Axiome gelten.
+\end{blockDef}
+
+\end{column}
+
+\begin{column}{0.48\linewidth}
+
+\begin{blockC2}{Norm-Axiome}
+Für alle $x,y\in V$ und $\lambda\in\mathbb{K}$:
+\begin{enumerate}
+\item \textbf{Definitheit}
+\[
+\|x\|=0 \iff x=0
+\]
+
+\item \textbf{Homogenität}
+\[
+\|\lambda x\| = |\lambda|\,\|x\|
+\]
+
+\item \textbf{Dreiecksungleichung}
+\[
+\|x+y\|
+\leq
+\|x\|+\|y\|
+\]
+\end{enumerate}
+\end{blockC2}
+
+\[
+(V,\|\cdot\|)
+\quad\Rightarrow\quad
+\textbf{normierter Raum}
+\]
+
+\end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Normen erzeugen Geometrie}
+  \small
+\begin{columns}
+\begin{column}{0.47\linewidth}
+Mit einer Norm kann man auch den \textbf{Abstand zweier Vektoren} $x,y\in V$ berechnen. Man ermittelt hierfür die \textbf{Länge des Differenzvektors}:
+\[
+d(x,y) = \|x-y\|
+\]
+
+Mit einem Abstandsbegriff wird $V$ automatisch zu einem \textbf{metrischen Raum} und jeder metrische Raum ist zugleich ein \textbf{topologischer Raum}.
+\[
+\text{Norm} \;\Longrightarrow\; \text{Metrik} \;\Longrightarrow\; \text{Topologie}
+\]
+\end{column}
+\begin{column}{0.48\linewidth}
+\begin{block}{\small Was bringt uns das?}
+\begin{itemize}
+\item In topologischen Räumen gibt es einen Begriff von \textbf{Nähe}.
+\item Damit werden \textbf{Umgebungen}, \textbf{Konvergenz} und \textbf{Stetigkeit} definierbar.
+\item Normierte Räume erben also automatisch alle Werkzeuge der Analysis.
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Wichtige Normen im $\mathbb{R}^n$}
+\begin{columns}
+\begin{column}{0.47\linewidth}
+\textbf{$p$-Norm ($L^p$-Norm)}
+\[
+\|x\|_p = \left( \sum_{i=1}^n |x_i|^p \right)^{1/p}, \quad p \geq 1
+\]
+
+\textbf{Spezialfälle}
+\begin{itemize}
+\item $\|x\|_1 = \sum_{i=1}^n |x_i|$ -- Manhattan-Norm
+\item $\|x\|_2 = \sqrt{\sum_{i=1}^n x_i^2}$ -- euklidische Norm
+\item $\|x\|_\infty = \max_i |x_i|$ -- Maximumsnorm
+\end{itemize}
+
+\end{column}
+\begin{column}{0.48\linewidth}
+\textbf{Einheitskugeln im $\mathbb{R}^2$}
+\resizebox{0.9\linewidth}{!}{
+\begin{tikzpicture}[scale=1.2]
+\draw[->] (-1.6,0) -- (1.6,0) node[right] {$x_1$};
+\draw[->] (0,-1.6) -- (0,1.6) node[above] {$x_2$};
+\draw[thick, PrimaryColor] (1,0) -- (0,1) -- (-1,0) -- (0,-1) -- cycle;
+\draw[thick, AlertColor] (0,0) circle (1);
+\draw[thick, AccentTitle] (-1,-1) rectangle (1,1);
+\end{tikzpicture}
+}
+
+\vspace{0.2cm}
+\textcolor{PrimaryColor}{$\blacksquare$} $\|\cdot\|_1$ \quad
+\textcolor{AlertColor}{$\blacksquare$} $\|\cdot\|_2$ \quad
+\textcolor{AccentTitle}{$\blacksquare$} $\|\cdot\|_\infty$
+\end{column}
+\end{columns}
+\note{Auf der Einheitskugel liegen alle Punkte mit gleichem Abstand zum Ursprung bezüglich der jeweiligen Norm. }
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Lineare Modelle und Hyperebenen}
 \footnotesize
@@ -839,33 +989,25 @@ A \mathbf{u} = \mathbf{y}
 
 \begin{frame}{Fehler im Regressionsmodell}
 
-\begin{columns}
 
-\column{0.47\textwidth}
+\begin{blockrow}
+  \begin{blockcol}{0.47\linewidth}{blockC1}{Residuen einzelner Datenpunkte}
+Für \textbf{jeden Messpunkt} vergleichen wir den beobachteten Wert
+mit der Vorhersage des Modells:
 
-\begin{block}{Fehler definieren}
-Für jeden Datenpunkt gilt:
 \[
 r_i = y_i - (A\mathbf{u})_i
 \]
 
-\medskip
-
 \begin{itemize}
 \item $r_i$ heißt \textbf{Residuum}
-\item beschreibt den Fehler eines einzelnen Punkts
+\item misst den Fehler des $i$-ten Datenpunkts
+\item Differenz zwischen Beobachtung $y_i$ und Modellwert
 \end{itemize}
-\end{block}
+  \end{blockcol}
 
-\textbf{Norm (Länge) eines Vektors:}
-\[
-\|A\mathbf{u} - \mathbf{y}\| = \sqrt{r_1^2 + r_2^2 + \dots + r_n^2}
-\]
-
-\column{0.48\textwidth}
-
-\begin{block}{Gesamtfehler}
-Alle Fehler zusammen:
+  \begin{blockcol}{0.48\linewidth}{blockC3}{Gesamtfehler des Modells}
+   Alle Fehler zusammen:
 \[
 \sum_{i=1}^{n} r_i^2
 = \sum_{i=1}^{n} (y_i - f(x_i))^2
@@ -884,9 +1026,9 @@ Kompakte Schreibweise:
 \item Summe der Fehlerquadrate
 \item Maß für die Modellgüte
 \end{itemize}
-\end{block}
+  \end{blockcol}
+\end{blockrow}
 
-\end{columns}
 
 \end{frame}
 
@@ -924,11 +1066,6 @@ A \mathbf{u} = \mathbf{y}
 \end{columns}
 
 \end{frame}
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 {

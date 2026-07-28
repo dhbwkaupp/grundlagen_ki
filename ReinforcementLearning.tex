@@ -899,25 +899,21 @@ Der Agent wird über zwei \textbf{Callback-Funktionen} eingebunden:
 \end{frame}
 
 \begin{frame}{Q-Learning umsetzen}
-\begin{columns}
-\begin{column}{0.47\textwidth}
-\begin{block}{Der aktuelle \textbf{Zustand} enthält...}
+\begin{blockrow}
+  \begin{blockcol}{0.47\textwidth}{block}{Der aktuelle \textbf{Zustand} enthält...}
 \begin{itemize}
 \item die \textbf{y-Geschwindigkeit} des Vogels,
 \item die \textbf{x-Position} der nächsten Röhre,
 \item den \textbf{y-Abstand} zwischen Vogel und Röhre.
 \end{itemize}
-\end{block}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{blockC2}{Belohnungssystem}
+  \end{blockcol}
+  \begin{blockcol}{0.48\textwidth}{blockC2}{Belohnungssystem}
 \begin{itemize}
 \item Überlebt der Vogel einen Frame, erhält er einen \textbf{Bonus-Punkt}.
 \item Stirbt er, erhält er \textbf{-10000} Punkte Strafe.
 \end{itemize}
-\end{blockC2}
-\end{column}
-\end{columns}
+  \end{blockcol}
+\end{blockrow}
 \source{\cite{seemann2024mlaz}}
 \end{frame}
 

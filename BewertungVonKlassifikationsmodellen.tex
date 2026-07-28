@@ -122,27 +122,25 @@ Beim \textbf{Spritzgieß-Beispiel} ist das Label, ob ein Zyklus ein
 erzeugt hat. Die vier Möglichkeiten:
 
 \vspace{0.6em}
-\begin{columns}[T]
-\column{0.48\textwidth}
-\begin{blockC1}{Korrekt klassifiziert}
+\begin{blockrow}
+\begin{blockcol}{0.48\textwidth}{blockC1}{Korrekt klassifiziert}
 \begin{itemize}
   \item \textbf{TP} (true positive): Klassifikator sagt Gutteil -- war ein
         Gutteil.
   \item \textbf{TN} (true negative): Klassifikator sagt Schlechtteil --
         war ein Schlechtteil.
 \end{itemize}
-\end{blockC1}
+\end{blockcol}
 
-\column{0.47\textwidth}
-\begin{blockC2}{Falsch klassifiziert}
+\begin{blockcol}{0.47\textwidth}{blockC2}{Falsch klassifiziert}
 \begin{itemize}
   \item \textbf{FP} (false positive): Klassifikator sagt Gutteil -- war ein
         Schlechtteil.
   \item \textbf{FN} (false negative): Klassifikator sagt Schlechtteil --
         war ein Gutteil.
 \end{itemize}
-\end{blockC2}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 \end{frame}
 
 \begin{frame}{Konfusionsmatrix: konkretes Beispiel}
@@ -250,25 +248,23 @@ Sie ist wichtig, wenn \textbf{Fehlalarme teuer} sind.
 \end{frame}
 
 \begin{frame}{Bewertung: Trefferquote und Fehlerrate}
-\begin{columns}
-\column{0.49\textwidth}
-\begin{blockC1}{Trefferquote (Accuracy)}
+\begin{blockrow}
+\begin{blockcol}{0.49\textwidth}{blockC1}{Trefferquote (Accuracy)}
 Anteil der korrekt klassifizierten Datensätze:
 \[
   \frac{\text{TP} + \text{TN}}
        {\text{TP} + \text{TN} + \text{FP} + \text{FN}}
 \]
-\end{blockC1}
+\end{blockcol}
 
-\column{0.48\textwidth}
-\begin{blockC2}{Fehlerrate}
+\begin{blockcol}{0.48\textwidth}{blockC2}{Fehlerrate}
 Anteil der falsch klassifizierten Datensätze:
 \[
   \frac{\text{FP} + \text{FN}}
        {\text{TP} + \text{TN} + \text{FP} + \text{FN}}
 \]
-\end{blockC2}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 
 \vspace{0.6em}
 \centering

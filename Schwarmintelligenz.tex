@@ -286,19 +286,17 @@ x_i^{t+1} = x_i^{t} + v_i^{t+1}
 
 
 \begin{frame}{Die Parameter}
-\begin{columns}[T]
-\column{0.48\textwidth}
-\begin{block}{Bedeutung}
+\begin{blockrow}
+\begin{blockcol}{0.48\textwidth}{block}{Bedeutung}
 \begin{itemize}
 \item $c_1$ -- \textbf{kognitiver Faktor} (eigene Erfahrung).
 \item $c_2$ -- \textbf{sozialer Faktor} (Schwarmverhalten).
 \item $r_1, r_2$ -- \textbf{Zufall} in $[0,1]$.
 \item $w$ -- \textbf{Trägheit} der Bewegung.
 \end{itemize}
-\end{block}
+\end{blockcol}
 
-\column{0.48\textwidth}
-\begin{blockC2}{Wirkung}
+\begin{blockcol}{0.48\textwidth}{blockC2}{Wirkung}
 \begin{itemize}
 \item Großes $c_1$ $\rightarrow$ mehr \textbf{Exploration}.
 \item Großes $c_2$ $\rightarrow$ schnellere \textbf{Konvergenz}.
@@ -307,9 +305,9 @@ x_i^{t+1} = x_i^{t} + v_i^{t+1}
 
 \vspace{0.5em}
 \textbf{Typisch:} $c_1 \approx c_2 \approx 2$
-\end{blockC2}
+\end{blockcol}
 
-\end{columns}
+\end{blockrow}
 \source{\cite{kennedy1995particle}}
 \end{frame}
 
@@ -397,28 +395,26 @@ Lokale Topologien verringern die Gefahr, in einem \textbf{lokalen Minimum} zu la
 
 
 \begin{frame}{Stärken und Grenzen}
-\begin{columns}
+\begin{blockrow}
 
-\column{0.48\textwidth}
-\begin{blockC1}{Stärken}
+\begin{blockcol}{0.48\textwidth}{blockC1}{Stärken}
 \begin{itemize}
 \item \textbf{Einfach} zu implementieren
 \item \textbf{Wenige Parameter}
 \item \textbf{Keine Ableitungen} erforderlich
 \item Gut \textbf{parallelisierbar}
 \end{itemize}
-\end{blockC1}
+\end{blockcol}
 
-\column{0.48\textwidth}
-\begin{blockC2}{Grenzen}
+\begin{blockcol}{0.48\textwidth}{blockC2}{Grenzen}
 \begin{itemize}
 \item Gefahr von \textbf{vorzeitiger Konvergenz}
 \item \textbf{Parameterwahl} beeinflusst stark
 \item Keine Garantie für \textbf{globales Optimum}
 \end{itemize}
-\end{blockC2}
+\end{blockcol}
 
-\end{columns}
+\end{blockrow}
 \source{\cite{kennedy1995particle}}
 \end{frame}
 

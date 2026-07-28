@@ -898,7 +898,7 @@ Ist eine Trefferquote von \textbf{95{,}42\%} hier wirklich gut?
 \end{frame}
 
 \begin{frame}{Auflösung: Warum 95\% täuschen können}
-\begin{columns}
+\begin{columns}[T]
 \begin{column}{0.60\textwidth}
 \begin{block}{Die naive Baseline}
 Ein Modell, das \textbf{immer} „kein T-Shirt“ vorhersagt, erreicht bereits \textbf{90\%} Genauigkeit.
@@ -2807,7 +2807,7 @@ def convolve2d(img, kernel):
 
 % ---------------------------------------------------------
 \begin{frame}{Hierarchie der Merkmale und rezeptives Feld}
-\begin{columns}
+\begin{columns}[T]
 \begin{column}{0.35\textwidth}
 \begin{itemize}
     \item Das \textbf{rezeptive Feld} eines Neurons ist der Bildbereich, der seinen Wert beeinflusst
@@ -3164,9 +3164,8 @@ model.evaluate(x_test, y_test)
 
 \begin{frame}{Wo lässt sich unser MNIST-Netz verbessern?}
 \small
-\begin{columns}[T]
-\begin{column}{0.47\linewidth}
-\begin{blockC2}{\small Mehr Netzfunktionen}
+\begin{blockrow}
+\begin{blockcol}{0.47\linewidth}{blockC2}{\small Mehr Netzfunktionen}
 Das Netz soll \textbf{bessere Merkmale} lernen.
 \begin{itemize}
   \item \emph{Mehrschichtige Faltungen} für hierarchische Muster
@@ -3174,11 +3173,8 @@ Das Netz soll \textbf{bessere Merkmale} lernen.
   \item \emph{Mehr Filter} in tieferen Blöcken
 \end{itemize}
 Wirkung: höhere \textbf{Trainings}- und Testgüte.
-\end{blockC2}
-\end{column}
-\begin{column}{0.48\linewidth}
-
-\begin{blockC1}{\small Weniger Overfitting}
+\end{blockcol}
+\begin{blockcol}{0.48\linewidth}{blockC1}{\small Weniger Overfitting}
 Das Gelernte soll auf \textbf{neue Daten} übertragbar sein.
 \begin{itemize}
   \item \emph{Dropout} gegen Auswendiglernen
@@ -3186,10 +3182,8 @@ Das Gelernte soll auf \textbf{neue Daten} übertragbar sein.
   \item \emph{Weniger Parameter} im \texttt{Dense}-Kopf
 \end{itemize}
 Wirkung: kleinerer \textbf{Abstand} zwischen Trainings- und Testgüte.
-\end{blockC1}
-
-\end{column}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 \medskip
 \begin{itemize}
   \item Beide Angriffspunkte greifen \textbf{gemeinsam}: ein stärkeres Netz ohne Regularisierung würde schneller overfitten. 
@@ -3220,7 +3214,7 @@ Nicht der einzelne Filter wird größer, sondern der \textbf{Weg} durch das Netz
 
 \begin{frame}{Das rezeptive Feld}
 \footnotesize
-\begin{columns}
+\begin{columns}[T]
 \begin{column}{0.47\linewidth}
 
 \begin{blockDef}{\footnotesize Rezeptives Feld}
@@ -4502,28 +4496,25 @@ model.compile(optimizer="rmsprop",
 
 
 \begin{frame}{Transfer Learning mit VGG16: Vergleich der Varianten}
-\begin{columns}[T ]
-\begin{column}{0.47\textwidth}
-\begin{blockC1}{Variante 1}
+\small 
+\begin{blockrow}
+\begin{blockcol}{0.47\textwidth}{blockC1}{\small Variante 1}
 \begin{itemize}
   \item VGG16 ist fester Bestandteil des Modells
   \item Die Trainingsdaten durchlaufen in \textbf{jedem Trainingsschritt} das gesamte VGG16-Netz
   \item Die Vorverarbeitung wird immer wieder neu berechnet
   \item Aufwändig, dafür flexibel
 \end{itemize}
-\end{blockC1}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{blockC2}{Variante 2}
+\end{blockcol}
+\begin{blockcol}{0.48\textwidth}{blockC2}{\small Variante 2}
 \begin{itemize}
   \item VGG16 und das zu trainierende Netz sind \textbf{getrennt}
   \item Die Daten werden vor dem Training \textbf{einmalig} von VGG16 bearbeitet
   \item Trainiert wird nur noch auf den gespeicherten Zwischenergebnissen
   \item Die einmalige Bearbeitung spart deutlich \textbf{Zeit}
 \end{itemize}
-\end{blockC2}
-\end{column}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 \source{\cite{seemann_deeplearning}}
 \end{frame}
 

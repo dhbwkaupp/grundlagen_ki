@@ -544,24 +544,22 @@ Pfadlängensumme.}
 \end{frame}
 
 \begin{frame}{Wie findet man einen kleinen, genauen Baum?}
-\begin{columns}
-\column{0.47\textwidth}
-\begin{blockC1}{Optimalen Baum finden}
+\begin{blockrow}
+\begin{blockcol}{0.47\textwidth}{blockC1}{Optimalen Baum finden}
 \begin{itemize}
   \item Problem ist \textbf{NP-vollständig}.
   \item Rechnerisch herausfordernd.
   \item Liefert potenziell die \textbf{genaueste} Lösung.
 \end{itemize}
-\end{blockC1}
+\end{blockcol}
 
-\column{0.48\textwidth}
-\begin{blockC2}{Heuristiken verwenden}
+\begin{blockcol}{0.48\textwidth}{blockC2}{Heuristiken verwenden}
 \begin{itemize}
   \item Liefert \textbf{praktikable}, aber nicht perfekte Lösungen.
   \item Besonders wichtig bei \textbf{größeren Datenmengen}.
 \end{itemize}
-\end{blockC2}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 
 \vspace{0.6em}
 \centering
@@ -1151,46 +1149,33 @@ Ein Byte besteht aus \textbf{8 Bits}.
 \source{\cite{strutz2025bilddatenkompression}}
 \end{frame}
 
+
 \begin{frame}{Wetterinformation: Ausgangssituation}
-
-\begin{columns}[t]
-
-\begin{column}{0.4\textwidth}
-
-\begin{blockC4}{Beispiel}
-Ein Meteorologe meldet täglich das \textbf{Wetter} an eine Zentrale.  
+\begin{blockrow}
+  \begin{blockcol}{0.48\linewidth}{blockC1}{Beispiel}
+    Ein Meteorologe meldet täglich das \textbf{Wetter} an eine Zentrale.
 Wir unterscheiden  \textbf{vier Zustände}:
-
 \begin{itemize}
   \item \(s_1\): Sonne
   \item \(s_2\): Wolken
   \item \(s_3\): Regen
   \item \(s_4\): Schnee
 \end{itemize}
+  \end{blockcol}
 
-\end{blockC4}
-
-
-\end{column}
-
-\begin{column}{0.55\textwidth}
-
-
-\begin{block}{Ziel}
+  \begin{blockcol}{0.47\linewidth}{blockC2}{Ziel}
 Anhand der Wetterdaten soll gezeigt werden, wie sich der
-\textbf{Informationsgehalt} zur Codierung von Ereignissen nutzen lässt.\\
-\medskip
+\textbf{Informationsgehalt} zur Codierung von Ereignissen nutzen lässt.\\*[0.5ex]
 Wir wollen die Wetterzustände so darstellen, dass sie mit
 \textbf{möglichst wenig Speicherplatz} gespeichert werden können.
 Dabei spielt die Wahl einer geeigneten Codierung eine zentrale Rolle.
-\end{block}
-
-\end{column}
-
-\end{columns}
-
+  \end{blockcol}
+\end{blockrow}
 \source{\cite{strutz2025bilddatenkompression}}
 \end{frame}
+
+
+
 
 \begin{frame}{Gleichverteiltes Wetter}
 
@@ -1819,27 +1804,25 @@ ergibt sich folgender Entscheidungsbaum:
 \end{frame}
 
 \begin{frame}{Zusammenfassung und Erweiterung}
-\begin{columns}
-\column{0.47\textwidth}
-\begin{blockC1}{ID3-Algorithmus}
+\begin{blockrow}
+\begin{blockcol}{0.47\textwidth}{blockC1}{ID3-Algorithmus}
 
 \begin{itemize}
   \item Baut Bäume auf \textbf{diskreten} Merkmalen.
   \item Attributwahl über \textbf{maximalen Information Gain}.
   \item Arbeitet \textbf{rekursiv} bis zur reinen Klassifikation.
 \end{itemize}
-\end{blockC1}
+\end{blockcol}
 
-\column{0.48\textwidth}
-\begin{blockC3}{Numerische Merkmale}
+\begin{blockcol}{0.48\textwidth}{blockC3}{Numerische Merkmale}
 
 \textbf{Quantitative} Merkmale brauchen eine Sonderbehandlung:
 \begin{itemize}
   \item Binär-Splits an \textbf{Schwellenwerten} (z.\,B. „Druck < 800?").
   \item Sortieren und optimale Trennpunkte suchen.
 \end{itemize}
-\end{blockC3}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 
 \vspace{0.4em}
 
@@ -1855,27 +1838,25 @@ ergibt sich folgender Entscheidungsbaum:
 
 
 \begin{frame}{Entscheidungsbäume: Vor- und Nachteile}
-\begin{columns}[T]
-\column{0.49\textwidth}
-\begin{blockC4}{Vorteile}
+\begin{blockrow}
+\begin{blockcol}{0.49\textwidth}{blockC4}{Vorteile}
 \begin{itemize}
   \item Entscheidungen sehr gut \textbf{nachvollziehbar},  der Weg eines
         Datensatzes durch den Baum ist klar verfolgbar.
   \item Berechnungen \textbf{schnell und einfach}.
   \item Baum und Entscheidungen gut \textbf{visualisierbar}.
 \end{itemize}
-\end{blockC4}
+\end{blockcol}
 
-\column{0.49\textwidth}
-\begin{blockC2}{Nachteile}
+\begin{blockcol}{0.49\textwidth}{blockC2}{Nachteile}
 \begin{itemize}
   \item Neigung zur \textbf{Überanpassung} an die Trainingsdaten
         (Overfitting).
   \item Nur \textbf{senkrechte und waagerechte} Trennebenen $\rightarrow$ komplexe
         Entscheidungsgrenzen schwer nachbildbar.
 \end{itemize}
-\end{blockC2}
-\end{columns}
+\end{blockcol}
+\end{blockrow}
 
 \vspace{0.8em}
 \centering
