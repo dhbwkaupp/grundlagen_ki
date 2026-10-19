@@ -2191,6 +2191,82 @@ Beispiel $d = 2$, $c = 0$ im $\mathbb{R}^2$:
 \end{tikzpicture}}
 \end{columns}
 \source{\cite{scholkopf2002learning}}
+
+\note{
+\footnotesize
+ \(\Phi\) muss so gewählt werden, dass ihr Skalarprodukt genau dem polynomialen Kernel entspricht. Deshalb tauchen in deinem Beispiel die Quadrate und der gemischte Term mit \(\sqrt{2}\) auf.\\
+1. Ausgangspunkt: Der polynomiale Kernel
+Für den Grad \(d=2\) und \(c=0\) lautet der Kernel:\(K(x,z)=(x\cdot z)^2\)
+
+Wir betrachten zwei Vektoren im \(\mathbb R^2\):\(x=(x_1,x_2),\qquad z=(z_1,z_2)\)
+
+Ihr Skalarprodukt ist:
+\[
+x\cdot z=x_1z_1+x_2z_2
+\]
+
+Wenn wir das quadrieren, erhalten wir:
+\[
+\begin{aligned}
+K(x,z)&=(x_1z_1+x_2z_2)^2\\
+&=x_1^2z_1^2+2x_1x_2z_1z_2+x_2^2z_2^2
+\end{aligned}
+\]
+
+Der entscheidende Schritt ist die binomische Formel: Beim Quadrieren entsteht der gemischte Term mit dem Faktor \(2\).
+2. Wie entsteht daraus die Abbildung \(\Phi\)?
+Wir suchen eine Abbildung, deren gewöhnliches Skalarprodukt genau diesen Ausdruck ergibt.
+
+Dazu definieren wir:
+\[
+\boxed{
+\Phi(x)=
+\begin{pmatrix}
+x_1^2\\
+x_2^2\\
+\sqrt{2}\,x_1x_2
+\end{pmatrix}
+}
+\]
+
+Für den zweiten Vektor gilt entsprechend:
+\[
+\Phi(z)=
+\begin{pmatrix}
+z_1^2\\
+z_2^2\\
+\sqrt{2}\,z_1z_2
+\end{pmatrix}
+\]
+
+Jetzt berechnen wir das Skalarprodukt der transformierten Vektoren:
+\[
+\begin{aligned}
+\Phi(x)\cdot\Phi(z)
+&=x_1^2z_1^2+x_2^2z_2^2\\
+&\quad+(\sqrt{2}x_1x_2)(\sqrt{2}z_1z_2)\\
+&=x_1^2z_1^2+x_2^2z_2^2\\
+&\quad+2x_1x_2z_1z_2\\
+&=(x_1z_1+x_2z_2)^2\\
+&=K(x,z)
+\end{aligned}
+\]
+
+Damit gilt:
+\[
+\boxed{K(x,z)=\Phi(x)\cdot\Phi(z)}
+\]
+
+Das ist genau die Eigenschaft, die wir benötigen.
+3. Warum steht dort \(\sqrt{2}\) und nicht \(2\)?
+Weil beim Skalarprodukt die Komponenten miteinander multipliziert werden:
+\[
+\sqrt{2}\cdot\sqrt{2}=2
+\]
+
+Der Faktor \(\sqrt{2}\) sorgt also dafür, dass beim Skalarprodukt der gewünschte Faktor \(2\) entsteht.
+Ohne diesen Faktor wäre der gemischte Term nur \(x_1x_2z_1z_2\) statt \(2x_1x_2z_1z_2\). Das Skalarprodukt würde dann nicht mehr dem polynomialen Kernel entsprechen.
+}
 \end{frame}
 
 \begin{frame}{SVM: Wirkung des Polynomgrads $d$}
@@ -2699,7 +2775,7 @@ $\gamma = \frac{1}{n_{\text{features}} \cdot \text{Var}(X)}$.
 
 \column{0.48\textwidth}
 \centering
-\textbf{$\gamma = 10$, Training (oben) und Test}\\
+\textbf{$\gamma = 100$, Training (oben) und Test}\\
 \includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_train.svg}\\[1pt]
 \includesvg[width=0.65\linewidth]{figures/scatter_svm_rbf_gamma_100_test.svg}\\[1pt]
 \end{columns}
