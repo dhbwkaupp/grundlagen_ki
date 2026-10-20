@@ -237,7 +237,7 @@ einem Ausdruck zusammenfasst.
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item Wir nehmen jetzt noch den den Schwellenwert $\theta$ hinzu und stellen um:
+  \item Wir nehmen jetzt noch den Schwellenwert $\theta$ hinzu und stellen um:
         \[
           h(\mathbf{x}) - \theta = \mathbf{w}\cdot\mathbf{x} - \theta = 0
         \]
@@ -1067,7 +1067,7 @@ $\Rightarrow$ XOR$(0,0) = 0$, korrekt.
 \column{0.60\textwidth}
 \begin{itemize}
   \item Ein Bias-Neuron im \textbf{Input-Layer} ist \textbf{zwingend}
-        nötig- Nur so lässt sich die Trennebene aus dem Ursprung
+        nötig. Nur so lässt sich die Trennebene aus dem Ursprung
         verschieben.
   \item In \textbf{Hidden-Layern} sind Bias-Neuronen dagegen \textbf{optional}.
   \item Fehlen sie dort, kann das Netz sie durch geeignete Gewichte
@@ -1079,7 +1079,7 @@ $\Rightarrow$ XOR$(0,0) = 0$, korrekt.
 \column{0.35\textwidth}
 \begin{blockC1}{Kernaussage}
 Ein Input-Bias ist \textbf{Pflicht}. Weitere Bias-Neuronen sind eine Frage
-der \textbf{Effizienz}.
+der \textbf{Effizienz}.\par
 \medskip
 In \textbf{Standard-Implementierungen} von Multilayer-Perzeptrons sind typischerweise Bias-Neuronen \textbf{in jeder Schicht} enthalten
 
@@ -1090,6 +1090,7 @@ In \textbf{Standard-Implementierungen} von Multilayer-Perzeptrons sind typischer
 
 
 \begin{frame}{Aktivierungsfunktionen: Lineare Aktivierung}
+\footnotesize
 \begin{columns}
 \column{0.60      \textwidth}
 Eine weitere, oft im \textbf{Output-Layer} genutzte Aktivierungsfunktion
@@ -1133,7 +1134,7 @@ ist die \textbf{lineare} Aktivierung:
 \begin{columns}
 \column{0.35\textwidth}
 \begin{itemize}
-  \item Neuronale Netze können\textbf{beliebig viele} Hidden Layer haben.
+  \item Neuronale Netze können \textbf{beliebig viele} Hidden Layer haben.
   \item Ab mehr als drei Hidden Layern spricht man von \textbf{tiefen}
         Netzen (Deep Networks).
   \item Mit \textbf{zwei} Hidden Layern (Sigmoid) und \textbf{linearem}
@@ -1427,9 +1428,8 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \column{0.45\textwidth}
 \centering
 \includesvg[width=\linewidth]{figures/gradient_2D.svg}
-
-\vspace{0.2cm}
-{\scriptsize Beispielhafte Funktion der Loss Function $L$ in Abhängigkeit von einem einzigen Gewicht.}
+\par \vspace{0.2cm}
+{\scriptsize Beispielhafter Graph der Loss Function $L$ in Abhängigkeit von einem einzigen Gewicht.}
 
 \column{0.55\textwidth}
 \footnotesize
@@ -1942,7 +1942,7 @@ W^{(1)}\mathbf{x}
 \begin{blockC1}{\footnotesize Kernidee}
 Nicht jede Ableitung wird vollständig neu berechnet.
 
-\vspace{0.3cm}
+\par\medskip
 
 Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
 \end{blockC1}
@@ -2036,9 +2036,6 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
 \draw[focus] (a2) -- (c2)
   node[smalllab, pos=0.55, above] {$w_{i,j}$};
 
-% Beschriftung der beiden beteiligten Neuronen
-\node[lab, left=0.08cm of a2] {$o_j$};
-\node[lab, right=0.08cm of c2] {$\delta_i$};
 
 % Ausgegraute Kanten Hidden 2 -> Output ohne Gewichtsbeschriftung
 \foreach \i in {c1,c2,c3,c4}{
@@ -2049,6 +2046,11 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
 \draw[<-, draw=AccentColor, very thick, dashed]
   (c2.east) -- ++(1.05,0)
   node[midway, above, font=\tiny] {Fehlersignal};
+
+  % Beschriftung der beiden beteiligten Neuronen
+\node[lab, left=0.08cm of a2] {$o_j$};
+\node[lab, right=0.08cm of c2] {$\delta_i$};
+
 
 \end{tikzpicture}%
 }
