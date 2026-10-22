@@ -98,14 +98,14 @@
                   very thick, minimum size=10pt, inner sep=0pt}
 ]
 % Inputs
-\node[input] (x0) at (0,3.0) {};
-\node[input] (x1) at (0,2.0) {};
-\node[input] (x2) at (0,1.0) {};
+\node[input] (x1) at (0,3.0) {};
+\node[input] (x2) at (0,2.0) {};
+\node[input] (x3) at (0,1.0) {};
 \node[font=\scriptsize] at (0,0.2) {$\vdots$};
 \node[input] (xn) at (0,-0.6) {};
-\node[font=\scriptsize, left] at (-0.2,3.0) {$x_0$};
-\node[font=\scriptsize, left] at (-0.2,2.0) {$x_1$};
-\node[font=\scriptsize, left] at (-0.2,1.0) {$x_2$};
+\node[font=\scriptsize, left] at (-0.2,3.0) {$x_1$};
+\node[font=\scriptsize, left] at (-0.2,2.0) {$x_2$};
+\node[font=\scriptsize, left] at (-0.2,1.0) {$x_3$};
 \node[font=\scriptsize, left] at (-0.2,-0.6) {$x_n$};
 % Summation
 \node[sum] (h) at (2.6,1.2) {$\sum$};
@@ -115,9 +115,9 @@
 \node[ausgabe] (y) at (5.6,1.2) {};
 \node[font=\scriptsize, right] at (5.8,1.2) {$y$};
 % Kanten mit Gewichten
-\draw[->] (x0) -- (h) node[midway, above, font=\scriptsize] {$w_0$};
 \draw[->] (x1) -- (h) node[midway, above, font=\scriptsize] {$w_1$};
-\draw[->] (x2) -- (h) node[midway, below, font=\scriptsize] {$w_2$};
+\draw[->] (x2) -- (h) node[midway, above, font=\scriptsize] {$w_2$};
+\draw[->] (x3) -- (h) node[midway, below, font=\scriptsize] {$w_3$};
 \draw[->] (xn) -- (h) node[midway, below, font=\scriptsize] {$w_n$};
 \draw[->] (h) -- (g) node[midway, above, font=\scriptsize] {$h$};
 \draw[->] (g) -- (y);
@@ -126,7 +126,7 @@
 \column{0.48\textwidth}
 \begin{itemize}
   \item Elementarer Baustein ist das \textbf{künstliche Neuron}.
-  \item Links stehen die Einträge $x_0, x_1, \dots, x_n$ des
+  \item Links stehen die Einträge $x_1, x_2, \dots, x_n$ des
         \textbf{Merkmalsvektors} $\mathbf{x}$.
   \item Sie werden mit \textbf{Gewichten} $w_i \in \mathbb{R}$ multipliziert
         und aufsummiert.
@@ -144,7 +144,7 @@
   \item Die gewichtete Summe ergibt die Funktion
         $h: \mathbb{R}^n \to \mathbb{R}$:
         \[
-          h(\mathbf{x}) = \sum_{i=0}^{n} w_i x_i
+          h(\mathbf{x}) = \sum_{i=1}^{n} w_i x_i
         \]
   \item $h(\mathbf{x})$ ist der Eingangswert der \textbf{Aktivierungs\-%
         funktion} $g$.
@@ -210,11 +210,11 @@ die echte Nervenzelle.
   \item Jeder Eintrag $x_i$ wird mit dem Gewicht $w_i$ multipliziert und
         aufsummiert:
         \[
-          h(\mathbf{x}) = \sum_{i=0}^{n} w_i x_i
+          h(\mathbf{x}) = \sum_{i=1}^{n} w_i x_i
         \]
   \item Fasst man Gewichte und Eingabe als \textbf{Vektoren}
-        $\mathbf{w} = (w_0, \dots, w_n)^{\mathsf{T}}$ und
-        $\mathbf{x} = (x_0, \dots, x_n)^{\mathsf{T}}$ auf, wird daraus ein
+        $\mathbf{w} = (w_1, \dots, w_n)^{\mathsf{T}}$ und
+        $\mathbf{x} = (x_1, \dots, x_n)^{\mathsf{T}}$ auf, wird daraus ein
         \textbf{Skalarprodukt}:
         \[
           h(\mathbf{x}) = \mathbf{w}\cdot\mathbf{x}
@@ -247,7 +247,7 @@ einem Ausdruck zusammenfasst.
         heraus.
   \item Im 2D-Fall ist die Hyperebene eine \textbf{Gerade}:
         \[
-          w_0 x_0 + w_1 x_1 - \theta = 0
+          w_1 x_1 + w_2 x_2 - \theta = 0
         \]
 \end{itemize}
 
@@ -256,8 +256,8 @@ einem Ausdruck zusammenfasst.
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[>=Stealth]
 % Achsen
-\draw[->, thick] (-0.5,0) -- (4.5,0) node[right] {$x$};
-\draw[->, thick] (0,-0.5) -- (0,4.5) node[above] {$y$};
+\draw[->, thick] (-0.5,0) -- (4.5,0) node[right] {$x_1$};
+\draw[->, thick] (0,-0.5) -- (0,4.5) node[above] {$x_2$};
 % Trenngerade h - theta = 0
 \draw[AlertTitle, line width=1.2pt] (-0.3,4.2) -- (4.2,0.3);
 \node[AlertTitle, font=\footnotesize, anchor=south west]
@@ -277,12 +277,12 @@ einem Ausdruck zusammenfasst.
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item Die Trennebene ist ja beschrieben durch $\mathbf{w}\cdot\mathbf{x} - 𝜃 = 0$.
-  \item Das \textbf{Aktivierungspotenzial} $\theta$ ist dabei \textbf{konstant}. 
+  \item Die Trennebene ist beschrieben durch $\mathbf{w}\cdot\mathbf{x} - \theta = 0$.
+  \item Das \textbf{Aktivierungspotenzial} $\theta$ ist dabei \textbf{konstant}.
   \item Mit fixiertem $\theta$ könnte die Hyperebene nur ihre
         \textbf{Steigung} ändern, nicht ihre \textbf{Verschiebung}.
-  \item Lösung: ein zusätzlicher, konstant $1$-wertiger Input, das
-        \textbf{Bias-Neuron}.
+  \item Lösung: ein zusätzlicher, konstant $1$-wertiger Input
+        $x_{n+1} = 1$, das \textbf{Bias-Neuron}.
   \item Ergebnis ist das \textbf{einlagige Perzeptron}.
   \item \textbf{Hinweis:} $y_2$ zeigt den allgemeinen \textbf{Mehr-Output}-Fall.
         Für zwei Klassen genügt \textbf{ein} Output-Neuron.
@@ -300,8 +300,8 @@ einem Ausdruck zusammenfasst.
                very thick, minimum size=16pt, inner sep=0pt}
 ]
 % Beschriftung Schichten
-\node[font=\footnotesize\bfseries, align=center] at (0,4.6) {Input\\layer};
-\node[font=\footnotesize\bfseries, align=center] at (4,4.6) {Output-\\Layer};
+\node[font=\footnotesize\bfseries, align=center] at (0,4.6) {Input\\Layer};
+\node[font=\footnotesize\bfseries, align=center] at (4,4.6) {Output\\Layer};
 % Input-Neuronen
 \node[input] (x1) at (0,3.6) {};
 \node[input] (x2) at (0,2.0) {};
@@ -340,15 +340,17 @@ einem Ausdruck zusammenfasst.
           W = \begin{pmatrix*}[r]
             w_{1,1} & w_{1,2} & w_{1,3}\\
             w_{2,1} & w_{2,2} & w_{2,3}
-          \end{pmatrix*}
+          \end{pmatrix*},
+          \qquad
+          \mathbf{x} = (x_1, x_2, 1)^{\mathsf{T}}
         \]
-        gilt $\mathbf{h} = W\cdot\mathbf{x}$ und
-        $\mathbf{y} = g(\mathbf{h}(\mathbf{x}))$.
-  \item $g$ wird \textbf{komponentenweise} angewandt (Schwellenwert-/%
-        Heaviside-Funktion).
+        gilt $\mathbf{h} = W\mathbf{x}$ und
+        $\mathbf{y} = g(\mathbf{h})$.
+  \item $g$ wird \textbf{komponentenweise} angewandt, hier als
+        \textbf{Heaviside-Funktion} $H$ mit $H(h) = 1$ für $h > 0$, sonst $0$.
   \item Am Beispiel $y_1$ zeigt sich die Rolle des Bias-Neurons:
         \[
-          h(\mathbf{x}) = w_{1,1}\cdot x_1 + w_{1,2}\cdot x_2 + w_{1,3}\cdot 1
+          h_1 = w_{1,1} x_1 + w_{1,2} x_2 + w_{1,3}\cdot 1
         \]
   \item $w_{1,3}$ übernimmt die Rolle von $-\theta$.
 \end{itemize}
@@ -356,10 +358,11 @@ einem Ausdruck zusammenfasst.
 \column{0.35\textwidth}
 \begin{blockC1}{\footnotesize Ein Output-Neuron}
 Beim Startbeispiel genügt \textbf{ein} Output. $W$ wird einzeilig und lässt
-sich als \textbf{Zeilen-Vektor} schreiben:
+sich als \textbf{Zeilenvektor} schreiben:
 \[
-  \mathbf{w} = \begin{pmatrix} w_1 & w_2 & w_3 \end{pmatrix}
+  \mathbf{w}^{\mathsf{T}} = \begin{pmatrix} w_1 & w_2 & w_3 \end{pmatrix}
 \]
+Damit gilt $h = \mathbf{w}\cdot\mathbf{x}$ und $\hat{y} = H(\mathbf{w}\cdot\mathbf{x})$.
 \end{blockC1}
 \end{columns}
 \source{\cite{Frochte2020}}
@@ -369,7 +372,7 @@ sich als \textbf{Zeilen-Vektor} schreiben:
 \begin{columns}
 \column{0.60\textwidth}
 \begin{itemize}
-  \item Neuronale Netze werden trainiert, indem man die \textbf{Gewichte} $w_i$ anpasst.
+  \item Neuronale Netze werden trainiert, indem man die \textbf{Gewichte} $w_j$ anpasst.
   \item Grundlage ist der \textbf{Fehler} zwischen gewünschtem $y$ und
         beobachtetem $\hat{y}$:
         \[
@@ -378,9 +381,9 @@ sich als \textbf{Zeilen-Vektor} schreiben:
   \item Ist $y > \hat{y}$, werden die Gewichte \textbf{vergrößert}, sonst
         \textbf{verkleinert}:
         \[
-          \Delta w_j = \text{error}\cdot x_j, \qquad w_j = w_j + \Delta w_j
+          \Delta w_j = \eta\cdot\text{error}\cdot x_j, \qquad w_j \leftarrow w_j + \Delta w_j
         \]
-  \item Eine \textbf{Lernrate} $\eta \in\, ]0,1]$ \textbf{dämpft} die
+  \item Die \textbf{Lernrate} $\eta \in\, ]0,1]$ \textbf{dämpft} die
         Änderung und sichert die Konvergenz.
 \end{itemize}
 
@@ -394,53 +397,56 @@ mit kleinem Einfluss.
 \end{frame}
 
 \begin{frame}{Perzeptron: Algorithmus der Hebbschen Lernregel}
-\footnotesize
+\scriptsize
 \begin{columns}
-\SetAlgoCaptionLayout{footnotesize}
-\column{0.60\textwidth}
+\SetAlgoCaptionLayout{scriptsize}
+\column{0.55\textwidth}
 \begin{algorithm}[H]
 \SetAlgoLined
-\KwIn{Beispielmenge $D = \{(x, y)\}$}
-\KwOut{Gewichtsvektor $\mathbf{w}$}
-$\mathbf{w}$ mit Zufallszahlen in $[-0.5, 0.5]$ initialisieren\;
-$t = 0$\;
-\Repeat{$\lVert Y - \text{heaviside}(WX)\rVert < \varepsilon$ \textbf{oder} $t > t_{\max}$}{
-  $t = t + 1$\;
-  $(x, y) = \text{RandomSelect}(D)$\;
-  $\hat{y} = \text{heaviside}(W \cdot x)$\;
-  $\text{error} = y - \hat{y}$\;
-  \For{$j = 0$ \KwTo $p$}{
-    $\Delta w_j = \eta\cdot\text{error}\cdot x_j$\;
-    $w_j = w_j + \Delta w_j$\;
+\KwIn{Trainingsmenge $D = \{(\mathbf{x}_i, y_i)\}_{i=1}^{N}$ mit $\mathbf{x}_i \in \mathbb{R}^{p}$, Lernrate $\eta$, Toleranz $\varepsilon$, $t_{\max}$}
+\KwOut{Gewichtsvektor $\mathbf{w} \in \mathbb{R}^{p}$}
+$\mathbf{w}$ mit Zufallszahlen aus $[-0{,}5;\,0{,}5]$ initialisieren\;
+$t \leftarrow 0$\;
+\Repeat{$E < \varepsilon$ \textbf{oder} $t \geq t_{\max}$}{
+  $t \leftarrow t + 1$\;
+  $(\mathbf{x}, y) \leftarrow \text{RandomSelect}(D)$\;
+  $\hat{y} \leftarrow H(\mathbf{w}\cdot\mathbf{x})$\;
+  $\text{error} \leftarrow y - \hat{y}$\;
+  \For{$j = 1$ \KwTo $p$}{
+    $\Delta w_j \leftarrow \eta\cdot\text{error}\cdot x_j$\;
+    $w_j \leftarrow w_j + \Delta w_j$\;
   }
+  $E \leftarrow \sum_{i=1}^{N} \bigl(y_i - H(\mathbf{w}\cdot\mathbf{x}_i)\bigr)^2$\;
 }
 \caption{Hebbsche Lernregel}
 \end{algorithm}
 
-\column{0.35\textwidth}
+\column{0.40\textwidth}
 \begin{blockC1}{\footnotesize Ablauf}
+  \footnotesize
 \begin{itemize}
-  \item Zufälliges Beispiel $(x, y)$ wählen.
+  \item $p = n + 1$: Anzahl der \textbf{Gewichte}, also $n$ Merkmale plus
+        Bias-Eingang $x_p = 1$.
+  \item Zufälliges Beispiel $(\mathbf{x}, y)$ wählen.
   \item Ausgabe berechnen:
-        $\hat{y} = \text{heaviside}(W \cdot x)$.
+        $\hat{y} = H(\mathbf{w}\cdot\mathbf{x})$.
   \item \textbf{Fehler} bestimmen:
         $\text{error} = y - \hat{y}$.
-  \item Pro Gewicht die Änderung berechnen:
-        $\Delta w_j = \eta\cdot\text{error}\cdot x_j$.
-  \item Gewicht anpassen: $w_j = w_j + \Delta w_j$.
-  \item Wiederholen, bis der Fehler $< \varepsilon$ ist oder $t_{\max}$
-        erreicht ist.
+  \item Jedes Gewicht anpassen:
+        $w_j \leftarrow w_j + \eta\cdot\text{error}\cdot x_j$.
+  \item Wiederholen, bis der Gesamtfehler $E < \varepsilon$ ist oder
+        $t_{\max}$ erreicht ist.
 \end{itemize}
 \end{blockC1}
 \end{columns}
 \source{\cite{Frochte2020}}
-\end{frame}
+  \end{frame}
 
 \begin{frame}{Hebbsche Lernregel -- Eigenschaften}
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-    \item Der Lernalgorithmus verwendet \textbf{Zufallszahlen} $\Rightarrow$ seed beeinflußt Ergebnis.
+    \item Der Lernalgorithmus verwendet \textbf{Zufallszahlen} $\Rightarrow$ der Seed beeinflusst das Ergebnis.
     \item Er liefert eine \textbf{Trennebene}, aber \textbf{keine optimale} im geometrischen Sinn.
     \item Qualität der Lösung variiert.
     \item Weitere Verfeinerungen möglich und notwendig.
@@ -450,7 +456,7 @@ $t = 0$\;
 
 \begin{column}{0.35\textwidth}
       \centering
-      \scriptsize 
+      \scriptsize
 \includesvg[width=0.8\linewidth]{figures/perceptron_trenngerade_42.svg}
 Trenngerade mit seed=42
 \vspace{0.5em}
@@ -481,7 +487,7 @@ Trenngerade mit seed=100
     \item \textbf{AND}: $(1,1)$ liefert $1$, alle anderen $0$. Der Einspunkt ist mit \textbf{einer Geraden} abtrennbar $\Rightarrow$ \textbf{lernbar}.
     \item \textbf{XOR}: $(0,1)$ und $(1,0)$ liefern $1$, $(0,0)$ und $(1,1)$ liefern $0$. Die beiden Klassen liegen \textbf{über Kreuz} $\Rightarrow$ \textbf{keine Gerade} trennt sie.
     \item XOR ist daher \textbf{nicht linear separierbar}. Wir brauchen \textbf{mehrschichtige} Netze.
-    \item Das \textbf{XOR}-Problem ist eines der berühmtesten Probleme der KI. 
+    \item Das \textbf{XOR}-Problem ist eines der berühmtesten Probleme der KI.
 \end{itemize}
 
 \column{0.40\textwidth}
@@ -586,11 +592,11 @@ Trenngerade mit seed=100
     \]
     \item Das \textbf{Bias-Gewicht} lautet
     \[
-        w_3 = -0.5.
+        w_3 = -0{,}5.
     \]
     \item Im \textbf{Output-Neuron} wird die \textbf{Heaviside-Funktion} verwendet:
     \[
-        y = H(x_1 + x_2 - 0.5).
+        y = H(x_1 + x_2 - 0{,}5).
     \]
 \end{itemize}
 
@@ -607,8 +613,8 @@ Trenngerade mit seed=100
 ]
 \node[font=\footnotesize\bfseries] at (2,4.6) {OR-Funktion};
 
-\node[font=\footnotesize\bfseries, align=center] at (0,4.0) {Input\\layer};
-\node[font=\footnotesize\bfseries, align=center] at (4,4.0) {Output-\\Layer};
+\node[font=\footnotesize\bfseries, align=center] at (0,4.0) {Input\\Layer};
+\node[font=\footnotesize\bfseries, align=center] at (4,4.0) {Output\\Layer};
 
 \node[input] (x1) at (0,3.0) {};
 \node[input] (x2) at (0,1.6) {};
@@ -626,7 +632,7 @@ Trenngerade mit seed=100
 
 \draw[->] (x1) -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$1$};
 \draw[->] (x2) -- (y) node[fill=white, inner sep=1pt, pos=0.50, font=\scriptsize] {$1$};
-\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-0.5$};
+\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-0{,}5$};
 \end{tikzpicture}%
 }
 
@@ -648,11 +654,11 @@ Trenngerade mit seed=100
     \]
     \item Das \textbf{Bias-Gewicht} ist nun
     \[
-        w_3 = -1.5.
+        w_3 = -1{,}5.
     \]
     \item Im \textbf{Output-Neuron} wird die \textbf{Heaviside-Funktion} verwendet:
     \[
-        y = H(x_1 + x_2 - 1.5).
+        y = H(x_1 + x_2 - 1{,}5).
     \]
 \end{itemize}
 
@@ -688,7 +694,7 @@ Trenngerade mit seed=100
 
 \draw[->] (x1) -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$1$};
 \draw[->] (x2) -- (y) node[fill=white, inner sep=1pt, pos=0.50, font=\scriptsize] {$1$};
-\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-1.5$};
+\draw[->] (b)  -- (y) node[fill=white, inner sep=1pt, pos=0.48, font=\scriptsize] {$-1{,}5$};
 \end{tikzpicture}%
 }
 
@@ -701,7 +707,7 @@ Trenngerade mit seed=100
 \begin{columns}
 \column{0.55\textwidth}
 \begin{itemize}
-  \item Für \textbf{XOR} lassen sich keine passenden Gewichte $w$ finden.
+  \item Für \textbf{XOR} lässt sich kein passender Gewichtsvektor $\mathbf{w}$ finden.
   \item Lösung: mehrere Neuronen \textbf{neben-} und vor allem
         \textbf{hintereinander} verschalten.
   \item Solche Netze sind \textbf{weit komplexer} zu trainieren.
@@ -726,14 +732,14 @@ die Heaviside-Funktion.
 \column{0.60\textwidth}
 Zwei differenzierbare Alternativen zur Heaviside-Funktion:
 \[
-  \varphi = \text{sig}(ax) = \frac{1}{1 + \exp(-ax)}
+  \operatorname{sig}(a t) = \frac{1}{1 + e^{-a t}}
 \]
 \[
-  \phi = \tanh(ax) = \frac{e^{ax} - e^{-ax}}{e^{ax} + e^{-ax}}
+  \tanh(a t) = \frac{e^{a t} - e^{-a t}}{e^{a t} + e^{-a t}}
 \]
 
 \begin{itemize}
-  \item Wertebereich: \textbf{sig} zwischen $0$ und $1$, \textbf{tanh}
+  \item Wertebereich: $\operatorname{sig}$ zwischen $0$ und $1$, $\tanh$
         zwischen $-1$ und $1$.
   \item Der Parameter $a$ steuert die \textbf{Steilheit}: je größer $a$,
         desto näher an der \textbf{Heaviside}-Funktion.
@@ -746,7 +752,7 @@ Zwei differenzierbare Alternativen zur Heaviside-Funktion:
 \begin{tikzpicture}[>=Stealth]
 % ===== Sigmoid (y-Achse doppelt skaliert) =====
 \begin{scope}[yshift=2.7cm]
-\draw[->, thick] (-2.3,0) -- (2.3,0) node[right, font=\scriptsize] {$x$};
+\draw[->, thick] (-2.3,0) -- (2.3,0) node[right, font=\scriptsize] {$t$};
 \draw[->, thick] (0,-0.2) -- (0,2.5) node[above, font=\scriptsize] {$y$};
 \draw (0.05,2) -- (-0.05,2) node[left, font=\scriptsize] {$1$};
 \draw (0.05,1) -- (-0.05,1) node[left, font=\scriptsize] {$0{,}5$};
@@ -759,12 +765,12 @@ Zwei differenzierbare Alternativen zur Heaviside-Funktion:
   (0,1.0) -- (0.05,1.124) -- (0.1,1.245) -- (0.15,1.358) --
   (0.2,1.462) -- (0.25,1.555) -- (0.3,1.635) -- (0.4,1.762) --
   (0.5,1.848) -- (0.7,1.941) -- (1,1.987) -- (1.5,1.999) -- (2,2.0);
-\node[AccentColor, font=\scriptsize] at (1,2.3) {$\text{sig}(5x)$};
+\node[AccentColor, font=\scriptsize] at (1,2.3) {$\operatorname{sig}(5t)$};
 \end{scope}
 
 % ===== Tanh =====
 \begin{scope}[yshift=-0.0cm]
-\draw[->, thick] (-2.3,0) -- (2.3,0) node[right, font=\scriptsize] {$x$};
+\draw[->, thick] (-2.3,0) -- (2.3,0) node[right, font=\scriptsize] {$t$};
 \draw[->, thick] (0,-1.3) -- (0,1.5) node[above, font=\scriptsize] {$y$};
 \draw (0.05,1) -- (-0.05,1) node[left, font=\scriptsize] {$1$};
 \draw (0.05,-1) -- (-0.05,-1) node[left, font=\scriptsize] {$-1$};
@@ -777,7 +783,7 @@ Zwei differenzierbare Alternativen zur Heaviside-Funktion:
   (0,0.0) -- (0.05,0.245) -- (0.1,0.462) -- (0.15,0.635) --
   (0.2,0.762) -- (0.25,0.848) -- (0.3,0.905) -- (0.4,0.964) --
   (0.5,0.987) -- (0.7,0.998) -- (1,1.0) -- (1.5,1.0) -- (2,1.0);
-\node[SecondaryColor, font=\scriptsize] at (1.1,1.35) {$\tanh(5x)$};
+\node[SecondaryColor, font=\scriptsize] at (1.1,1.35) {$\tanh(5t)$};
 \end{scope}
 \end{tikzpicture}}
 \end{columns}
@@ -790,7 +796,7 @@ Zwei differenzierbare Alternativen zur Heaviside-Funktion:
 \column{0.55\textwidth}
 Beide Funktionen haben eine \textbf{einfach strukturierte} Ableitung:
 \[
-  \text{sig}'(t) = \text{sig}(t)\,\bigl(1 - \text{sig}(t)\bigr)
+  \operatorname{sig}'(t) = \operatorname{sig}(t)\,\bigl(1 - \operatorname{sig}(t)\bigr)
 \]
 \[
   \tanh'(t) = \bigl(1 + \tanh(t)\bigr)\bigl(1 - \tanh(t)\bigr)
@@ -854,18 +860,18 @@ genügt für die Ableitung.
       \node[bias]   (b2) at (3,-0.4) {$1$};
       % Output
       \node[outp] (y) at (6,2.4) {};
-      \node[font=\scriptsize, right] at (6.5,2.4) {$y$};
+      \node[font=\scriptsize, right] at (6.5,2.4) {$\hat{y}$};
       \draw[->] (y) -- (6.5,2.4);
       % Kanten Input -> Hidden mit Gewichten
-      \draw[->] (x1) -- (h1) node[wlab, pos=0.25] {$w_{1,1}$};
-      \draw[->] (x1) -- (h2) node[wlab, pos=0.25] {$w_{2,1}$};
-      \draw[->] (x1) -- (h3) node[wlab, pos=0.25] {$w_{3,1}$};
-      \draw[->] (x2) -- (h1) node[wlab, pos=0.25] {$w_{1,2}$};
-      \draw[->] (x2) -- (h2) node[wlab, pos=0.25] {$w_{2,2}$};
-      \draw[->] (x2) -- (h3) node[wlab, pos=0.25] {$w_{3,2}$};
-      \draw[->] (b1) -- (h1) node[wlab, pos=0.22] {$w_{1,3}$};
-      \draw[->] (b1) -- (h2) node[wlab, pos=0.22] {$w_{2,3}$};
-      \draw[->] (b1) -- (h3) node[wlab, pos=0.22] {$w_{3,3}$};
+      \draw[->] (x1) -- (h1) node[wlab, pos=0.25] {$w^{(1)}_{1,1}$};
+      \draw[->] (x1) -- (h2) node[wlab, pos=0.25] {$w^{(1)}_{2,1}$};
+      \draw[->] (x1) -- (h3) node[wlab, pos=0.25] {$w^{(1)}_{3,1}$};
+      \draw[->] (x2) -- (h1) node[wlab, pos=0.25] {$w^{(1)}_{1,2}$};
+      \draw[->] (x2) -- (h2) node[wlab, pos=0.25] {$w^{(1)}_{2,2}$};
+      \draw[->] (x2) -- (h3) node[wlab, pos=0.25] {$w^{(1)}_{3,2}$};
+      \draw[->] (b1) -- (h1) node[wlab, pos=0.22] {$w^{(1)}_{1,3}$};
+      \draw[->] (b1) -- (h2) node[wlab, pos=0.22] {$w^{(1)}_{2,3}$};
+      \draw[->] (b1) -- (h3) node[wlab, pos=0.22] {$w^{(1)}_{3,3}$};
       % Kanten Hidden -> Output mit Gewichten
       \draw[->] (h1) -- (y) node[wlab, pos=0.25] {$w^{(2)}_{1,1}$};
       \draw[->] (h2) -- (y) node[wlab, pos=0.25] {$w^{(2)}_{1,2}$};
@@ -925,17 +931,17 @@ genügt für die Ableitung.
 
 \column{0.45\textwidth}
 \footnotesize
-\textbf{Fall} $\mathbf{x} = (1,0)$:
+\textbf{Fall} $\mathbf{x} = (1,0)^{\mathsf{T}}$:
 \begin{itemize}
-  \item $a$: Eingang $0{,}5 \Rightarrow$ Heaviside $= \mathbf{1}$.
-  \item $b$: Eingang $-1{,}5 \Rightarrow$ Heaviside $= \mathbf{0}$.
+  \item $a$: Eingang $0{,}5 \Rightarrow H = \mathbf{1}$.
+  \item $b$: Eingang $-1{,}5 \Rightarrow H = \mathbf{0}$.
   \item $c$: $1 + 0 - 0{,}5 = 0{,}5 \Rightarrow y = \mathbf{1}$.
 \end{itemize}
 
 \vspace{0.3em}
-\textbf{Fall} $\mathbf{x} = (1,1)$:
+\textbf{Fall} $\mathbf{x} = (1,1)^{\mathsf{T}}$:
 \begin{itemize}
-  \item $a$ und $b$: Eingang je $-0{,}5 \Rightarrow$ Heaviside $= \mathbf{0}$.
+  \item $a$ und $b$: Eingang je $-0{,}5 \Rightarrow H = \mathbf{0}$.
   \item $c$: $0 + 0 - 0{,}5 = -0{,}5 \Rightarrow y = \mathbf{0}$.
 \end{itemize}
 
@@ -964,7 +970,7 @@ Mit nur \textbf{wenigen Neuronen} und einem Hidden-Layer lässt sich die
 \textbf{Aufgabe:} Zeigen Sie, dass das Netz auch für die verbleibenden
 Fälle
 \[
-  \mathbf{x} = (0,1) \qquad \text{und} \qquad \mathbf{x} = (0,0)
+  \mathbf{x} = (0,1)^{\mathsf{T}} \qquad \text{und} \qquad \mathbf{x} = (0,0)^{\mathsf{T}}
 \]
 das \textbf{korrekte} Ergebnis liefert.
 \column{0.48\textwidth}
@@ -980,7 +986,7 @@ das \textbf{korrekte} Ergebnis liefert.
 \footnotesize
 \begin{columns}
 \column{0.48\textwidth}
-\textbf{Fall} $\mathbf{x} = (0,1)$:
+\textbf{Fall} $\mathbf{x} = (0,1)^{\mathsf{T}}$:
 \begin{itemize}
   \item $a$: Eingang $0 - 1 - 0{,}5 = -1{,}5 \Rightarrow \mathbf{0}$.
   \item $b$: Eingang $0 + 1 - 0{,}5 = 0{,}5 \Rightarrow \mathbf{1}$.
@@ -989,7 +995,7 @@ das \textbf{korrekte} Ergebnis liefert.
 $\Rightarrow$ XOR$(0,1) = 1$, korrekt.
 
 \column{0.48\textwidth}
-\textbf{Fall} $\mathbf{x} = (0,0)$:
+\textbf{Fall} $\mathbf{x} = (0,0)^{\mathsf{T}}$:
 \begin{itemize}
   \item $a$: Eingang $0 + 0 - 0{,}5 = -0{,}5 \Rightarrow \mathbf{0}$.
   \item $b$: Eingang $0 + 0 - 0{,}5 = -0{,}5 \Rightarrow \mathbf{0}$.
@@ -1055,7 +1061,7 @@ $\Rightarrow$ XOR$(0,0) = 0$, korrekt.
         \[
           0\cdot x_1 + 0\cdot x_2 + 1\cdot 1 = 1 > 0,
         \]
-        also \textbf{konstant} Heaviside $= 1$.
+        also \textbf{konstant} $H(1) = 1$.
   \item So bildet das Netz das Bias-Neuron \textbf{selbst} nach.
 \end{itemize}
 \end{columns}
@@ -1081,7 +1087,7 @@ $\Rightarrow$ XOR$(0,0) = 0$, korrekt.
 Ein Input-Bias ist \textbf{Pflicht}. Weitere Bias-Neuronen sind eine Frage
 der \textbf{Effizienz}.\par
 \medskip
-In \textbf{Standard-Implementierungen} von Multilayer-Perzeptrons sind typischerweise Bias-Neuronen \textbf{in jeder Schicht} enthalten
+In \textbf{Standard-Implementierungen} von Multilayer-Perzeptrons sind typischerweise Bias-Neuronen \textbf{in jeder Schicht} enthalten.
 
 \end{blockC1}
 \end{columns}
@@ -1092,15 +1098,15 @@ In \textbf{Standard-Implementierungen} von Multilayer-Perzeptrons sind typischer
 \begin{frame}{Aktivierungsfunktionen: Lineare Aktivierung}
 \footnotesize
 \begin{columns}
-\column{0.60      \textwidth}
+\column{0.60\textwidth}
 Eine weitere, oft im \textbf{Output-Layer} genutzte Aktivierungsfunktion
 ist die \textbf{lineare} Aktivierung:
 \[
-  \varphi = a\cdot x
+  g(t) = a\,t
 \]
 
 \begin{itemize}
-  \item Sigmoid/tanh begrenzen den Output auf $0$ bis $1$ bzw. $-1$ bis $1$.
+  \item $\operatorname{sig}$ und $\tanh$ begrenzen den Output auf $0$ bis $1$ bzw. $-1$ bis $1$.
   \item Solche Netze funktionieren nur mit entsprechend \textbf{skalierten}
         Zielwerten.
   \item Die lineare Funktion hat einen \textbf{unbeschränkten}
@@ -1114,16 +1120,16 @@ ist die \textbf{lineare} Aktivierung:
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[>=Stealth]
 % Achsen
-\draw[->, thick] (-1.4,0) -- (1.4,0) node[right, font=\scriptsize] {$x$};
+\draw[->, thick] (-1.4,0) -- (1.4,0) node[right, font=\scriptsize] {$t$};
 \draw[->, thick] (0,-1.4) -- (0,1.4) node[above, font=\scriptsize] {$y$};
 % Ticks
 \draw (1,0.05) -- (1,-0.05) node[below, font=\scriptsize] {$1$};
 \draw (-1,0.05) -- (-1,-0.05) node[above, font=\scriptsize] {$-1$};
 \draw (0.05,1) -- (-0.05,1) node[left, font=\scriptsize] {$1$};
 \draw (0.05,-1) -- (-0.05,-1) node[left, font=\scriptsize] {$-1$};
-% lineare Funktion phi = a*x (hier a=1)
+% lineare Funktion g(t) = a t (hier a=1)
 \draw[SecondaryColor, line width=1pt] (-1.2,-1.2) -- (1.2,1.2);
-\node[SecondaryColor, font=\scriptsize] at (0.85,1.25) {$\varphi = a\cdot x$};
+\node[SecondaryColor, font=\scriptsize] at (0.85,1.45) {$g(t) = a\,t$};
 \end{tikzpicture}}
 \end{columns}
 \source{\cite{Frochte2020}}
@@ -1137,7 +1143,7 @@ ist die \textbf{lineare} Aktivierung:
   \item Neuronale Netze können \textbf{beliebig viele} Hidden Layer haben.
   \item Ab mehr als drei Hidden Layern spricht man von \textbf{tiefen}
         Netzen (Deep Networks).
-  \item Mit \textbf{zwei} Hidden Layern (Sigmoid) und \textbf{linearem}
+  \item Mit \textbf{zwei} Hidden Layern ($\operatorname{sig}$) und \textbf{linearem}
         Output lassen sich bereits \textbf{alle stetigen} Funktionen
         approximieren.
 \end{itemize}
@@ -1180,9 +1186,9 @@ ist die \textbf{lineare} Aktivierung:
 \node[hidden] (c4) at (5.2,0.4) {};
 % Output
 \node[outp] (y) at (7.8,2.8) {};
-\node[font=\scriptsize, right] at (8.3,2.8) {$y$};
+\node[font=\scriptsize, right] at (8.3,2.8) {$\hat{y}$};
 \draw[->] (y) -- (8.3,2.8);
-% Kanten Input -> Hidden 1 (mittlerer Eingang je Knoten mittig auf Linie)
+% Kanten Input -> Hidden 1
 \draw[->] (x1) -- (a1) node[wlab, above, pos=0.72] {$w^{(1)}_{1,1}$};
 \draw[->] (x1) -- (a2) node[wlab, above , pos=0.9] {$w^{(1)}_{2,1}$};
 \draw[->] (x1) -- (a3) node[wlab, right, pos=0.8] {$w^{(1)}_{3,1}$};
@@ -1192,7 +1198,7 @@ ist die \textbf{lineare} Aktivierung:
 \draw[->] (b1) -- (a1) node[wlab, right, pos=0.90] {$w^{(1)}_{1,3}$};
 \draw[->] (b1) -- (a2) node[wlab, right, pos=0.8] {$w^{(1)}_{2,3}$};
 \draw[->] (b1) -- (a3) node[wlab, below, pos=0.72] {$w^{(1)}_{3,3}$};
-% Kanten Hidden 1 -> Hidden 2 (mittlerer Eingang je Knoten mittig auf Linie)
+% Kanten Hidden 1 -> Hidden 2
 \draw[->] (a1) -- (c1) node[wlab, above, pos=0.74] {$w^{(2)}_{1,1}$};
 \draw[->] (a1) -- (c2) node[wlab, above, pos=0.92] {$w^{(2)}_{2,1}$};
 \draw[->] (a1) -- (c3) node[wlab, right, pos=0.8] {$w^{(2)}_{3,1}$};
@@ -1205,7 +1211,7 @@ ist die \textbf{lineare} Aktivierung:
 \draw[->] (a3) -- (c2) node[wlab, right, pos=0.85] {$w^{(2)}_{2,3}$};
 \draw[->] (a3) -- (c3) node[wlab, below, pos=0.92] {$w^{(2)}_{3,3}$};
 \draw[->] (a3) -- (c4) node[wlab, below, pos=0.74] {$w^{(2)}_{4,3}$};
-% Kanten Hidden 2 -> Output mit Gewichten
+% Kanten Hidden 2 -> Output
 \draw[->] (c1) -- (y) node[wmid, pos=0.75] {$w^{(3)}_{1,1}$};
 \draw[->] (c2) -- (y) node[wmid, pos=0.75] {$w^{(3)}_{1,2}$};
 \draw[->] (c3) -- (y) node[wmid, pos=0.75] {$w^{(3)}_{1,3}$};
@@ -1264,13 +1270,13 @@ Mehr als zwei Hidden-Layer waren lange selten wegen der größeren
 \begin{frame}{MLP: Vorwärtsberechnung -- erste Schicht}
 \begin{columns}
 \column{0.60\textwidth}
-Angenommen, das Netz ist \textbf{trainiert}, mit \textbf{Sigmoid} in den
+Angenommen, das Netz ist \textbf{trainiert}, mit $\operatorname{sig}$ in den
 Hidden-Layern und \textbf{linearer} Aktivierung im Output.
 
 \vspace{0.4em}
-Die erste Schicht berechnet:
+Die erste Schicht berechnet mit $\mathbf{x} = (x_1, x_2, 1)^{\mathsf{T}}$:
 \[
-  O^{(1)} = \text{sig}(\underbrace{W^{(1)}\mathbf{x}}_{\mathbf{b}})
+  \mathbf{o}^{(1)} = \operatorname{sig}\bigl(\underbrace{W^{(1)}\mathbf{x}}_{\mathbf{h}^{(1)}}\bigr)
 \]
 mit der Gewichtsmatrix
 \[
@@ -1284,10 +1290,10 @@ mit der Gewichtsmatrix
 
 \column{0.35\textwidth}
 \begin{blockC2}{Komponentenweise}
-Die Sigmoid-Funktion wird pro Eintrag von $\mathbf{b}$ angewandt:
+$\operatorname{sig}$ wird pro Eintrag von $\mathbf{h}$ angewandt:
 \[
-  \begin{pmatrix} \text{sig}(b_1)\\ \vdots\\ \text{sig}(b_n) \end{pmatrix}
-  = \text{sig}(\mathbf{b})
+  \operatorname{sig}(\mathbf{h}) =
+  \begin{pmatrix} \operatorname{sig}(h_1)\\ \vdots\\ \operatorname{sig}(h_m) \end{pmatrix}
 \]
 \end{blockC2}
 \end{columns}
@@ -1297,10 +1303,10 @@ Die Sigmoid-Funktion wird pro Eintrag von $\mathbf{b}$ angewandt:
 \begin{frame}{MLP: Vorwärtsberechnung -- zweite Schicht}
 \begin{columns}
 \column{0.60\textwidth}
-Der Output $O^{(1)}$ ist der \textbf{Input} der nächsten Schicht. Er wird
+Der Output $\mathbf{o}^{(1)}$ ist der \textbf{Input} der nächsten Schicht. Er wird
 mit der Matrix $W^{(2)}$ multipliziert:
 \[
-  O^{(2)} = \text{sig}(W^{(2)} O^{(1)})
+  \mathbf{o}^{(2)} = \operatorname{sig}\bigl(W^{(2)} \mathbf{o}^{(1)}\bigr)
 \]
 mit
 \[
@@ -1325,18 +1331,19 @@ gefolgt von einer \textbf{komponentenweisen} Aktivierung.
 \begin{frame}{MLP: Vorwärtsberechnung -- Gesamtformel}
 \begin{columns}
 \column{0.60\textwidth}
-Die Output-Schicht nutzt eine \textbf{lineare} Aktivierung:
+Die Output-Schicht nutzt eine \textbf{lineare} Aktivierung mit
+$W^{(3)} \in \mathbb{R}^{1\times 4}$:
 \[
-  y = W^{(3)} O^{(2)}
+  \hat{y} = W^{(3)} \mathbf{o}^{(2)}
 \]
 Setzt man alle Schichten ineinander ein, ergibt sich:
 \[
-  y = W^{(3)}\,\text{sig}\bigl(W^{(2)}\,\text{sig}(W^{(1)}\mathbf{x})\bigr)
+  \hat{y} = W^{(3)}\,\operatorname{sig}\bigl(W^{(2)}\,\operatorname{sig}(W^{(1)}\mathbf{x})\bigr)
 \]
 
 \column{0.35\textwidth}
 \begin{blockC1}{Kernaussage}
-Die Vorhersage $y_p$ ist eine \textbf{Verkettung} von
+Die Vorhersage $\hat{y}$ ist eine \textbf{Verkettung} von
 Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \end{blockC1}
 \end{columns}
@@ -1354,12 +1361,12 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
           (verdeckte Schichten und Neuronen).
 
     \item \textbf{Gewichte} werden zufällig initialisiert und beim Training so \textbf{angepasst},
-          sodass das Netz die gewünschte Ausgabe liefert.
+          dass das Netz die gewünschte Ausgabe liefert.
 
     \item Das Training ähnelt dem Einstellen eines Mischpults mit
           vielen Reglern: Die Gewichte werden \textbf{schrittweise über
           viele Iterationen optimiert}.
-    \item \textbf{Grundproblem: }  Woher wissen wir, wie genau wir die einzelnen Regeler verstellen sollen? 
+    \item \textbf{Grundproblem:} Woher wissen wir, wie genau wir die einzelnen Regler verstellen sollen?
 \end{itemize}
 
 \column{0.28\textwidth}
@@ -1378,9 +1385,9 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \begin{itemize}
   \item Gewichte können nicht \textbf{isoliert} angepasst werden, da Neuronen miteinander verknüpft sind.
   \item Deshalb werden \textbf{alle Gewichte gemeinsam} optimiert.
-  \item Für jede Element des Trainingsdatensatzes $D$ wird die Netzausgabe $\hat{y}$ mit dem \textbf{Soll-Wert} $y_i$ verglichen.
+  \item Für jedes Element $(\mathbf{x}_i, y_i)$ des Trainingsdatensatzes $D$ wird die Netzausgabe $\hat{y}_i$ mit dem \textbf{Soll-Wert} $y_i$ verglichen.
   \item Über alle Trainingsbeispiele werden die Fehler \textbf{quadriert und aufsummiert}.
-  \item Das Ergebnis ist die \textbf{Loss Function} (\emph{Verlustfunktion} $L$).
+  \item Das Ergebnis ist die \textbf{Loss Function} (Verlustfunktion $L$).
 \end{itemize}
 
 
@@ -1397,7 +1404,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 ]
 % Formel oben rechts
 \node[font=\small] at (5.0,5.4)
-  {$L = \sum_{y_i \in D} (\hat{y}_i - y_i)^2$};
+  {$L = \sum_{(\mathbf{x}_i, y_i) \in D} (\hat{y}_i - y_i)^2$};
 % Input
 \node[input] (x1) at (0,4.2) {};
 \node[input] (x2) at (0,2.6) {};
@@ -1435,10 +1442,10 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \footnotesize
 \begin{itemize}
     \item Der \textbf{Gradientenabstieg} ist ein Optimierungsverfahren.
-    
+
     \item Ziel ist es, die Gewichte so zu bestimmen, dass der \textbf{Gesamtfehler} minimal wird:
     \[
-      L = \sum_{(x_i,y_i)\in D}
+      L = \sum_{(\mathbf{x}_i,y_i)\in D}
       (\hat{y}_i-y_i)^2
     \]
 
@@ -1495,27 +1502,27 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 \column{0.65\textwidth}
 
 \begin{itemize}
-    \item Der \textbf{Gradientenabstieg} (\textit{Gradient Descent}) ist ein Verfahren zur Minimierung einer Zielfunktion.
+    \item Der \textbf{Gradientenabstieg} (Gradient Descent) ist ein Verfahren zur Minimierung einer Zielfunktion.
 
-    \item Ziel ist es, einen Parametervektor $\theta$ zu finden, für den die Fehlerfunktion minimal wird.
+    \item Ziel ist es, einen Gewichtsvektor $\mathbf{w}$ zu finden, für den die Loss Function $L$ minimal wird.
 
     \item Vorgehen:
     \begin{enumerate}
       \footnotesize
-        \item Startpunkt $\theta_0$ wählen.
-        \item Gradienten $\nabla f(\theta_i)$ berechnen.
+        \item Startpunkt $\mathbf{w}_0$ wählen.
+        \item Gradienten $\nabla L(\mathbf{w}_t)$ berechnen.
         \item Schritt entgegen der Gradientenrichtung ausführen:
         \[
-            \theta_{i+1}
+            \mathbf{w}_{t+1}
             =
-            \theta_i
+            \mathbf{w}_t
             -
-            \alpha \cdot \nabla f(\theta_i)
+            \eta \cdot \nabla L(\mathbf{w}_t)
         \]
         \item Wiederholen, bis ein Minimum erreicht ist.
     \end{enumerate}
 
-    \item Die \textbf{Lernrate} $\alpha$ bestimmt die Schrittweite.
+    \item Die \textbf{Lernrate} $\eta$ bestimmt die Schrittweite.
 \end{itemize}
 
 \column{0.35\textwidth}
@@ -1539,7 +1546,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
           minimieren:
           \[
               L =
-              \sum_{(x_i,y_i)\in D}
+              \sum_{(\mathbf{x}_i,y_i)\in D}
               \left(\hat{y}_i - y_i\right)^2
           \]
 
@@ -1624,14 +1631,14 @@ Dadurch wird das Training schneller, der Gradient aber nur
 \node[calc, right=0.75cm of b1] (c1) {
     $L_{B_1}
     =
-    \displaystyle\sum_{(x_i,y_i)\in B_1}
+    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_1}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
 \node[calc, right=0.75cm of b2] (c2) {
     $L_{B_2}
     =
-    \displaystyle\sum_{(x_i,y_i)\in B_2}
+    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_2}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
@@ -1642,7 +1649,7 @@ Dadurch wird das Training schneller, der Gradient aber nur
 \node[calc, right=0.75cm of bn] (cn) {
     $L_{B_n}
     =
-    \displaystyle\sum_{(x_i,y_i)\in B_n}
+    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_n}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
@@ -1681,7 +1688,7 @@ Dadurch wird das Training schneller, der Gradient aber nur
           Gesamtfehler kleiner wird.
 
     \item Für den Gradientenabstieg benötigt man den Gradienten der
-          loss function:
+          Loss Function:
           \[
               \nabla L
           \]
@@ -1704,7 +1711,7 @@ Für jedes Gewicht wird benötigt:
 
 Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \[
-    w \leftarrow w - \alpha \frac{\partial L}{\partial w}
+    w \leftarrow w - \eta \frac{\partial L}{\partial w}
 \]
 \end{blockC1}
 
@@ -1717,7 +1724,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \column{0.52\textwidth}
 
 \begin{itemize}
-    \item Für ein Trainingsbeispiel $(x_i,y_i)\in D$ erzeugt das Netz eine
+    \item Für ein Trainingsbeispiel $(\mathbf{x}_i,y_i)\in D$ erzeugt das Netz eine
           Ausgabe $\hat{y}_i$.
 
     \item Die Loss Function summiert die Abweichungen über alle
@@ -1734,7 +1741,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \begin{block}{Gesamtfehler}
 \[
     L =
-    \sum_{(x_i,y_i)\in D}
+    \sum_{(\mathbf{x}_i,y_i)\in D}
     \left(\hat{y}_i-y_i\right)^2
 \]
 \end{block}
@@ -1761,7 +1768,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \column{0.45\textwidth}
 
 \begin{itemize}
-    \item Für jedes Trainingsbeispiel müsste man $x_i$ in \textbf{die Netzfunktion
+    \item Für jedes Trainingsbeispiel müsste man $\mathbf{x}_i$ in \textbf{die Netzfunktion
           einsetzen}.
 
     \item Alle Netzfunktionen setzt man in die \textbf{Fehlerfunktion} ein.
@@ -1777,7 +1784,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \footnotesize
 \begin{blockC3}{\footnotesize Einsetzen in die Loss Function}
 \[
-L=\sum_{(x_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname{sig}(W^{(1)}x_i)\bigr)- y_i\Bigr)^2
+L=\sum_{(\mathbf{x}_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname{sig}(W^{(1)}\mathbf{x}_i)\bigr)- y_i\Bigr)^2
 \]
 \end{blockC3}
 
@@ -1788,7 +1795,7 @@ L=\sum_{(x_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname
     \frac{\partial L}{\partial w_{1,1}^{(1)}},
     \frac{\partial L}{\partial w_{1,2}^{(1)}},
     \dots,
-    \frac{\partial L}{\partial w_{m,n}^{(3)}}
+    \frac{\partial L}{\partial w_{1,4}^{(3)}}
 \]
 \end{blockC4}
 
@@ -1825,7 +1832,7 @@ W^{(1)}\mathbf{x}
 \operatorname{sig}(W^{(1)}\mathbf{x})
 \]
 \[
-\rightarrow W^{(2)}(\cdot)\mathbf{x}
+\rightarrow W^{(2)}\operatorname{sig}(W^{(1)}\mathbf{x})
 \rightarrow
 \dots
 \rightarrow
@@ -1923,7 +1930,7 @@ W^{(1)}\mathbf{x}
 \column{0.6\textwidth}
 
 \begin{itemize}
-      
+
     \item Der direkte Weg wäre:
           \textbf{einsetzen, ausmultiplizieren, nach allen Gewichten ableiten}.
 
@@ -1955,7 +1962,7 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
     \leftarrow
     W^{(k)}
     -
-    \alpha
+    \eta
     \frac{\partial L}{\partial W^{(k)}}
 \]
 \end{block}
@@ -2017,7 +2024,7 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
 \node[outp] (y) at (7.8,2.8) {};
 \node[font=\scriptsize, right, text=gray!70] at (8.25,2.8) {$\hat{y}$};
 
-% Ausgegraute Kanten Input -> Hidden 1 ohne Gewichtsbeschriftung
+% Ausgegraute Kanten Input -> Hidden 1
 \foreach \i in {x1,x2,b1}{
   \foreach \j in {a1,a2,a3}{
     \draw[inactive] (\i) -- (\j);
@@ -2031,13 +2038,11 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
   }
 }
 
-% Beispielhaft fokussierte Kante:
-% w_{i,j}: Gewicht von Knoten j zu Knoten i
+% Fokussierte Kante: w_{i,j} von Knoten j zu Knoten i
 \draw[focus] (a2) -- (c2)
   node[smalllab, pos=0.55, above] {$w_{i,j}$};
 
-
-% Ausgegraute Kanten Hidden 2 -> Output ohne Gewichtsbeschriftung
+% Ausgegraute Kanten Hidden 2 -> Output
 \foreach \i in {c1,c2,c3,c4}{
   \draw[inactive] (\i) -- (y);
 }
@@ -2047,10 +2052,9 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
   (c2.east) -- ++(1.05,0)
   node[midway, above, font=\tiny] {Fehlersignal};
 
-  % Beschriftung der beiden beteiligten Neuronen
+% Beschriftung der beiden beteiligten Neuronen
 \node[lab, left=0.08cm of a2] {$o_j$};
 \node[lab, right=0.08cm of c2] {$\delta_i$};
-
 
 \end{tikzpicture}%
 }
@@ -2071,17 +2075,17 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
           \[
               \Delta w_{i,j}
               =
-              -\alpha
+              -\eta
               \frac{\partial L}{\partial w_{i,j}}
               =
-              -\alpha\,\delta_i\cdot o_j
+              -\eta\,\delta_i\, o_j
           \]
 
     \item $\delta_i$ ist das \textbf{Fehlersignal} des Neurons $i$.
 
     \item $o_j$ ist die \textbf{Ist-Ausgabe} des Neurons $j$.
 
-    \item $\alpha$ ist die \textbf{Lernrate} des Gradientenabstiegs.
+    \item $\eta$ ist die \textbf{Lernrate} des Gradientenabstiegs.
 \end{itemize}
 
 \end{columns}
@@ -2115,9 +2119,9 @@ Stattdessen werden \textbf{Fehleranteile schichtweise} zurückgegeben.
 $\displaystyle
 \delta_j =
 \begin{cases}
-\varphi'(\mathrm{net}_j)\,(o_j-y),
+g'(\mathrm{net}_j)\,(o_j-y),
 & \text{falls } j \text{ Ausgabeneuron ist}, \\[0.4cm]
-\varphi'(\mathrm{net}_j)
+g'(\mathrm{net}_j)
 \displaystyle\sum_k \delta_k\,w_{k,j},
 & \text{sonst.}
 \end{cases}
@@ -2132,8 +2136,7 @@ $%
     \item $o_j$: Ausgabe von Neuron $j$
     \item $y$: gewünschte Ausgabe
     \item $\mathrm{net}_j$: gewichtete Summe der Eingänge von Neuron $j$: $\mathrm{net}_j = \sum_i w_{j,i}\,o_i$
-              
-    \item $\varphi'(\mathrm{net}_j)$: Ableitung der Aktivierungsfunktion
+    \item $g'(\mathrm{net}_j)$: Ableitung der Aktivierungsfunktion
     \item $w_{k,j}$: Gewicht von Neuron $j$ zu Neuron $k$
 \end{itemize}
 \end{blockC2}
@@ -2159,7 +2162,7 @@ $%
 \item Verwendet Gradienten zur Optimierung
 \item Aktualisiert Gewichte iterativ
 \item Ziel: Minimierung der Loss Function
-\item Update: $w := w - \alpha \cdot \nabla L$
+\item Update: $\mathbf{w} \leftarrow \mathbf{w} - \eta \cdot \nabla L$
 \end{itemize}
 \end{columns}
 
@@ -2193,27 +2196,27 @@ Backpropagation liefert die Gradienten. Gradient Descent nutzt sie, um das Netz 
 Gegeben ist ein kleines neuronales Netz mit der
 \textbf{Identitätsfunktion} als Aktivierung:
 \[
-  \varphi(x)=x
+  g(t)=t
   \qquad\Rightarrow\qquad
-  \varphi'(x)=1.
+  g'(t)=1.
 \]
 
 Für das Trainingsbeispiel gilt:
 \[
-  x_1=1,\qquad x_2=2,\qquad y=1.
+  \mathbf{x}=(x_1,x_2)^{\mathsf{T}}=(1,2)^{\mathsf{T}},\qquad y=1.
 \]
 
 Die Lernrate sei:
 \[
-  \alpha=0{,}1.
+  \eta=0{,}1.
 \]
 
 Berechnen Sie:
 
 \begin{enumerate}
-  \item die Forward Propagation,
-  \item die Fehlersignale $\delta$,
-  \item die Gewichtsänderungen $\Delta w$.
+  \item Die Forward Propagation.
+  \item Die Fehlersignale $\delta$.
+  \item Die Gewichtsänderungen $\Delta w$.
 \end{enumerate}
 
 \column{0.48\textwidth}
@@ -2252,7 +2255,7 @@ Berechnen Sie:
 \node[font=\scriptsize, left=0.2cm of x1] {$1$};
 \node[font=\scriptsize, left=0.2cm of x2] {$2$};
 
-\node[font=\scriptsize, below=0.35cm of h] {$o_h=\varphi(\mathrm{net}_h)$};
+\node[font=\scriptsize, below=0.35cm of h] {$o_h=g(\mathrm{net}_h)$};
 \node[font=\scriptsize, below=0.35cm of o] {$o_o=\hat{y}$};
 
 \end{tikzpicture}%
@@ -2265,7 +2268,7 @@ Hinweis:
 \[
   \Delta w_{i,j}
   =
-  -\alpha\,\delta_i\,o_j
+  -\eta\,\delta_i\,o_j
 \]
 }
 
@@ -2304,9 +2307,9 @@ w_{h,1}x_1+w_{h,2}x_2 \\[0.1cm]
 \end{aligned}
 \]
 
-Da $\varphi(x)=x$ gilt:
+Da $g(t)=t$ gilt:
 \[
-  o_h=\varphi(\mathrm{net}_h)=-0{,}5.
+  o_h=g(\mathrm{net}_h)=-0{,}5.
 \]
 
 \column{0.48\textwidth}
@@ -2341,7 +2344,7 @@ Der quadratische Fehler beträgt:
 
 
 %=======================================================================
-% Frame 3: Lösung 2 - Backpropagation / Fehlersignale
+% Frame 3: Lösung 2 - Fehlersignale
 %=======================================================================
 \begin{frame}{Backpropagation: Lösung 2 -- Fehlersignale}
 \footnotesize
@@ -2356,7 +2359,7 @@ Für das Ausgabeneuron gilt:
 \[
   \delta_o
   =
-  \varphi'(\mathrm{net}_o)(o_o-y)
+  g'(\mathrm{net}_o)(o_o-y)
 \]
 
 Einsetzen liefert:
@@ -2385,7 +2388,7 @@ zurückgerechnet:
 \[
   \delta_h
   =
-  \varphi'(\mathrm{net}_h)
+  g'(\mathrm{net}_h)
   \sum_k \delta_k w_{k,h}.
 \]
 
@@ -2428,7 +2431,7 @@ Die Gewichtsänderung lautet:
 \[
   \Delta w_{i,j}
   =
-  -\alpha\,\delta_i\,o_j.
+  -\eta\,\delta_i\,o_j.
 \]
 
 Für das Gewicht vom versteckten Neuron zum Ausgabeneuron:
@@ -2436,7 +2439,7 @@ Für das Gewicht vom versteckten Neuron zum Ausgabeneuron:
 \begin{aligned}
 \Delta w_{o,h}
 &=
--\alpha\delta_o o_h \\[0.1cm]
+-\eta\,\delta_o\, o_h \\[0.1cm]
 &=
 -0{,}1\cdot(-2)\cdot(-0{,}5) \\[0.1cm]
 &=
@@ -2446,7 +2449,7 @@ Für das Gewicht vom versteckten Neuron zum Ausgabeneuron:
 
 Damit:
 \[
-  w_{o,h}^{\,neu}
+  w_{o,h}^{\text{neu}}
   =
   2 + (-0{,}1)
   =
@@ -2462,7 +2465,7 @@ Für $w_{h,1}$:
 \begin{aligned}
 \Delta w_{h,1}
 &=
--\alpha\delta_h x_1 \\[0.1cm]
+-\eta\,\delta_h\, x_1 \\[0.1cm]
 &=
 -0{,}1\cdot(-4)\cdot 1 \\[0.1cm]
 &=
@@ -2475,7 +2478,7 @@ Für $w_{h,2}$:
 \begin{aligned}
 \Delta w_{h,2}
 &=
--\alpha\delta_h x_2 \\[0.1cm]
+-\eta\,\delta_h\, x_2 \\[0.1cm]
 &=
 -0{,}1\cdot(-4)\cdot 2 \\[0.1cm]
 &=
@@ -2485,10 +2488,10 @@ Für $w_{h,2}$:
 
 Damit:
 \[
-  w_{h,1}^{\,neu}=0{,}5+0{,}4=0{,}9
+  w_{h,1}^{\text{neu}}=0{,}5+0{,}4=0{,}9
 \]
 \[
-  w_{h,2}^{\,neu}=-0{,}5+0{,}8=0{,}3
+  w_{h,2}^{\text{neu}}=-0{,}5+0{,}8=0{,}3
 \]
 
 \end{columns}
@@ -2506,19 +2509,18 @@ Damit:
 \column{0.75\textwidth}
 \begin{itemize}
   \item MLPs tendieren bei hoher Modellkomplexität zur \textbf{Überanpassung}.
-    \item Zur Regularisierung wird der Loss-Funktion häufig ein 
-    $L^2$-\textbf{Strafterm} hinzugefügt, der große Gewichte bestraft.
-    \item \textbf{Grundgedanke:} Große Gewichte führen dazu, dass das Netz stark auf kleine Änderungen der Eingangsgrößen reagiert.
-    Dadurch entstehen steile und empfindliche Entscheidungsfunktionen.
-\item Der Parameter  $\alpha$ steuert den Einfluss des $L^2$-\textbf{Strafterms}:
+  \item Zur Regularisierung wird der Loss Function häufig ein
+        $L^2$-\textbf{Strafterm} hinzugefügt, der große Gewichte bestraft.
+  \item \textbf{Grundgedanke:} Große Gewichte führen dazu, dass das Netz stark auf kleine Änderungen der Eingangsgrößen reagiert.
+        Dadurch entstehen steile und empfindliche Entscheidungsfunktionen.
+  \item Der Parameter $\alpha$ steuert den Einfluss des $L^2$-\textbf{Strafterms}:
 \[
-C(\mathbf{W})=\underbrace{L(\mathbf{W})}_{\text{Fehler}}+\alpha\underbrace{\textstyle\sum_i w_i^2}_{\text{Strafterm}}
+C(\mathbf{w})=\underbrace{L(\mathbf{w})}_{\text{Fehler}}+\alpha\underbrace{\textstyle\sum_i w_i^2}_{\text{Strafterm}}
 \]
-    \item \textbf{Großes $\alpha$:} kleinere Gewichte, \textbf{glattere} Entscheidungsgrenze,
-    Overfitting.
-
-    \item \textbf{Kleines $\alpha$:} größere Gewichte, \textbf{komplexere} Entscheidungsgrenze,
-    Unterfitting.
+  \item \textbf{Großes $\alpha$:} kleinere Gewichte, \textbf{glattere} Entscheidungsgrenze,
+        Gefahr von Underfitting.
+  \item \textbf{Kleines $\alpha$:} größere Gewichte, \textbf{komplexere} Entscheidungsgrenze,
+        Gefahr von Overfitting.
 \end{itemize}
 
 \column{0.25\textwidth}
@@ -2552,10 +2554,10 @@ C(\mathbf{W})=\underbrace{L(\mathbf{W})}_{\text{Fehler}}+\alpha\underbrace{\text
   \end{scope}
 \end{tikzpicture}
 \end{columns}
-\source{\cite{goodfellow2016deep}}
 
 \note{Das $L^2$ steht für die euklidische Norm.}
 
+\source{\cite{goodfellow2016deep}}
 \end{frame}
 
 
@@ -2605,9 +2607,9 @@ print(model.score(X_test, y_test))
 \footnotesize
 \begin{blockC1}{\footnotesize Parameter des MLP}
 \begin{itemize}
-  \item \texttt{solver}: \textbf{Optimierungsverfahren} für die Gewichte. \texttt{'sgd'} wäre das klassische \emph{Stochastic Graadiend Descent}
+  \item \texttt{solver}: \textbf{Optimierungsverfahren} für die Gewichte. \texttt{'sgd'} wäre das klassische Stochastic Gradient Descent.
   \item \texttt{max\_iter}: maximale \textbf{Iterationszahl}.
-  \item \texttt{alpha}: Stärke der \textbf{Regularisierung}.
+  \item \texttt{alpha}: Stärke $\alpha$ der \textbf{Regularisierung}.
   \item \texttt{hidden\_layer\_sizes}: \textbf{Größe} der Hidden-Layer, hier
         $30$, $20$, $10$.
   \item \texttt{random\_state}: feste \textbf{Initialisierung}.
@@ -2638,7 +2640,7 @@ $\alpha$ erlaubt eine \textbf{komplexere} Entscheidungsgrenze.
 \source{MultilayerPerceptron.ipynb}
 \end{frame}
 
-  \begin{frame}{Neuronale Netze: Toolkits für neuronale Netze}
+\begin{frame}{Neuronale Netze: Toolkits für neuronale Netze}
 \begin{columns}
 \column{0.25\textwidth}
 \centering
@@ -2670,8 +2672,8 @@ Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils ein \textbf{Multi-Layer
 Perceptron} anwenden:
 
 \begin{itemize}
-  \item auf den \textbf{Iris-Datensatz},
-  \item auf den \textbf{UCI Heart Disease} Datensatz.
+  \item Auf den \textbf{Iris-Datensatz}.
+  \item Auf den \textbf{UCI Heart Disease} Datensatz.
 \end{itemize}
 
 \vspace{0.4em}
@@ -2686,6 +2688,3 @@ Hidden-Layer) und vergleichen Sie die Ergebnisse.
 \end{frame}
 
 \makequestionspage{\FRAGENIMAGE}
-
-
-
