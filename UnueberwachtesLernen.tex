@@ -388,6 +388,33 @@ $-2\,\mathbf{x}_i \cdot \mathbf{x}_j$.
 \end{block}
 \end{columns}
 \source{\cite{deLeeuw1977}}
+
+\note{\scriptsize
+\textbf{Notation:} $\mathbf{x}_i$ ist die $i$-te Zeile von $X$, $\mathbf{x}_i \cdot \mathbf{x}_j = \sum_a x_{ia}x_{ja}$, und es gilt $w_{ij} = w_{ji}$.
+
+\textbf{Was bedeutet $\sum_{i<j}$?} Man summiert über \textbf{jedes Punktpaar genau einmal}, nur über die Indexkombinationen, bei denen der erste kleiner ist als der zweite. Bei $n = 3$:
+
+\begin{tabular}{ll}
+  \textbf{Summe} & \textbf{Läuft über}\\
+  $\sum_{i,j}$ & alle 9 Kombinationen, inklusive $(1,1), (2,2), (3,3)$\\
+  $\sum_{i \neq j}$ & 6 geordnete Paare: $(1,2), (2,1), (1,3), (3,1), (2,3), (3,2)$\\
+  $\sum_{i<j}$ & 3 Paare: $(1,2), (1,3), (2,3)$
+\end{tabular}
+
+In $\sum_{i \neq j}$ kommt also jedes Paar \textbf{zweimal} vor, als $(i,j)$ und $(j,i)$.
+
+\begin{enumerate}
+  \item \textbf{Spur ausschreiben:} $\operatorname{tr}(X^{\mathsf{T}} V X) = \sum_a \sum_{i,j} x_{ia}\,v_{ij}\,x_{ja} = \sum_{i,j} v_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_j$.
+  \item \textbf{Aufteilen} in $i = j$ mit $v_{ii} = \sum_{k \neq i} w_{ik}$ und $i \neq j$ mit $v_{ij} = -w_{ij}$.
+  \item \textbf{Auf Paare $i<j$ umsortieren:}
+  \begin{itemize}
+    \item Erste Summe: Das Paar liefert als $(i,j)$ den Term $w_{ij}\,\mathbf{x}_i \cdot \mathbf{x}_i$ und als $(j,i)$ den Term $w_{ij}\,\mathbf{x}_j \cdot \mathbf{x}_j$. \textbf{Daher kommt $\mathbf{x}_j \cdot \mathbf{x}_j$.}
+    \item Zweite Summe: Wegen $\mathbf{x}_i \cdot \mathbf{x}_j = \mathbf{x}_j \cdot \mathbf{x}_i$ sind beide Beiträge gleich. \textbf{Daher kommt die 2.}
+  \end{itemize}
+  \item \textbf{Binomische Formel:} $\mathbf{x}_i \cdot \mathbf{x}_i - 2\,\mathbf{x}_i \cdot \mathbf{x}_j + \mathbf{x}_j \cdot \mathbf{x}_j = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert^2$.
+\end{enumerate}
+}
+
 \end{frame}
 
 
@@ -499,6 +526,20 @@ aktuellen Punkt überein!
 \end{blockC4}
 \end{columns}
 \source{\cite{deLeeuw1977}}
+
+\note{\textbf{Abstand als Vektorlänge:} Der Abstand $d_{ij}$ ist genau die \textbf{Länge des Differenzvektors} der beiden Punkte. Mit $\mathbf{u} = \mathbf{x}_i - \mathbf{x}_j$ und $\mathbf{v} = \mathbf{z}_i - \mathbf{z}_j$ gilt also
+\[
+  d_{ij}(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert = \lVert \mathbf{u} \rVert, \qquad d_{ij}(Z) = \lVert \mathbf{z}_i - \mathbf{z}_j \rVert = \lVert \mathbf{v} \rVert.
+\]
+\textbf{Cauchy-Schwarz:}
+\[
+  \langle \mathbf{u}, \mathbf{v} \rangle \le |\langle \mathbf{u}, \mathbf{v} \rangle| \le \underbrace{\lVert \mathbf{u} \rVert}_{d_{ij}(X)} \, \underbrace{\lVert \mathbf{v} \rVert}_{d_{ij}(Z)}.
+\]
+Der erste Schritt gilt, da eine Zahl nie größer als ihr Betrag ist. Division durch $d_{ij}(Z) > 0$ (also $\mathbf{z}_i \neq \mathbf{z}_j$) liefert die \textbf{lineare untere Schranke}:
+\[
+  \frac{\langle \mathbf{x}_i - \mathbf{x}_j,\; \mathbf{z}_i - \mathbf{z}_j \rangle}{d_{ij}(Z)} \le d_{ij}(X).
+\]}
+
 \end{frame}
 
 
@@ -539,36 +580,24 @@ Lösung.
 \end{columns}
 \source{\cite{deLeeuw1977}}
 
-\note{
-\textbf{Singuläre Matrix:}
+\note{\scriptsize
+\textbf{Schranke im Problemterm:} Jedes $d_{ij}(X)$ in $\rho(X)$ wird durch seine lineare Schranke ersetzt. Wegen $w_{ij}\,\delta_{ij} \ge 0$ bleibt die Ungleichung erhalten:
+\[
+  \rho(X) \;\ge\; \sum_{i<j} \frac{w_{ij}\,\delta_{ij}}{d_{ij}(Z)}\,
+  \langle \mathbf{x}_i - \mathbf{x}_j,\; \mathbf{z}_i - \mathbf{z}_j \rangle
+  = \operatorname{tr}\bigl(X^{\mathsf{T}} B(Z)\,Z\bigr).
+\]
 \begin{itemize}
-    \item Eine singuläre Matrix ist eine quadratische Matrix, die \textbf{keine Inverse} besitzt.
-    \item Äquivalent gilt: $\det(V)=0$.
+    \item Aufbau wie bei $V$, mit Gewichten $\frac{w_{ij}\delta_{ij}}{d_{ij}(Z)}$ und Produkten $x \cdot z$.
+    \item Im Stress steht $-2\rho(X)$: Die untere Schranke für $\rho$ wird zur \textbf{oberen} für den Stress.
 \end{itemize}
 
-\textbf{Moore-Penrose-Pseudoinverse:}
+\textbf{Pseudoinverse:}
 \begin{itemize}
-    \item Die Pseudoinverse $V^{+}$ ist eine Verallgemeinerung der gewöhnlichen Inversen.
-    \item Ist $V$ invertierbar, so gilt
-    \[
-        V^{+}=V^{-1}.
-    \]
-    \item Ist $V$ singulär, existiert keine gewöhnliche Inverse. Die Pseudoinverse liefert dennoch eine wohldefinierte Lösung.
+    \item $V$ ist \textbf{singulär} ($\det(V) = 0$), da alle Zeilensummen null sind.
+    \item $V^{+}$ verallgemeinert die Inverse. Ist $V$ invertierbar, gilt $V^{+} = V^{-1}$.
+    \item $x = V^{+}b$ ist die Lösung von $Vx = b$ mit \textbf{minimaler Norm}. Bei SMACOF ist das die im Ursprung \textbf{zentrierte} Konfiguration.
 \end{itemize}
-
-\textbf{Anwendung auf lineare Gleichungssysteme:}
-Für
-\[
-    Vx=b
-\]
-liefert
-\[
-    x=V^{+}b
-\]
-die Lösung mit \textbf{minimaler euklidischer Norm} unter allen möglichen Lösungen (bzw. die beste Least-Squares-Lösung, falls keine exakte Lösung existiert).
-
-\textbf{Bezug zu SMACOF:}
-Da die Matrix $V$ singulär ist (Zeilensummen gleich Null), kann $V^{-1}$ nicht berechnet werden. Daher wird die Pseudoinverse $V^{+}$ verwendet, die die eindeutig bestimmte, im Ursprung zentrierte Konfiguration liefert.
 }
 \end{frame}
 
@@ -576,8 +605,8 @@ Da die Matrix $V$ singulär ist (Zeilensummen gleich Null), kann $V^{-1}$ nicht 
 \footnotesize
 \begin{columns}
 \column{0.55\textwidth}
-Für \textbf{gleiche} Gewichte ($w_{ij} = 1$) vereinfacht sich die
-Pseudoinverse zu $V^{+} = \tfrac{1}{n}I$. Damit folgt die
+Für \textbf{gleiche} Gewichte ($w_{ij} = 1$) wirkt die Pseudoinverse
+auf $B(Z)\,Z$ wie $\tfrac{1}{n}I$. Damit folgt die
 \textbf{Guttman-Transformation}:
 \[
   X^{(k+1)} = \frac{1}{n}\,B\!\left(X^{(k)}\right) X^{(k)}
@@ -602,7 +631,10 @@ Matrixmultiplikationen.
 \end{blockC2}
 \end{columns}
 \source{\cite{deLeeuw1977}}
-\note{Eine Majorante ist eine Funktion, die überall oberhalb einer anderen Funktion liegt. Im SMACOF-Kontext ist sie das zentrale Werkzeug, um das schwierige Stress-Minimierungsproblem in eine Folge einfacher Schritte zu zerlegen.}
+\note{Eine Majorante ist eine Funktion, die überall oberhalb einer anderen Funktion liegt. Im SMACOF-Kontext ist sie das zentrale Werkzeug, um das schwierige Stress-Minimierungsproblem in eine Folge einfacher Schritte zu zerlegen.\\
+\textbf{Gewichte:} Standardmäßig gilt $w_{ij} = 1$, alle Paare zählen gleich. Andere Gewichte nutzt man z.\,B. für fehlende Werte ($w_{ij} = 0$).\\
+\textbf{Warum $\tfrac{1}{n}$:} Genau gilt $V^{+} = \tfrac{1}{n}\bigl(I - \tfrac{1}{n}\mathbf{1}\mathbf{1}^{\mathsf{T}}\bigr)$. Da die Zeilensummen von $B(Z)$ null sind, ist $B(Z)\,Z$ bereits zentriert, und es bleibt der Faktor $\tfrac{1}{n}$.
+}
 \end{frame}
 
 
@@ -1096,6 +1128,7 @@ Sie steuert das $\sigma_i$ jedes Punktes.
 \end{block}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
+\note{Abstand in Normalverteilung zum jeweiligen Punkt geteilt durch die Summe der Abstände zu allen anderen Punkten}
 \end{frame}
 
 \begin{frame}{t-SNE: Symmetrisierung}
@@ -1121,19 +1154,25 @@ Verteilung:
 \textbf{Matrix $P$}\\[3pt]
 \resizebox{0.9\linewidth}{!}{%
 \begin{tikzpicture}
-\foreach \i in {0,...,4} {
-  \foreach \j in {0,...,4} {
-    \pgfmathsetmacro{\val}{\i==\j ? 0 : 0.3 + 0.5*rnd}
-    \pgfmathsetmacro{\dval}{\i==\j ? 1 : \val}
-    \fill[SecondaryColor, opacity=\dval] (\j,-\i) rectangle ++(1,-1);
+\foreach \row [count=\i from 0] in {%
+  {0,.9,.2,.15,.1},
+  {.9,0,.25,.2,.15},
+  {.2,.25,0,.8,.7},
+  {.15,.2,.8,0,.85},
+  {.1,.15,.7,.85,0}} {
+  \foreach \v [count=\j from 0] in \row {
+    \fill[SecondaryColor, opacity=\v] (\j,-\i) rectangle ++(1,-1);
     \draw[white, thin] (\j,-\i) rectangle ++(1,-1);
   }
 }
+\draw[gray, thin] (0,0) rectangle (5,-5);
 \end{tikzpicture}}
 
-{\scriptsize Dunkel $=$ hohe Ähnlichkeit}
+{\scriptsize Dunkel $=$ hohe Ähnlichkeit, Diagonale $p_{ii} = 0$}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
+
+\note{$p_{ii} = 0$ per Definition}
 \end{frame}
 
 \begin{frame}{t-SNE: Ähnlichkeiten im Zielraum}
@@ -1141,8 +1180,10 @@ Verteilung:
 \begin{columns}
 \column{0.55\textwidth}
 
-Die Ähnlichkeitsverteiung im Zielraum wird im Prinzip gleich berechnet. Allerdings nutzt t-SNE hier eine
-\textbf{Student-t}-Verteilung mit einem Freiheitsgrad (Cauchy):
+Die Ähnlichkeiten im Zielraum werden \textbf{direkt} als gemeinsame
+Verteilung berechnet, ohne individuelle Bandbreite $\sigma_i$. Statt der
+Gauß-Verteilung nutzt t-SNE hier eine \textbf{Student-t}-Verteilung mit
+einem Freiheitsgrad (Cauchy):
 \[
   q_{ij} =
   \frac{\bigl(1 + \lVert \mathbf{y}_i - \mathbf{y}_j \rVert^2\bigr)^{-1}}
@@ -1161,17 +1202,21 @@ Die Ähnlichkeitsverteiung im Zielraum wird im Prinzip gleich berechnet. Allerdi
 \textbf{Matrix $Q$}\\[3pt]
 \resizebox{0.9\linewidth}{!}{%
 \begin{tikzpicture}
-\foreach \i in {0,...,4} {
-  \foreach \j in {0,...,4} {
-    \pgfmathsetmacro{\val}{\i==\j ? 0 : 0.25 + 0.55*rnd}
-    \pgfmathsetmacro{\dval}{\i==\j ? 1 : \val}
-    \fill[ExampleColor, opacity=\dval] (\j,-\i) rectangle ++(1,-1);
+\foreach \row [count=\i from 0] in {%
+  {0,.3,.75,.2,.5},
+  {.3,0,.25,.7,.35},
+  {.75,.25,0,.3,.2},
+  {.2,.7,.3,0,.55},
+  {.5,.35,.2,.55,0}} {
+  \foreach \v [count=\j from 0] in \row {
+    \fill[ExampleColor, opacity=\v] (\j,-\i) rectangle ++(1,-1);
     \draw[white, thin] (\j,-\i) rectangle ++(1,-1);
   }
 }
+\draw[gray, thin] (0,0) rectangle (5,-5);
 \end{tikzpicture}}
 
-{\scriptsize Ziel: $Q \approx P$}
+{\scriptsize Zu Beginn $Q \neq P$, Ziel: $Q \approx P$}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
 \end{frame}
