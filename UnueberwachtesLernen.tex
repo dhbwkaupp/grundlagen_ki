@@ -231,7 +231,7 @@ Wollen wir $n$ Punkte in einen 2D-Zielraum projizieren, dass ist $X$ ein $n\time
 \column{0.55\textwidth}
 Die Güte einer Konfiguration $X$ misst man über die \textbf{Stress}-Funktion $\sigma: \mathbb{R}^{n\times p} \to \mathbb{R}$, definiert durch 
 \[
-  \sigma(X) = \sum_{i<j} w_{ij}\bigl(\delta_{ij} - d_{ij}(X)\bigr)^2
+  \sigma(X) = \sum_{i<j} w_{ij} \cdot \bigl(\delta_{ij} - d_{ij}(X)\bigr)^2
 \]
 für alle $X\in \mathbb{R}^{n\times p}$. 
 
@@ -260,7 +260,6 @@ $\Rightarrow$ Wir haben wieder ein \textbf{Optimierungsproblem}.
 \end{frame}
 
 \begin{frame}{MDS: Warum ist das schwierig?}
-  \footnotesize
 \begin{columns}
 \column{0.60\textwidth}
 Ein Optimierungsproblem heißt \textbf{konvex}, wenn die Funktion nur
@@ -270,16 +269,13 @@ Ein Optimierungsproblem heißt \textbf{konvex}, wenn die Funktion nur
 \begin{itemize}
   \item Die Stress-Funktion ist \textbf{nicht konvex}: Sie hat \textbf{viele
         lokale Minima}.
-  \item Der Grund: $d_{ij}(X) = \lVert \mathbf{x}_i - \mathbf{x}_j \rVert
-  = \sqrt{\sum_{a=1}^{p} (x_{ia} - x_{ja})^2}$
-        enthält eine \textbf{Wurzel} und ist selbst nicht konvex.
   \item Der \textbf{Gradientenabstieg} läuft in das \textbf{nächstgelegene}
         lokale Minimum, je nach Startpunkt ein anderes.
   \item Das globale Minimum wird so \textbf{nicht garantiert} gefunden.
 \end{itemize}
 
 \column{0.35\textwidth}
-\begin{blockC2}{\footnotesize Konsequenz}
+\begin{blockC2}{Konsequenz}
 Statt reinem Gradientenabstieg nutzt man \textbf{SMACOF}, das den Stress in
 jedem Schritt garantiert \textbf{senkt}.
 \end{blockC2}
@@ -352,6 +348,13 @@ seine \textbf{quadratische} Struktur in $X$.
 \end{blockC1}
 \end{columns}
 \source{\cite{deLeeuw1977}}
+
+\note{\textbf{Spur und Quadratsummen:} Die Spur ist die Summe der Diagonale. In $X^{\mathsf{T}} X$ ist das Diagonalelement $(a,a)$ das Skalarprodukt der $a$-ten Spalte mit sich selbst, also eine Quadratsumme:
+\[
+  \operatorname{tr}(X^{\mathsf{T}} X) = \sum_{i=1}^{n} \sum_{a=1}^{p} x_{ia}^2.
+\]
+In $\operatorname{tr}(X^{\mathsf{T}} V X)$ legt $V$ fest, \textbf{welche} Kombinationen quadriert und \textbf{wie} sie gewichtet werden. Mit passendem $V$ entstehen genau die quadrierten Abstandsdifferenzen $(\mathbf{x}_i - \mathbf{x}_j)^2$.}
+
 \end{frame}
 
 \begin{frame}{SMACOF: Herleitung der Spur-Identität}
