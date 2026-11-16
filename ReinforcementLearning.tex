@@ -558,7 +558,7 @@ Q(s_t, a_t) = r_t + \gamma \cdot \max_{a} Q(s_{t+1}, a)
 \begin{block}{\footnotesize Bestandteile der Formel}
 \begin{itemize}
 \item $Q(s_t,a_t)$: Wert der Aktion $a_t$ im Zustand $s_t$
-\item $r_t$: sofortiger Reward der Aktion
+\item $r_{t+1}$: sofortiger Reward der Aktion
 \item $\gamma$: Diskontfaktor für zukünftige Rewards
 \item $Q(s_{t+1},a)$: Wert einer Folgeaktion
 \item $\max_a Q(s_{t+1},a)$: bester erwarteter Folgewert
@@ -754,7 +754,7 @@ Runde 2:
 \node[inner sep=0pt] (sk1) at (3.7,2.0) {\twemoji[width=0.9cm]{skull and crossbones}};
 \node[inner sep=0pt] (sk2) at (3.7,0.7) {\twemoji[width=0.9cm]{skull and crossbones}};
 
-\draw[trans] (S1) to node[above, sloped, text=PrimaryTitle] {$\mathbf{-24{,}3}$} (S2);
+\draw[trans] (S1) to node[above, sloped, text=PrimaryTitle] {$\mathbf{-22{,}56}$} (S2);
 \draw[trans] (S1) to (S3);
 \draw[trans] (S2) to node[above, sloped, text=AccentTitle] {$\mathbf{-100}$} (sk1);
 \draw[trans] (S2) to node[below, sloped, text=AccentTitle] {$\mathbf{-100}$} (sk2);
@@ -771,7 +771,7 @@ Wir verwenden weiterhin $\alpha = 0{,}3$ und $\gamma = 0{,}9$.
 \textbf{Runde 2:}
 \begin{itemize}
 \item $Q(s_1, a_1)$ ist nun $4{,}2$.
-\item $r_t + \gamma \max_{a} Q(s_{t+1}, a)$ ist $-85$.
+\item $r_{t+1} + \gamma \max_{a} Q(s_{t+1}, a)$ ist $-85$.
 \item $Q(s_1, a_1) = 0{,}7 \cdot 4{,}2 + 0{,}3 \cdot (-85) = -22{,}56$.
 \end{itemize}
 

@@ -265,7 +265,7 @@ automatisch erstellen}.
 An jedem \textbf{Entscheidungsknoten} kommt eine Menge von Daten an.
 \begin{itemize}
   \item Der Knoten teilt die Menge in \textbf{zwei Teilmengen}.
-  \item Daten, die die Bedingung erfüllen zandern zum \textbf{ja}-Knoten.
+  \item Daten, die die Bedingung erfüllen, wandern zum \textbf{ja}-Knoten.
   \item Alle übrigen $\rightarrow$ \textbf{nein}-Knoten.
 \end{itemize}
 
@@ -581,7 +581,7 @@ Pfadlängensumme.}
 \vspace{0.4em}
 \begin{blockC1}{Eigenschaften}
 \begin{itemize}
-  \item Effizient bei vielen Features.
+  \item Effizient bei vielen Merkmalen.
   \item Erzeugt vergleichsweise \textbf{einfache} Bäume.
   \item \textbf{Keine Garantie} für optimale Bäume.
 \end{itemize}
@@ -675,7 +675,7 @@ zur Arbeit fährt.}
 % Knoten
 \node[test]  (w)   at (0,0)        {Wetterlage sonnig};
 \node[test]  (sch) at (-4.0,-2.3)  {Schnee};
-\node[test]  (auto)at (4.0,-2.3)   {Auto kaputt};
+\node[test]  (auto)at (4.0,-2.3)   {Auto defekt};
 \node[nicht] (n1)  at (-6.0,-4.8)  {nicht\\Rad fahren};
 \node[test]  (start)at (-2.6,-4.8) {Start 8 Uhr};
 \node[rad]   (r1)  at (2.4,-4.8)   {Rad\\fahren};
@@ -732,7 +732,7 @@ zur Arbeit fährt.}
 
 \column{0.35\textwidth}
 \begin{itemize}
-  \item Die konketen Verfahren unterscheiden sich nur in der \textbf{Merkmalsauswahl}.
+  \item Die konkreten Verfahren unterscheiden sich nur in der \textbf{Merkmalsauswahl}.
   \item Der Grundalgorithmus erlaubt auch Prüfungen mit \textbf{mehr als zwei
         Ausgängen}.
   \item Wir arbeiten aber stets mit \textbf{Binärbäumen}.
@@ -824,7 +824,7 @@ Mit passenden Fragen kann man nicht zutreffende Werte ausschließen.
 \end{exampleblock}
 \medskip
 \begin{itemize}
-  \item Unser Informationstoken hat $k=8$ mögliche Zustände.
+  \item Unser Beispiel hat $k=8$ mögliche Zustände (die Zahlen $1$ bis $8$).
   \item Jede Antwort liefert 1 Bit.
   \item Optimal: immer das Intervall halbieren.
 \end{itemize}
@@ -911,16 +911,17 @@ Mit passenden Fragen kann man nicht zutreffende Werte ausschließen.
 \begin{column}{0.60\textwidth}
 
 \begin{block}{Formel}
-Um \(k\)\; Zustände eindeutig zu unterscheiden, gilt:
+Um \(k\)\; gleichwahrscheinliche Zustände eindeutig zu unterscheiden, gilt:
 \vspace{-1.3ex}
 \[
-m = \log_2(k)
+m = \lceil \log_2(k) \rceil
 \]
 \vspace{-1.3ex}
 \end{block}
 
 \begin{itemize}
   \item \(m\): Anzahl der erforderlichen Ja/Nein-Fragen.
+  \item Ist \(k\) eine Zweierpotenz, gilt \(m = \log_2(k)\) exakt.
   \item Dient als \textbf{Maß für den Informations- bzw. Entscheidungsgehalt}.
 \end{itemize}
 
@@ -1276,14 +1277,14 @@ Das haben wir bei der Codierung ausgenutzt.
 
 \textbf{Wettertabelle}
 \begin{center}
-\begin{tabular}{llcc}
+\begin{tabular}{llc}
 \hline
 Symbol & \(p(s_i)\) & \(I(s_i)\) [bit] \\
 \hline
-Sonne  & 0{,}5   & 1 &? \\
-Wolken & 0{,}25  & 2 &?\\
-Regen  & 0{,}125 & 3 &?\\
-Schnee & 0{,}125 & 3 &?\\
+Sonne  & 0{,}5   & 1 \\
+Wolken & 0{,}25  & 2 \\
+Regen  & 0{,}125 & 3 \\
+Schnee & 0{,}125 & 3 \\
 \hline
 \end{tabular}
 \end{center}
@@ -1334,7 +1335,7 @@ Schnee & 0{,}125 & 3 &?\\
 
 \begin{frame}{Signalentropie}
 \small
-\begin{columns}]
+\begin{columns}
   \begin{column}{0.66\textwidth}
 
     \begin{blockDef}{\small Entropie}
@@ -1765,7 +1766,7 @@ ergibt sich folgender Entscheidungsbaum:
 ]
 
 % Ebene 0
-\node[test]  (auto)  at (0,0)         {Auto kaputt};
+\node[test]  (auto)  at (0,0)         {Auto defekt};
 
 % Ebene 1
 \node[test]  (sch1)  at (-6.0,-1.8)   {Schnee};
@@ -2289,7 +2290,7 @@ Im Datensatz sind folgende drei Unterarten der Iris erfasst:
         handelt es sich?
         \begin{itemize}
           \item Kelchblatt: \textbf{7,2\,cm} lang, \textbf{3,0\,cm} breit.
-          \item Deckblatt: \textbf{5,9\,cm} lang, \textbf{2,0\,cm} breit.
+          \item Kronblatt: \textbf{5,9\,cm} lang, \textbf{2,0\,cm} breit.
         \end{itemize}
 \end{enumerate}
 

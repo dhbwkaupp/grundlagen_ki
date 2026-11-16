@@ -217,7 +217,7 @@ X=
 
 \medskip
 
-Wollen wir $n$ Punkte in einen 2D-Zielraum projizieren, dass ist $X$ ein $n\times 2$-Matrix
+Wollen wir $n$ Punkte in einen 2D-Zielraum projizieren, dann ist $X$ eine $n\times 2$-Matrix
 \end{blockC2}
 
 
@@ -262,8 +262,9 @@ $\Rightarrow$ Wir haben wieder ein \textbf{Optimierungsproblem}.
 \begin{frame}{MDS: Warum ist das schwierig?}
 \begin{columns}
 \column{0.60\textwidth}
-Ein Optimierungsproblem heißt \textbf{konvex}, wenn die Funktion nur
-\textbf{ein einziges} und damit globales  Minimum besitzt. Solche Probleme lassen sich zuverlässig lösen.
+Ein Optimierungsproblem heißt \textbf{konvex}, wenn seine Zielfunktion
+\textbf{konvex} ist: Jedes \textbf{lokale} Minimum ist dann automatisch auch
+ein \textbf{globales}. Solche Probleme lassen sich zuverlässig lösen.
 
 \vspace{0.4em}
 \begin{itemize}
@@ -282,7 +283,7 @@ jedem Schritt garantiert \textbf{senkt}.
 \end{columns}
 \source{\cite{deLeeuw1977}}
 \note{Eine Funktion heißt \textbf{konvex}, wenn zwischen zwei beliebigen Punkten auf ihrem Graphen die Verbindungslinie \textbf{oberhalb} des Graphen verläuft.\\
-Konvexe Funktionen haben die Form einer Schüssel. Sie haben ein eindeutiges Minimum.
+Konvexe Funktionen haben die Form einer Schüssel. Bei ihnen ist jedes lokale Minimum zugleich ein globales Minimum.
 }
 \end{frame}
 
@@ -299,7 +300,7 @@ Function}.
   \item Dabei ist $Z = X^{(k)}$ die \textbf{aktuelle} Konfiguration des
         letzten Schritts.
   \item Die Majorante liegt \textbf{überall oberhalb} von $\sigma$ und
-        \textbf{berührt} es im aktuellen Punkt $Z$.
+        \textbf{berührt} ihn im aktuellen Punkt $Z$.
   \item Sie ist \textbf{quadratisch} und daher leicht zu minimieren.
 \end{itemize}
 
@@ -501,7 +502,8 @@ $\mathbf{a}, \mathbf{b}$:
   \mathbf{a} \cdot \mathbf{b} \leq \lVert \mathbf{a} \rVert\,\lVert \mathbf{b} \rVert
 \]
 mit \textbf{Gleichheit} genau dann, wenn $\mathbf{a}$ und $\mathbf{b}$
-\textbf{parallel} sind.
+\textbf{gleichgerichtet} sind, d.\,h. $\mathbf{a} = c\,\mathbf{b}$ für ein
+$c \geq 0$.
 
 \vspace{0.4em}
 Wir setzen $\mathbf{a} = \mathbf{x}_i - \mathbf{x}_j$ (neu) und
@@ -654,7 +656,7 @@ Matrixmultiplikationen.
 \SetAlgoCaptionLayout{footnotesize}
 \begin{algorithm}[H]
 \SetAlgoLined
-\KwIn{Unähnlichkeiten $\delta_{ij}$, Dimension $p$, Toleranz $\varepsilon$}
+\KwIn{Unähnlichkeiten $\delta_{ij}$, Dimension $p$, Toleranz $\varepsilon$, maximale Iterationszahl $k_{\max}$}
 \KwOut{Konfiguration $X$}
 Startkonfiguration $X^{(0)}$ initialisieren\;
 $k = 0$\;
@@ -773,8 +775,8 @@ X_2d = mds.fit_transform(X_transformed)
         Datensätze.
   \item Bei \textbf{großen} Datenmengen ist das Verfahren sehr
         \textbf{langsam}.
-  \item Bei Daten \textbf{höherer Dimension} ist es sehr langsam und liefert oft \textbf{keine
-        optimalen} Ergebnisse.
+  \item Bei Daten \textbf{hoher Dimension} liefert MDS wegen der
+        \textbf{Abstandskonzentration} oft keine \textbf{optimalen} Ergebnisse.
   \item \textbf{Beispiel:} die MDS-Projektion des \textbf{MNIST}-Datensatzes.
 \end{itemize}
 
@@ -975,9 +977,9 @@ gr/.style={circle, fill=AccentColor, draw=AccentTitle,
 \begin{columns}
 \column{0.47\textwidth}
 \begin{itemize}
-  \item So berechnet man die \textbf{unskalierten} Unähnlichkeiten zu
+  \item So berechnet man die \textbf{unskalierten} Ähnlichkeiten zu
         \textbf{allen} Datenpunkten.
-  \item Im nächsten Teilschritt werden die Unähnlichkeiten so
+  \item Im nächsten Teilschritt werden die Ähnlichkeiten so
         \textbf{skaliert}, dass sie sich für jeden Punkt auf \textbf{1}
         aufsummieren.
 \end{itemize}
@@ -1135,7 +1137,7 @@ Sie steuert das $\sigma_i$ jedes Punktes.
 \end{block}
 \end{columns}
 \source{\cite{vanDerMaaten2008}}
-\note{Abstand in Normalverteilung zum jeweiligen Punkt geteilt durch die Summe der Abstände zu allen anderen Punkten}
+\note{Unskalierte Ähnlichkeit (Dichtewert der Normalverteilung am jeweiligen Abstand) geteilt durch die Summe der unskalierten Ähnlichkeiten zu allen anderen Punkten}
 \end{frame}
 
 \begin{frame}{t-SNE: Symmetrisierung}
@@ -1435,7 +1437,7 @@ Führen Sie auf dem \textbf{Iris-Datensatz} eine Dimensionsreduktion mit
   \item Jeder Cluster wird durch sein \textbf{Zentrum} (Centroid)
         repräsentiert.
   \item Jeder Punkt gehört zum \textbf{nächstgelegenen} Zentrum.
-  \item Das Verfahren ist \textbf{robust}, \textbf{schnell} und hat geringen
+  \item Das Verfahren ist \textbf{einfach}, \textbf{schnell} und hat geringen
         \textbf{Speicherbedarf}.
 \end{itemize}
 
@@ -1476,13 +1478,13 @@ zufällige Datenpunkte.
 k-Means minimiert die \textbf{Summe der quadrierten Abstände} jedes Punktes
 zu seinem Clusterzentrum:
 \[
-  J = \sum_{k=1}^{K} \sum_{\mathbf{x} \in C_k}
-      \lVert \mathbf{x} - \boldsymbol{\mu}_k \rVert^2
+  J = \sum_{i=1}^{k} \sum_{\mathbf{x} \in C_i}
+      \lVert \mathbf{x} - \boldsymbol{\mu}_i \rVert^2
 \]
 
 \begin{itemize}
-  \item $C_k$: Menge der Punkte im Cluster $k$.
-  \item $\boldsymbol{\mu}_k$: Zentrum des Clusters $k$.
+  \item $C_i$: Menge der Punkte im Cluster $i$.
+  \item $\boldsymbol{\mu}_i$: Zentrum des Clusters $i$.
   \item Diese Größe heißt auch \textbf{Within-Cluster Sum of Squares}
         (WCSS).
 \end{itemize}
@@ -1995,7 +1997,7 @@ plt.show()
 \end{minted}
 
 \vspace{0.3em}
-Der große \textbf{Knick} bei $K=3$ zeigt ein sinnvolles $k$ an.\par\medskip
+Der große \textbf{Knick} bei $k=3$ zeigt ein sinnvolles $k$ an.\par\medskip
 
 \begin{blockC1}{\footnotesize Mehrere Knicke}
 Oft ist der Ellbogen nicht eindeutig. Zeigt die Kurve mehrere Knicke, testet man die zugehörigen Werte für $k$ einzeln und vergleicht die entstehenden Cluster.

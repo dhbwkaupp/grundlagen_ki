@@ -151,7 +151,7 @@ from sklearn.model_selection import train_test_split
 X = df[["Quadratmeter"]].to_numpy()
 Y = df[["Kaltmiete"]].to_numpy()
 
-X_train, X_test, y_train, Y_test = train_test_split(
+X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y,
     random_state=0
 )
@@ -513,11 +513,10 @@ R^2 \coloneqq
         = 1 - 1 = 0
     \]
 
-    \item Besser als Vergleichsmodell:
-    \begin{itemize}
-        \item $0 < R^2 \leq 1$
-        \item Je näher an 1, desto besser
-    \end{itemize}
+    \item Besser als Vergleichsmodell: $0 < R^2 < 1$ (näher an 1 = besser)
+
+    \item Schlechter als Vergleichsmodell: $R^2 < 0$ möglich (schlechter als
+          die reine Mittelwertvorhersage)
 \end{itemize}
 
 \end{columns}

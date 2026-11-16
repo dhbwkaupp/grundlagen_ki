@@ -362,7 +362,7 @@ sich als \textbf{Zeilenvektor} schreiben:
 \[
   \mathbf{w}^{\mathsf{T}} = \begin{pmatrix} w_1 & w_2 & w_3 \end{pmatrix}
 \]
-Damit gilt $h = \mathbf{w}\cdot\mathbf{x}$ und $\hat{y} = H(\mathbf{w}\cdot\mathbf{x})$.
+Damit gilt $h = \mathbf{w}\cdot\mathbf{x}$ und $y = H(\mathbf{w}\cdot\mathbf{x})$.
 \end{blockC1}
 \end{columns}
 \source{\cite{Frochte2020}}
@@ -378,8 +378,9 @@ Damit gilt $h = \mathbf{w}\cdot\mathbf{x}$ und $\hat{y} = H(\mathbf{w}\cdot\math
         \[
           \text{error} = y - \hat{y}
         \]
-  \item Ist $y > \hat{y}$, werden die Gewichte \textbf{vergrößert}, sonst
-        \textbf{verkleinert}:
+  \item Das Vorzeichen von $\text{error}$ bestimmt die Änderung: Gewichte
+        \textbf{vergrößert} ($y{>}\hat y$), \textbf{verkleinert} ($y{<}\hat y$),
+        sonst \textbf{unverändert}:
         \[
           \Delta w_j = \eta\cdot\text{error}\cdot x_j, \qquad w_j \leftarrow w_j + \Delta w_j
         \]
@@ -450,7 +451,7 @@ $t \leftarrow 0$\;
     \item Er liefert eine \textbf{Trennebene}, aber \textbf{keine optimale} im geometrischen Sinn.
     \item Qualität der Lösung variiert.
     \item Weitere Verfeinerungen möglich und notwendig.
-    \item Dennoch bemerkenswert: funktionierender Lernalgorithmus \textbf{seit 1947}.
+    \item Dennoch bemerkenswert: funktionierender Lernalgorithmus \textbf{seit 1949} (Hebb).
 \end{itemize}
 \end{column}
 
@@ -1141,11 +1142,12 @@ ist die \textbf{lineare} Aktivierung:
 \column{0.35\textwidth}
 \begin{itemize}
   \item Neuronale Netze können \textbf{beliebig viele} Hidden Layer haben.
-  \item Ab mehr als drei Hidden Layern spricht man von \textbf{tiefen}
+  \item Ab mehr als einem Hidden Layer spricht man häufig von \textbf{tiefen}
         Netzen (Deep Networks).
-  \item Mit \textbf{zwei} Hidden Layern ($\operatorname{sig}$) und \textbf{linearem}
-        Output lassen sich bereits \textbf{alle stetigen} Funktionen
-        approximieren.
+  \item Nach dem \textbf{Universellen Approximationssatz} reicht bereits
+        \textbf{ein} Hidden Layer mit \textbf{linearem} Output, um
+        \textbf{alle stetigen} Funktionen zu approximieren -- mehrere
+        Layer kommen dabei oft mit weniger Neuronen aus.
 \end{itemize}
 
 \column{0.65\textwidth}
@@ -1387,7 +1389,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
   \item Deshalb werden \textbf{alle Gewichte gemeinsam} optimiert.
   \item Für jedes Element $(\mathbf{x}_i, y_i)$ des Trainingsdatensatzes $D$ wird die Netzausgabe $\hat{y}_i$ mit dem \textbf{Soll-Wert} $y_i$ verglichen.
   \item Über alle Trainingsbeispiele werden die Fehler \textbf{quadriert und aufsummiert}.
-  \item Das Ergebnis ist die \textbf{Loss Function} (Verlustfunktion $L$).
+  \item Das Ergebnis ist die \textbf{Loss Function} (Verlustfunktion $L$). Ein Faktor $\tfrac12$ vereinfacht dabei die spätere Ableitung.
 \end{itemize}
 
 
@@ -1404,7 +1406,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 ]
 % Formel oben rechts
 \node[font=\small] at (5.0,5.4)
-  {$L = \sum_{(\mathbf{x}_i, y_i) \in D} (\hat{y}_i - y_i)^2$};
+  {$L = \tfrac12\sum_{(\mathbf{x}_i, y_i) \in D} (\hat{y}_i - y_i)^2$};
 % Input
 \node[input] (x1) at (0,4.2) {};
 \node[input] (x2) at (0,2.6) {};
@@ -1445,7 +1447,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
 
     \item Ziel ist es, die Gewichte so zu bestimmen, dass der \textbf{Gesamtfehler} minimal wird:
     \[
-      L = \sum_{(\mathbf{x}_i,y_i)\in D}
+      L = \tfrac12\sum_{(\mathbf{x}_i,y_i)\in D}
       (\hat{y}_i-y_i)^2
     \]
 
@@ -1546,7 +1548,7 @@ Aktivierungsfunktionen und \textbf{Matrix-Vektor-Multiplikationen}.
           minimieren:
           \[
               L =
-              \sum_{(\mathbf{x}_i,y_i)\in D}
+              \tfrac12\sum_{(\mathbf{x}_i,y_i)\in D}
               \left(\hat{y}_i - y_i\right)^2
           \]
 
@@ -1631,14 +1633,14 @@ Dadurch wird das Training schneller, der Gradient aber nur
 \node[calc, right=0.75cm of b1] (c1) {
     $L_{B_1}
     =
-    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_1}
+    \tfrac12\displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_1}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
 \node[calc, right=0.75cm of b2] (c2) {
     $L_{B_2}
     =
-    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_2}
+    \tfrac12\displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_2}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
@@ -1649,7 +1651,7 @@ Dadurch wird das Training schneller, der Gradient aber nur
 \node[calc, right=0.75cm of bn] (cn) {
     $L_{B_n}
     =
-    \displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_n}
+    \tfrac12\displaystyle\sum_{(\mathbf{x}_i,y_i)\in B_n}
     \left(\hat{y}_i-y_i\right)^2$
 };
 
@@ -1741,7 +1743,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \begin{block}{Gesamtfehler}
 \[
     L =
-    \sum_{(\mathbf{x}_i,y_i)\in D}
+    \tfrac12\sum_{(\mathbf{x}_i,y_i)\in D}
     \left(\hat{y}_i-y_i\right)^2
 \]
 \end{block}
@@ -1784,7 +1786,7 @@ Diese Werte bestimmen die Richtung der Gewichtsänderung.
 \footnotesize
 \begin{blockC3}{\footnotesize Einsetzen in die Loss Function}
 \[
-L=\sum_{(\mathbf{x}_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname{sig}(W^{(1)}\mathbf{x}_i)\bigr)- y_i\Bigr)^2
+L=\tfrac12\sum_{(\mathbf{x}_i,y_i)\in D}\Bigl(W^{(3)}\operatorname{sig}\bigl(W^{(2)}\operatorname{sig}(W^{(1)}\mathbf{x}_i)\bigr)- y_i\Bigr)^2
 \]
 \end{blockC3}
 
@@ -2335,7 +2337,7 @@ Damit ist:
 
 Der quadratische Fehler beträgt:
 \[
-  L=(\hat{y}-y)^2=(-1-1)^2=4.
+  L=\tfrac12(\hat{y}-y)^2=\tfrac12(-1-1)^2=2.
 \]
 
 \end{columns}
@@ -2503,7 +2505,7 @@ Damit:
 \makequizpage{\QUIZURL}{\QUIZQRCODE}{\QUIZIMAGE}
 \makequestionspage{\FRAGENIMAGE}
 
-\begin{frame}{Regularisierung im Multi-Layer-Perceptron}
+\begin{frame}{Regularisierung im Multilayer Perceptron}
 \footnotesize
 \begin{columns}
 \column{0.75\textwidth}
@@ -2665,10 +2667,10 @@ $\alpha$ erlaubt eine \textbf{komplexere} Entscheidungsgrenze.
 \end{frame}
 
 
-\begin{frame}{Übung: Multi-Layer Perceptron für Iris und Heart Disease}
+\begin{frame}{Übung: Multilayer Perceptron für Iris und Heart Disease}
 \begin{columns}
 \column{0.60\textwidth}
-Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils ein \textbf{Multi-Layer
+Erstellen Sie Jupyter-Notebooks, in denen Sie jeweils ein \textbf{Multilayer
 Perceptron} anwenden:
 
 \begin{itemize}

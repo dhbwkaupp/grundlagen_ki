@@ -166,7 +166,7 @@ Auf Basis der Größe einer Wohnung möchten wir vorhersagen, welche Miete wir e
               \[
                 E = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
               \]
-        \item Dieses Vorgehen zuhört zur \textbf{Methode der kleinsten Quadrate}.
+        \item Dieses Vorgehen gehört zur \textbf{Methode der kleinsten Quadrate}.
       \end{itemize}
 
 \end{columns}
@@ -252,7 +252,7 @@ df = pd.read_csv("monatsmieten.csv")
 \end{minted}
 
 \vspace{0.5em}
-\texttt{\textbf head()} zeigt die ersten fünf Einträge des Datensatzes an. So können wir uns ein erstes Bild von den Daten machen.
+\texttt{\textbf{head()}} zeigt die ersten fünf Einträge des Datensatzes an. So können wir uns ein erstes Bild von den Daten machen.
 \begin{minted}[fontsize=\scriptsize]{python}
 df.head()
 \end{minted}
@@ -562,8 +562,8 @@ und dem Verbrauch in mpg (\texttt{mpg})
 
 \textbf{Hinweis:}
 \begin{itemize}
-\item $1\,\text{l/100km} = 235.21\,\text{mpg}$
-\item Teilen Sie 235.21 durch den mpg-Wert, dann haben Sie den Verbrauch in Litern pro 100 km.
+\item Umrechnung: $\text{l/100km} = \dfrac{235{,}21}{\text{mpg}}$
+\item Teilen Sie also 235,21 durch den mpg-Wert, dann haben Sie den Verbrauch in Litern pro 100 km.
 \end{itemize}
 
 \column{0.3\textwidth}
@@ -761,25 +761,25 @@ Bei einem \textbf{linearen Modell} mit $n$-dimensionalem Eingangsraum hat die an
 \[
     f(\mathbf{x} ) = u_0 + u_1\cdot x_1 + \dots + u_n \cdot x_n
 \]
-mit $u_0, \dots , u_n \in \mathbb{R}^n$. \medskip
+mit $u_0, \dots , u_n \in \mathbb{R}$. \medskip
 
 Man schreibt das typischerweise als Skalarprodukt
 \[
-    f(\mathbf{x} ) = u_0 + \mathbf{b} \cdot \mathbf{x}  
+    f(\mathbf{x} ) = u_0 + \mathbf{b} \cdot \mathbf{x}
 \]
-mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^{\mathsf{T}} \in \mathbb{R}^n$. 
+mit  $u_0\in \mathbb{R}, \mathbf{b} = (u_1, \dots, u_n)^{\mathsf{T}} \in \mathbb{R}^n$.
 
 
 \column{0.47\textwidth}
 \begin{block}{\footnotesize Ebenengleichung}
 Aus der Schule kennen Sie die Darstellung bereits als \textbf{Koordinatenform} einer Ebene. Im  2D-Eingangsraum schreibt man
 \[
-z=ax+ay+c
+z=ax+by+c
 \]
 \end{block}
 
 \begin{blockC3}{\footnotesize Hyperebenen}
-Lineare Modelle beschreiben im 2D-Eingangsraum \textbf{Ebenen}, im 1D-Eingangsraum \textbf{Geraden} und für allgemeine Eingangsräume \textbf{Hyperebeben}
+Lineare Modelle beschreiben im 2D-Eingangsraum \textbf{Ebenen}, im 1D-Eingangsraum \textbf{Geraden} und für allgemeine Eingangsräume \textbf{Hyperebenen}
 \end{blockC3}
 
 \end{columns}
@@ -820,7 +820,7 @@ Wir berechnen ein Regressionsmodell für den \textbf{Boston Housing Dataset}.
 \item Zugang zu Autobahnen
 \item Schüler--Lehrer-Verhältnis
 \item Anteil sozial benachteiligter Bevölkerung
-\item Medianpreis von Häusern (in 1000 \$)
+\item Durchschnittliche Zimmerzahl pro Wohnung
 \end{itemize}
 \end{columns}
 \source{\cite{Frochte2020}}
@@ -1742,13 +1742,13 @@ y = df['MEDV']
 \column{0.50\textwidth}
 
 \begin{itemize}
-\item Die Auswahlund auch \texttt{{drop()}} akzeptieren auch Listen von Spalten.
+\item Die Auswahl und auch \texttt{drop()} akzeptieren auch Listen von Spalten.
 \begin{minted}[fontsize=\footnotesize]{python}
 # Mehrere Spalten auswählen
 X = df[['CRIM', 'CHAS',
         'AGE', 'PTRATIO']]
 
-# Mehrere Spalten verwefen
+# Mehrere Spalten verwerfen
 X = df.drop(columns=[
     'MEDV', 'CRIM', 'AGE'
 ])

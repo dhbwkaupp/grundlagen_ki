@@ -384,11 +384,13 @@ print(confusion_matrix)
 Die Konfusionsmatrix zeigt, welche Klassen der Klassifikator
 \textbf{verwechselt}.
 
-\vspace{0.4em}
+\vspace{0.3em}
 \begin{itemize}
-  \item \texttt{confusion\_matrix} wird aus den \textbf{vorhergesagten}
-        Labels und den \textbf{Test}-Labels erstellt.
+  \item \texttt{confusion\_matrix} wird aus den \textbf{Test}-Labels und den
+        \textbf{vorhergesagten} Labels erstellt.
   \item Ein Aufruf liefert alle Werte auf einmal.
+  \item \textbf{Achtung:} scikit-learn vertauscht \textbf{Zeilen}/\textbf{Spalten}
+        (Zeile = tatsächliche Klasse).
 \end{itemize}
 \end{columns}
 \source{EntscheidungsbaumConfusionMatrix.ipynb}
@@ -406,10 +408,9 @@ import matplotlib.pyplot as plt
 import numpy
 from sklearn import metrics
 
-cm_display = 
-    metrics.ConfusionMatrixDisplay(
-        confusion_matrix=confusion_matrix,
-        display_labels=["gut", "schlecht"])
+cm_display = metrics.ConfusionMatrixDisplay(
+    confusion_matrix=confusion_matrix,
+    display_labels=["gut", "schlecht"])
 cm_display.plot()
 plt.show()
 \end{minted}

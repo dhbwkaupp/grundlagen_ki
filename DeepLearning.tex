@@ -9,7 +9,7 @@
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{itemize}
-\item Deep Learning ist ein \textbf{Sonderfall des überwachten Lernens}.
+\item Deep Learning ist ein \textbf{Sonderfall des maschinellen Lernens}.
 \item Die Modelle basieren auf Architekturen \textbf{komplexer neuronaler Netze}.
 \item \textbf{deep} bezieht sich auf die Anzahl der \textbf{verborgenen Schichten}. Modelle können Hunderte oder Tausende davon haben.
 \item Sie werden mit großen Mengen an \textbf{gekennzeichneten Daten} trainiert.
@@ -695,7 +695,7 @@ Große Fehler entstehen genau dort, wo das Modell \textbf{zu sicher falsch} ist.
 \column{0.38\textwidth}
 \textbf{Einfluss auf das Training:}
 \begin{itemize}
-\item Gradienten sind der Loss Function \textbf{glatt} und gut berechenbar
+\item Die Gradienten der Loss Function sind \textbf{glatt} und gut berechenbar
 \item falsche Vorhersagen erzeugen \textbf{starke Updates}
 \item korrekt klassifizierte Beispiele werden \textbf{kaum verändert}
 \end{itemize}
@@ -1710,7 +1710,7 @@ model.compile(optimizer="adam",
 \end{minted}
 
 \vspace{0.3em}
-Drei verborgene Schichten mit \textbf{512}    , \textbf{256} und \textbf{128} Neuronen.
+Drei verborgene Schichten mit \textbf{512}, \textbf{256} und \textbf{128} Neuronen.
 \end{column}
 \begin{column}{0.48\textwidth}
 \centering
@@ -2070,7 +2070,7 @@ Unsere bisherigen \textbf{Dense-Netze} plätten das Bild zu einem Vektor aus 784
     \item Jeder Pixel enthält \textbf{drei Werte}:     \(    (R,G,B)    \)
     \item Beispiel:    \(    (255,0,0)    \)
     entspricht reinem Rot.
-    \item Das menschliche Auge nimmt die Grundfarben \textbf{unterschiedlich hell} war.
+    \item Das menschliche Auge nimmt die Grundfarben \textbf{unterschiedlich hell} wahr.
     \item Für die Umrechnung in Graustufen werden die Pixelwerte \textbf{nach Farbe gewichtet} (Grün: 58{,}7\,\%, 
         Rot: 29{,}9\,\%,  Blau: 11{,}4\,\%).
 \end{itemize}
@@ -2877,7 +2877,7 @@ y_test = to_categorical(y_test)
 \begin{column}{0.35\textwidth}
 \begin{itemize}
   \item \textbf{Normalisierung}: Pixelwerte von $[0,255]$ auf $[0,1]$
-  \item \textbf{Farbkanal}: Convolution Layer erwarten Bilder der Form (H, B, C)
+  \item \textbf{Farbkanal}: Convolution Layer erwarten Bilder der Form (H, W, C)
   \item Shape wechselt von $(N,28,28)$ zu $(N,28,28,1)$
   \item \textbf{One Hot Encoding}: Label als Vektor statt als Klassenindex
 \end{itemize}
@@ -2912,7 +2912,7 @@ model.compile(
   \item \textbf{Input}: erwartet Bilder der Form $(28,28,1)$
   \item \textbf{Conv2D}: 64 Filter der Größe $3 \times 3$, extrahiert lokale Merkmale
   \item \textbf{Flatten}: wandelt Merkmalskarten in einen Vektor
-  \item \textbf{Dense}: Klassifikation ueber 256 und 128 Neuronen
+  \item \textbf{Dense}: Klassifikation über eine Schicht mit 128 Neuronen
   \item \textbf{Softmax}: 10 Ausgaben als Wahrscheinlichkeitsverteilung
   \item \textbf{compile}: Adam als Optimierer, Cross Entropy als Verlustfunktion
 \end{itemize}
@@ -3023,7 +3023,7 @@ dense\_30 (\textcolor{jupytertype}{Dense}) & (\textcolor{jupytertype}{None}, \te
   \item Grund: \textbf{Gewichtsteilung}, jeder Filter besitzt nur $3 \cdot 3$ Gewichte plus Bias
   \item Über \textbf{99 Prozent} aller Parameter liegen in der ersten \texttt{Dense}-Schicht
   \item Ursache: \texttt{Flatten} erzeugt 43.264 Eingänge, jeder ist mit allen 128 Neuronen verbunden
-  \item Rechnung: $43{.}5264 \cdot 128 + 128 = 5{.}537{.}920$
+  \item Rechnung: $43{.}264 \cdot 128 + 128 = 5{.}537{.}920$
 \end{itemize}
 \end{column}
 \begin{column}{0.35\linewidth}
@@ -3050,7 +3050,7 @@ model.fit(
 
 \end{minted}
 \begin{itemize}
-  \item \textbf{10 Epochen}, das gesamte Training läuft 12 mal über den Gesamtdatensatz
+  \item \textbf{10 Epochen}, das gesamte Training läuft 10 mal über den Gesamtdatensatz
   \item \textbf{batch\_size 128}: Gewichte werden nach je 128 Bildern aktualisiert
   \item \texttt{validation\_split=0.1}: 10\% der Trainingsdaten dient nur zur \textbf{Kontrolle}, nicht zum Lernen
 \end{itemize}
@@ -3080,7 +3080,7 @@ model.evaluate(x_test, y_test)
 \begin{itemize}
   \item Erster Wert: \textbf{Loss} $\approx 0{,}067$ (categorical crossentropy)
   \item Zweiter Wert: \textbf{Accuracy} $\approx 98{,}7$ Prozent auf den Testdaten
-  \item Bedeutung: rund \textbf{156 von 10.000} Testbildern werden falsch klassifiziert
+  \item Bedeutung: rund \textbf{131 von 10.000} Testbildern werden falsch klassifiziert
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -3145,7 +3145,7 @@ model.evaluate(x_test, y_test)
 \begin{column}{0.7\linewidth}
 \begin{itemize}
   \item Nehmen Sie das Notebook \textbf{Multiclass Klassifikation Komplexeres Netz.ipynb} als Vorlage.
-  \item Ändern Sie die Architektur und fügen die einen  \textbf{Convolutional Layer} ein. Die Bilder bleiben im Format 28x28, die Kanaldimension wird ergänzt
+  \item Ändern Sie die Architektur und fügen Sie einen \textbf{Convolutional Layer} ein. Die Bilder bleiben im Format 28x28, die Kanaldimension wird ergänzt
   \item Trainieren Sie das Netz und bestimmen Sie die erreichte \textbf{Klassifikationsgüte} auf den Testdaten. Vergleichen Sie mit der Vorlage ohne Conv2D-Layer
   \item Wenden Sie die \textbf{gelernten Kernel} nach dem Training auf einzelne Fashion-Bilder an und stellen Sie die Feature Maps dar
   \item Bewerten Sie deren Funktion: welche Struktur hebt ein Kernel jeweils hervor, etwa Kanten, Kontraste oder Texturen?

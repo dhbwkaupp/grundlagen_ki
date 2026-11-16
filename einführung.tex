@@ -253,7 +253,7 @@ Analperlen: 2022
         \item \textbf{Titel:} Portrait of Edmond de Belamy
         \item \textbf{Verkauf:} Am 25.\ Oktober 2018 vom Auktionshaus Christie's
               verkauft
-        \item \textbf{Preis:} \(\approx 432{.}500\) US-Dollar
+        \item \textbf{Preis:} \(\approx 432\,500\) US-Dollar
         \item Häufig als \textbf{Meilenstein der KI-Kunst} im Auktionsmarkt
               diskutiert
       \end{itemize}
@@ -350,8 +350,8 @@ Analperlen: 2022
 \begin{column}{0.35\textwidth}
 \textbf{Beispiel:}
 \begin{itemize}
-      \item  Vorhersage, ob eine Person \textbf{Diabetes} hat.  
-      \item Dazu werden \textbf{Probant*innen} untersucht und befragt.
+      \item  Vorhersage, ob eine Person \textbf{Diabetes} hat.
+      \item Dazu werden \textbf{Proband*innen} untersucht und befragt.
       \item Aus diesen \textbf{Daten} werden \textbf{Diagnosen für neue Patient*innen} abgeleitet.
     \end{itemize}
 
@@ -525,7 +525,7 @@ nein \\
 \source{\cite{seemann2024mlaz}}
 \end{frame}
 
-\begin{frame}{Aufgabe: Kontinuierliche Werte vorhersagen}
+\begin{frame}{Aufgabe: Diskrete Klassen vorhersagen}
 \medskip
 \begin{columns}
 
@@ -774,8 +774,8 @@ benötigen wir \textbf{unterschiedliche Algorithmen}.
         \item Hier werden die \textbf{Kenngrößen} oft aus den \textbf{Rohdaten}  berechnet.
         \item Beispiel \textbf{Fahrerassistenzsysteme}: Fußgänger im Fahrschlauch werden per Frontkamera erkannt.
         \item Das ist eine \textbf{Klassifikationsaufgabe}. Aber nicht das Bild selbst wird klassifiziert.
-        \item Das Bild wird gerastert; für jedes Quadrat wird die Richtung des größten Hell-Dunkel-Übergangs
-              (Histogram of Oriented Gradients, HOG) als Kenngröße verwendet.
+        \item Das Bild wird gerastert; für jedes Quadrat wird die Verteilung der Richtungen
+              lokaler Hell-Dunkel-Übergänge (Histogram of Oriented Gradients, HOG) als Kenngröße verwendet.
       \end{itemize}
 
     \end{column}

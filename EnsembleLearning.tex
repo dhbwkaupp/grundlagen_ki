@@ -32,8 +32,9 @@ sich darin, wie die Trainingsdaten für die einzelnen Lerner gebildet werden:
 \begin{blockrow}
 \begin{blockcol}{0.48\textwidth}{blockC1}{Bagging}
 
-Für jeden Lerner wird \textbf{zufällig} eine Teilmenge der Trainingsdaten
-gezogen. Jeder Datensatz hat dieselbe Wahrscheinlichkeit.
+Für jeden Lerner wird \textbf{zufällig mit Zurücklegen} (Bootstrap) eine
+Teilmenge der Trainingsdaten gezogen; jeder Datensatz hat dieselbe
+Wahrscheinlichkeit.
 
 \vspace{0.3em}
 {\itshape Bootstrapping:  die Lerner entstehen unabhängig.}
@@ -52,9 +53,9 @@ Die Lerner entstehen \textbf{nacheinander}. Datensätze, die bisher
 \begin{frame}{Ensemble Learning: Random Forests}
 \begin{columns}
 \column{0.45\textwidth}
-Random Forests verwenden den \textbf{Bagging}-Ansatz. Für mehr Varianz
-wird zusätzlich an jedem Entscheidungsknoten nur eine \textbf{zufällige
-Teilmenge der Spalten} verwendet.
+Random Forests verwenden den \textbf{Bagging}-Ansatz. Damit die Bäume
+weniger korreliert sind, wird zusätzlich an jedem Entscheidungsknoten nur
+eine \textbf{zufällige Teilmenge der Spalten} verwendet.
 
 \vspace{0.4em}
 Streicht man z.\,B. die Spalte mit der niedrigsten Entropie, rutscht eine
@@ -114,13 +115,15 @@ darin,
 \end{itemize}
 
 \vspace{0.4em}
-Die gängigsten Verfahren sind \textbf{AdaBoost} und \textbf{LogitBoost}.
+Die gängigsten Verfahren sind \textbf{AdaBoost} und \textbf{Gradient
+Boosting} (z.\,B. XGBoost).
 
 \column{0.33\textwidth}
 \begin{blockC1}{In der Praxis}
 Boosting mit \textbf{flachen} Entscheidungsbäumen als Basislerner gilt als
-eines der \textbf{leistungsfähigsten} Klassifikationsmodelle. Oft genutzt
-in der automatisierten \textbf{Bildanalyse}.
+eines der \textbf{leistungsfähigsten} Klassifikationsmodelle für
+\textbf{tabellarische Daten}. Oft genutzt z.\,B. in Scoring- und
+Rankingsystemen.
 \end{blockC1}
 \end{columns}
 \source{\cite{guyon2011practical}}

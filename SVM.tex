@@ -163,9 +163,9 @@ Ebene. Dabei sind:
   \item $a, b, c$: die Komponenten des \textbf{Normalenvektors}
         $\mathbf{n} = (a, b, c)^{\mathsf{T}}$. Er steht \textbf{senkrecht} auf der
         Ebene und bestimmt ihre Ausrichtung.
-  \item $d$: bestimmt die \textbf{Lage} der Ebene. Der Abstand vom
-        Ursprung (entlang $\mathbf{n}$), multipliziert mit der Länge von
-        $\mathbf{n}$.
+  \item $d$: bestimmt die \textbf{Lage} der Ebene. Der (vorzeichenbehaftete)
+        Abstand der Ebene vom Ursprung entlang $\mathbf{n}$ beträgt
+        $d / \lVert\mathbf{n}\rVert$.
 \end{itemize}
 
 \column{0.4\textwidth}
@@ -190,10 +190,10 @@ Die Ebene trennt Punkte im Raum in \textbf{„vor"} und \textbf{„hinter"} der
 Ebene. Jeder Punkt $P$ liegt in einer Parallelebene zur unseren.
 
 \vspace{0.3em}
-Über den Abstand der Parallelebene durch $P$\;:
+Über den Wert der linken Seite für die Parallelebene durch $P$\;:
 \begin{itemize}
-  \item Abstand $> d$: $P$ liegt \textbf{vor} der Ebene.
-  \item Abstand $< d$: $P$ liegt \textbf{dahinter}.
+  \item Wert $> d$: $P$ liegt \textbf{vor} der Ebene.
+  \item Wert $< d$: $P$ liegt \textbf{dahinter}.
 \end{itemize}
 
 \vspace{0.3em}
@@ -678,7 +678,7 @@ Es gibt genau ein globales Minimum.
 \end{columns}
 \source{\cite{scholkopf2002learning}}
 
-\note{u.n.N.: Unter der Nebenbedingung}
+\note{u.~d.~N.: Unter der Nebenbedingung}
 
 \end{frame}
 
@@ -700,7 +700,7 @@ Es gibt genau ein globales Minimum.
 
 \column{0.35\textwidth}
 \begin{blockC1}{Warum $\tfrac{1}{2}$?}
-Der Faktor $\tfrac{1}{2}$ ist reine Bequemlichkeit. Wir müssen das nachher ableiten. Dann fällt der Faktor $2$ aus $\lVert\mathbf{w}\rVert^2$ weg.
+Der Faktor $\tfrac{1}{2}$ ist reine Bequemlichkeit: Wir werden die Zielfunktion später ableiten, dabei kürzt sich der Faktor $2$, der beim Ableiten von $\lVert\mathbf{w}\rVert^2$ entsteht, gerade mit der $\tfrac{1}{2}$ weg.
 \end{blockC1}
 \end{columns}
 \source{\cite{scholkopf2002learning}}
@@ -1096,8 +1096,8 @@ auf.
 \source{\cite{scholkopf2002learning}}
 \note{
 \begin{itemize}  
-\item Die Formel in der Box ist die tatschsächliche Berechnungsformel für die Lage.
-\item Das $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$ kommt aus der Baleitung gleich 0 fünf Folien weiter vorne.
+\item Die Formel in der Box ist die tatsächliche Berechnungsformel für die Lage.
+\item Das $\mathbf{w}^{*} = \sum_{i=1}^{n}\lambda_i \cdot y_i \mathbf{x}_i$ kommt aus der Ableitung gleich 0 fünf Folien weiter vorne.
 \end{itemize}
 }
 \end{frame}
@@ -1343,8 +1343,11 @@ Ansatz. Es treten zwei Probleme auf:
 \column{0.35\textwidth}
 \begin{blockC1}{Deutung von $\xi_i$}
 \begin{itemize}
-  \item $0 < \xi_i < 1$: Punkt \textbf{korrekt} klassifiziert.
-  \item $1 \leq \xi_i$: \textbf{Fehlklassifikation}.
+  \item $\xi_i = 0$: Punkt liegt auf oder außerhalb des Margins (korrekt
+        klassifiziert).
+  \item $0 < \xi_i < 1$: Punkt liegt \textbf{innerhalb} des Margins, aber
+        noch \textbf{korrekt} klassifiziert.
+  \item $\xi_i > 1$: \textbf{Fehlklassifikation}.
 \end{itemize}
 \end{blockC1}
 \end{columns}
@@ -1560,8 +1563,9 @@ print(model.score(X_test, y_test))
 \begin{itemize}
 \item Mit \texttt{kernel="linear"} nutzt die SVM eine \textbf{lineare}
 Trennebene, also genau die Hyperebene aus der Herleitung.
-\item Die Gerade kann die  Daten nicht genau beschreiben, weil unser Datensatz 
-\textbf{nicht linear trennbar} ist. Wir brauchen eine Soft-Margin.
+\item Die lineare Trennebene kann die Daten nicht fehlerfrei trennen, weil
+unser Datensatz \textbf{nicht linear trennbar} ist. Wir brauchen eine
+Soft-Margin.
 
 \end{itemize}
 
@@ -2305,11 +2309,14 @@ print(model.score(X_test, y_test))
 
 \vspace{0.4em}
 \footnotesize
-Die Polynome haben die Form $(a\cdot x - \texttt{coef0})^{\texttt{degree}}$.
+Die Polynome haben die Form $(\gamma\, a\cdot x + \texttt{coef0})^{\texttt{degree}}$,
+also genau $K(\mathbf{x}_i,\mathbf{x}_j) = (\mathbf{x}_i\!\cdot\mathbf{x}_j + c)^d$
+von vorhin.
 
 \vspace{0.2em}
-\textbf{Achtung:} \texttt{coef0} darf nicht $0$ sein, sonst entartet der
-Ausdruck zu $(a\cdot x)^{\texttt{degree}}$.
+\texttt{coef0} entspricht dem Parameter $c$: Mit \texttt{coef0}$=0$ erhält
+man den \textbf{homogenen} polynomialen Kernel (nur der höchste Grad trägt
+bei).
 
 \column{0.48\textwidth}
 \centering
