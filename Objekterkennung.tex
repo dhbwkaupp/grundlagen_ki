@@ -1,6 +1,6 @@
 %==============================================================================
 % OBJEKTERKENNUNG MIT YOLO
-% Durchgehendes Praxisbeispiel: KI-Kasse (Euro-Münzen erkennen und summieren)
+% Durchgehendes Praxisbeispiel: KI-Geldzähler (Euro-Münzen erkennen und summieren)
 %==============================================================================
 
 % ---------------------------------------------------------
@@ -40,14 +40,16 @@
 \footnotesize
 \begin{columns}
 \begin{column}{0.35\textwidth}
+Wir möchten ein System, das
+
 \begin{itemize}
-  \item Auf einem Foto liegen Euro-Münzen zwischen anderen Gegenständen.
-  \item Das System soll \textbf{jede Münze finden}, ihren \textbf{Wert bestimmen} und den \textbf{Gesamtbetrag} berechnen.
-  \item Schere, Stifte und Platine sollen \textbf{nicht} gezählt werden.
-  \item Werkzeug: \textbf{YOLO26n}, nachtrainiert mit öffentlichen und eigenen Münzbildern
+  \item \textbf{alle Münzen} auf einem Foto erkennt,
+  \item ihren \textbf{Wert} bestimmt und
+  \item den \textbf{Gesamtbetrag} berechnet.
 \end{itemize}
-\vfill
-Dieses Ergebnis erarbeiten wir in diesem Kapitel Schritt für Schritt.
+
+\vspace{0.5em}
+Werkzeug: \textbf{YOLO26n}, nachtrainiert mit öffentlichen und eigenen Münzbildern
 \end{column}
 \begin{column}{0.60\textwidth}
 \centering
@@ -57,6 +59,7 @@ Dieses Ergebnis erarbeiten wir in diesem Kapitel Schritt für Schritt.
 \end{column}
 \end{columns}
 \end{frame}
+
 
 \makesubsectionpage{Von der Klassifikation zur Objekterkennung}
 
@@ -451,7 +454,7 @@ Richtig wären \textbf{2,61\,€}. Keiner der beiden Schwellenwerte liefert das 
 \begin{itemize}
   \item Detektoren liefern pro Objekt oft \textbf{viele überlappende Boxen}.
   \item Ursache: Mehrere Stellen der Ausgabe „sehen“ dieselbe Münze.
-  \item Für die KI-Kasse fatal: Die 2-€-Münze wird \textbf{dreifach gezählt}.
+  \item Für den KI-Geldzähler fatal: Die 2-€-Münze wird \textbf{dreifach gezählt}.
   \item \textbf{Non-Maximum Suppression (NMS):} Pro Objekt bleibt die Box mit der \textbf{höchsten Confidence}, stark überlappende Boxen derselben Klasse werden entfernt.
 \end{itemize}
 \end{column}
@@ -655,7 +658,7 @@ def nms(boxes, scores, tau=0.5):
 \begin{itemize}
   \item YOLO formuliert Objekterkennung als \textbf{Regressionsproblem}: vom Bild direkt zu Boxkoordinaten und Klassenwahrscheinlichkeiten.
   \item Das Netz sieht dabei immer das \textbf{ganze Bild} und nutzt so den Kontext.
-  \item Für eine Live-Erkennung wie die KI-Kasse ist ein einstufiger Detektor die naheliegende Wahl.
+  \item Für eine Live-Erkennung wie den KI-Geldzähler ist ein einstufiger Detektor die naheliegende Wahl.
 \end{itemize}
 \end{column}
 \end{columns}
@@ -708,7 +711,7 @@ def nms(boxes, scores, tau=0.5):
   \item Pro Box $5$ Werte: $x, y, w, h$ und Confidence. Pro Zelle zusätzlich $C$ Klassenwahrscheinlichkeiten
   \item Original mit Pascal VOC: $S = 7$, $B = 2$, $C = 20$ ergibt $7 \times 7 \times 30$.
 \end{itemize}
-\begin{beispiel}[Ausgabe für die KI-Kasse\strut]
+\begin{beispiel}[Ausgabe für den KI-Geldzähler\strut]
 Mit $C = 8$ Münzklassen ergibt sich $7 \times 7 \times (2 \cdot 5 + 8) = 7 \times 7 \times 18$, also $882$ Ausgabewerte pro Bild.
 \end{beispiel}
 \end{column}
@@ -730,7 +733,7 @@ Mit $C = 8$ Münzklassen ergibt sich $7 \times 7 \times (2 \cdot 5 + 8) = 7 \tim
   \fill[AlertColor, opacity=0.6] ({3/7},{2*3/7},0) rectangle ({6/7},{3*3/7},0);
   \node[below] at (1.5,0,0) {$S = 7$};
   \node[left] at (0,1.5,0) {$S = 7$};
-  \node[right] at (3,0,1.6) {$30$};
+  \node[right] at (3,0,1.6) {\;\; $30$};
   % Vektor einer Zelle
   \draw[AlertColor, -{Latex[length=2mm]}, line width=0.8pt] (0.65,1.1,0) -- (0.65,-1.0,0);
   \begin{scope}[shift={(-1.2,-1.9,0)}]
@@ -849,7 +852,7 @@ Mit $C = 8$ Münzklassen ergibt sich $7 \times 7 \times (2 \cdot 5 + 8) = 7 \tim
 \[
 80^2 + 40^2 + 20^2 = \num{6400} + \num{1600} + 400 = \num{8400}
 \]
-Für die KI-Kasse liefert jede Position $4$ Boxwerte und $8$ Klassenwerte. Ultralytics gibt einen Tensor der Form \texttt{(1, 12, 8400)} aus.
+Für den KI-Geldzähler liefert jede Position $4$ Boxwerte und $8$ Klassenwerte. Ultralytics gibt einen Tensor der Form \texttt{(1, 12, 8400)} aus.
 \end{beispiel}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -928,7 +931,7 @@ Für die KI-Kasse liefert jede Position $4$ Boxwerte und $8$ Klassenwerte. Ultra
   \item Das Netz wählt die passendste Schablone und lernt nur, sie zu \textbf{verschieben und zu strecken}.
   \item Nachteil: Die Schablonen müssen vorab zum Datensatz passend gewählt werden.
   \item \textbf{Anchor-free:} Jede Position sagt direkt die Abstände zu den vier Kanten vorher, ohne Schablonen.
-  \item YOLO26 ist anchor-free, für die KI-Kasse ist nichts einzustellen.
+  \item YOLO26 ist anchor-free, für den KI-Geldzähler ist nichts einzustellen.
 \end{itemize}
 }
 
@@ -998,17 +1001,7 @@ L_{\text{CIoU}} = 1 - \operatorname{IoU} + \frac{\rho^2(\mathbf{b}, \mathbf{b}^{
   \item Beide Heads werden \textbf{gemeinsam trainiert}.
   \item Die Wahl erfolgt erst bei Vorhersage, Validierung oder Export.
   \item Preis: etwas geringere Genauigkeit
-  \item \textbf{mAP@0.5:0.95}: Gütemaß von 0 bis 100 für Treffer und Boxgenauigkeit, Details im Abschnitt Bewertung
 \end{itemize}
-\centering
-\begin{tabular}{lcc}
-\toprule
-\textbf{mAP@0.5:0.95} & \textbf{NMS} & \textbf{ohne} \\
-\midrule
-YOLO26n & 40,9 & 40,1 \\
-YOLO26s & 48,6 & 47,8 \\
-\bottomrule
-\end{tabular}
 \end{column}
 \end{columns}
 
@@ -1045,17 +1038,31 @@ YOLO26x & 55,7\,Mio. & 194,4\,Mrd. & 57,5 \\
 \end{tabular}
 
 \vspace{0.5em}
-mAP@0.5:0.95 auf COCO \texttt{val2017} bei $640 \times 640$ Pixeln, Definition im Abschnitt Bewertung
+COCO \texttt{val2017}, $640 \times 640$ Pixel
 \end{column}
 \begin{column}{0.35\textwidth}
 \begin{itemize}
   \item Gleiche Architektur, unterschiedliche \textbf{Breite und Tiefe}
   \item Zum Vergleich VGG16: 138\,Mio. Parameter
-  \item Für die KI-Kasse auf einem Laptop: \textbf{YOLO26n} oder \textbf{YOLO26s}
-  \item Größere Modelle lohnen sich erst mit GPU und vielen Trainingsdaten.
+  \item \textbf{FLOPs}: Rechenaufwand pro Bild
+  \item \textbf{mAP@0.5:0.95}: Güte von 0 bis 100, siehe Abschnitt Bewertung
+  \item Für den KI-Geldzähler: \textbf{YOLO26n} oder \textbf{YOLO26s}
 \end{itemize}
 \end{column}
 \end{columns}
+
+\note{
+\begin{itemize}
+  \item FLOPs: Gleitkommaoperationen für einen Vorwärtsdurchlauf eines Bildes mit $640 \times 640$ Pixeln. Eine Multiply-Add-Operation zählt als zwei FLOPs.
+  \item YOLO26n: 5,5\,Mrd. FLOPs, läuft auch auf einer CPU in Echtzeit, geeignet für Laptop und Webcam.
+  \item YOLO26s: 20,9\,Mrd. FLOPs, etwa viermal so viel Rechenaufwand wie n, auf der CPU noch nutzbar.
+  \item YOLO26m: 68,4\,Mrd. FLOPs, etwa zwölfmal so viel wie n, für flüssige Live-Erkennung ist eine GPU sinnvoll.
+  \item YOLO26l: 86,8\,Mrd. FLOPs, etwa 16-mal so viel wie n, nur wenig mehr Parameter als m, aber tiefer.
+  \item YOLO26x: 194,4\,Mrd. FLOPs, etwa 35-mal so viel wie n, nur mit leistungsfähiger GPU sinnvoll.
+  \item Der Gewinn an mAP wird mit wachsender Größe immer kleiner: von n zu s $+7{,}7$, von l zu x nur $+2{,}5$.
+  \item Die tatsächliche Laufzeit hängt außerdem von Hardware, Speicherzugriffen und Bildgröße ab. Bei $960 \times 960$ Pixeln steigen die FLOPs etwa um den Faktor 2,25.
+\end{itemize}
+}
 \source{\cite{ultralytics_yolo26, simonyan2014vgg}}
 \end{frame}
 
@@ -1126,7 +1133,7 @@ indoor & book, clock, vase, scissors \\
   \item Klassen-IDs $0$ bis $79$, abrufbar über \texttt{model.names}
   \item Ursprünglich wurden 91 Kategorien definiert, annotiert sind 80.
   \item Vortrainierte YOLO-Gewichte kennen \textbf{genau diese} Klassen.
-  \item \textbf{Keine Münzen}, kein Geld: Für die KI-Kasse ist Fine-Tuning nötig.
+  \item \textbf{Keine Münzen}, kein Geld: Für den KI-Geldzähler ist Fine-Tuning nötig.
 \end{itemize}
 \end{column}
 \end{columns}
@@ -1287,7 +1294,7 @@ for r in model.track(source="video.mp4",
 \begin{frame}{Das Testbild mit dem vortrainierten Modell}
 \footnotesize
 \begin{columns}
-\begin{column}{0.35\textwidth}
+\begin{column}{0.4\textwidth}
 \begin{itemize}
   \item YOLO26n ohne Anpassung, vortrainiert auf COCO
   \item Gefunden wird nur die \textbf{Schere} mit Confidence 0,91.
@@ -1317,7 +1324,7 @@ for r in model.track(source="video.mp4",
   \item Wenden Sie YOLO26n auf \texttt{strasse.jpg} und \texttt{bus.jpg} an und zählen Sie die Objekte je Klasse.
   \item Vergleichen Sie YOLO26n und YOLO26s hinsichtlich der Anzahl der Detektionen, der mittleren Confidence und der Laufzeit.
   \item Untersuchen Sie, wie die Anzahl erkannter Objekte vom Schwellenwert \texttt{conf} abhängt.
-  \item Wenden Sie das vortrainierte Modell auf \texttt{testbild.jpg} an und erklären Sie das Ergebnis.
+  \item Wenden Sie das vortrainierte Modell auf \texttt{testbild.jpg} an.
 \end{enumerate}
 \end{column}
 \begin{column}{0.35\textwidth}
@@ -1328,14 +1335,15 @@ for r in model.track(source="video.mp4",
 \source{Lösung: \texttt{LösungYoloAnwenden.ipynb}}
 \end{frame}
 
-\makesubsectionpage{Das Projekt: Die KI-Kasse}
+\makesubsectionpage{Das Projekt: Der KI-Geldzähler}
 
 % ---------------------------------------------------------
-\begin{frame}{Unser Projekt: Die KI-Kasse}
+\begin{frame}{Unser Projekt: Der KI-Geldzähler}
 \footnotesize
 \setbeamerfont{block title}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.52\textwidth}
 \begin{itemize}
   \item \textbf{Ziel:} Münzen erkennen und \textbf{die Summe} anzeigen
   \item \textbf{8 Klassen:} 1, 2, 5, 10, 20 und 50 Cent sowie 1\,€ und 2\,€
@@ -1463,7 +1471,7 @@ Nach Größe sortiert wechseln sich die Farben ab. Das Netz muss \textbf{Größe
 \begin{frame}{Datensatz reduzieren}
 \footnotesize
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.53\textwidth}
 \begin{itemize}
   \item Viele Trainingsbilder liegen \textbf{dreifach} vor: augmentierte Kopien aus früheren Versionen, erkennbar am gleichen Namen vor \texttt{.rf.}
   \item Ultralytics augmentiert selbst, die Kopien kosten nur Rechenzeit.
@@ -1552,11 +1560,22 @@ names:
 }
 \end{column}
 \end{columns}
+
+\note{
+\begin{itemize}
+  \item \texttt{data.yaml} beschreibt den Datensatz für Ultralytics und wird mit \texttt{data=} an \texttt{train} und \texttt{val} übergeben.
+  \item \texttt{train}, \texttt{val}, \texttt{test}: Bildordner der Splits. Labels: \texttt{images} $\rightarrow$ \texttt{labels}, \texttt{.jpg} $\rightarrow$ \texttt{.txt}
+  \item \texttt{names}: Klassen-ID $\rightarrow$ Name, passend zu den Label-Dateien. Bestimmt auch die Klassenzahl im Head.
+\end{itemize}
+}
+
 \source{\cite{ultralytics_datasets_detect}}
 \end{frame}
 % ---------------------------------------------------------
 \begin{frame}{Eigene Daten aufnehmen: Anforderungen}
 \footnotesize
+\setbeamerfont{block title}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{itemize}
@@ -1692,7 +1711,8 @@ Ohne gemeinsame Richtlinie annotiert jede Gruppe anders.
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{3.3cm}}
+\scriptsize
+\begin{tabular}{>{\raggedright\arraybackslash}p{\dimexpr0.27\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.38\linewidth-2\tabcolsep\relax}>{\raggedright\arraybackslash}p{\dimexpr0.35\linewidth-2\tabcolsep\relax}}
 \toprule
 \textbf{Werkzeug} & \textbf{Vorteile} & \textbf{Nachteile} \\
 \midrule
@@ -1864,7 +1884,7 @@ Fehler im Datensatz lassen sich durch kein Training ausgleichen.
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{enumerate}
-  \item Laden Sie den Datensatz „Small object detection for euro coins“ (Version 5) im Format YOLOv8 von Roboflow Universe herunter.
+  \item Laden Sie den Datensatz „Small object detection for euro coins“ von Moodle.
   \item Erzeugen Sie den reduzierten Datensatz mit einem Bild pro Quellbild und den Klassen-IDs der Vorlesung.
   \item Prüfen Sie Klassenverteilung und Boxgrößen und sehen Sie sich Ausschnitte je Klasse an. Finden Sie falsch annotierte Münzen?
   \item Fotografieren Sie 50 bis 100 eigene Münzbilder, lassen Sie diese mit \texttt{Vorannotieren.py} vorannotieren und korrigieren Sie die Boxen in makesense.ai.
@@ -1890,7 +1910,7 @@ Fehler im Datensatz lassen sich durch kein Training ausgleichen.
 \begin{itemize}
   \item Ausgangspunkt sind die auf COCO \textbf{vortrainierten Gewichte}.
   \item Der Head wird automatisch auf \textbf{8 Klassen} umgebaut.
-  \item Standardmäßig werden \textbf{alle Schichten} weitertrainiert.
+  \item Standardmäßig (\texttt{freeze=None}) werden \textbf{alle Schichten} weitertrainiert. So auch in unserem Training.
   \item Mit \texttt{freeze=10} bleiben die ersten 10 Schichten fest, ähnlich zu \texttt{trainable = False} bei VGG16.
   \item Münzen unterscheiden sich stark von COCO. Vollständiges Fine-Tuning ist daher meist besser.
 \end{itemize}
@@ -2045,6 +2065,8 @@ results = model.train(
 % ---------------------------------------------------------
 \begin{frame}{Hardware und Trainingszeit}
 \footnotesize
+\setbeamerfont{block title}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{itemize}
@@ -2132,6 +2154,7 @@ results = model.train(
 \begin{frame}{Precision und Recall}
 \footnotesize
 \setbeamerfont{block title}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
 \begin{columns}
 \begin{column}{0.47\textwidth}
 \begin{definition}[Precision und Recall\strut]
@@ -2234,6 +2257,15 @@ AP &= 0{,}2 \cdot 1 + 0{,}2 \cdot 1 + 0{,}2 \cdot 0{,}8 \\
 }
 \end{column}
 \end{columns}
+
+\note{
+\begin{itemize}
+  \item Precision-Recall-Kurve: Die Detektionen einer Klasse werden nach Confidence sortiert. Nach jeder Detektion werden Recall und Precision eingetragen.
+  \item Hier: 5 echte 1-€-Münzen, 8 Detektionen. Ein Treffer erhöht den Recall, ein Fehlalarm senkt nur die Precision. Deshalb liegen manche Punkte senkrecht übereinander.
+  \item Bleibt die Kurve lange oben, findet das Modell viele Münzen ohne Fehlalarme. Die Fläche darunter ist die AP.
+\end{itemize}
+}
+
 \end{frame}
 
 % ---------------------------------------------------------
@@ -2339,14 +2371,14 @@ metrics.box.maps    # je Klasse
 \begin{column}{0.47\textwidth}
 \begin{itemize}
   \item Die mAP bewertet die Erkennung, aber nicht den \textbf{Nutzen}.
-  \item Für die KI-Kasse zählt: Ist die \textbf{Summe} pro Bild richtig?
+  \item Für den KI-Geldzähler zählt: Ist die \textbf{Summe} pro Bild richtig?
   \item Ein einziger Fehlalarm oder eine übersehene Münze macht das Ergebnis falsch.
   \item Der Schwellenwert \texttt{conf} wird so gewählt, dass möglichst viele Beträge stimmen.
   \item Unser Test: mAP@0.5 von 0,65, aber nur bei \textbf{43 von 87} Testbildern mit Münzen stimmt der Betrag exakt.
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
-\begin{blockC3}{Metrik für die KI-Kasse}
+\begin{blockC3}{Metrik für den KI-Geldzähler}
 \[
 \text{Anteil exakt} = \frac{\#\{\text{Bilder mit korrekter Summe}\}}{\#\{\text{Bilder}\}}
 \]
@@ -2426,7 +2458,7 @@ Betrag exakt, eigene Fotos & 2 von 16 & 0 von 16 \\
 \makesubsectionpage{Deployment und Ausblick}
 
 % ---------------------------------------------------------
-\begin{frame}[fragile]{Live-Demo: Die KI-Kasse}
+\begin{frame}[fragile]{Live-Demo: Der KI-Geldzähler}
 \footnotesize
 \begin{columns}
 \begin{column}{0.47\textwidth}
@@ -2444,7 +2476,7 @@ for r in model.predict(
 }
 \begin{itemize}
   \item \texttt{agnostic\_nms=True}: NMS über alle Klassen, eine Box pro Münze
-  \item Skript \texttt{KiKasse.py} mit Reglern für \texttt{conf} und \texttt{iou}
+  \item Skript \texttt{KiGeldzaehler.py} mit Reglern für \texttt{conf} und \texttt{iou}
   \item Taste \texttt{s}: Bild für neue Trainingsdaten speichern
 \end{itemize}
 
@@ -2502,6 +2534,8 @@ Unser Test auf einer CPU mit \texttt{imgsz=960}: PyTorch 190\,ms, ONNX 167\,ms p
 % ---------------------------------------------------------
 \begin{frame}{Weitere Aufgaben mit YOLO}
 \footnotesize
+\setbeamerfont{block title}{size=\footnotesize}
+\setbeamerfont{itemize/enumerate subbody}{size=\footnotesize}
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{itemize}
@@ -2579,13 +2613,13 @@ Unser Test auf einer CPU mit \texttt{imgsz=960}: PyTorch 190\,ms, ONNX 167\,ms p
 \end{frame}
 
 % ---------------------------------------------------------
-\begin{frame}{Aufgabe: Die KI-Kasse live}
+\begin{frame}{Aufgabe: Der KI-Geldzähler live}
 \footnotesize
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{enumerate}
   \item Exportieren Sie Ihr bestes Modell nach ONNX und vergleichen Sie die Laufzeit mit dem PyTorch-Modell.
-  \item Starten Sie \texttt{KiKasse.py} mit Ihrer Webcam und testen Sie verschiedene Werte für \texttt{conf} und \texttt{iou}.
+  \item Starten Sie \texttt{KiGeldzaehler.py} mit Ihrer Webcam und testen Sie verschiedene Werte für \texttt{conf} und \texttt{iou}.
   \item Nehmen Sie mit der Taste \texttt{s} mindestens 30 Bilder auf, annotieren Sie diese mit makesense.ai und bestimmen Sie die mAP auf diesem Live-Testset.
   \item Ergänzen Sie das Training um 20 bis 30 weitere Bilder aus dem Hörsaal und vergleichen Sie die mAP auf dem Live-Testset vor und nach dem Nachtraining.
 \end{enumerate}
@@ -2595,5 +2629,5 @@ Unser Test auf einer CPU mit \texttt{imgsz=960}: PyTorch 190\,ms, ONNX 167\,ms p
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: \texttt{LösungYoloExport.ipynb}, \texttt{KiKasse.py}}
+\source{Lösung: \texttt{LösungYoloExport.ipynb}, \texttt{KiGeldzaehler.py}}
 \end{frame}
