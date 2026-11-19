@@ -33,7 +33,30 @@
   \yoloMuenze{(4.9,1.2)}{0.58}{GoldColor}{SilberColor}{1\,€}%
 }
 
-\makesectionpage{Objekterkennung mit YOLO}
+\makesectionpage[figures/YOLOObjekterkennung.png]{Objekterkennung mit YOLO}
+
+% ---------------------------------------------------------
+\begin{frame}{Aufgabe: Münzen erkennen und zusammenrechnen}
+\footnotesize
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Auf einem Foto liegen Euro-Münzen zwischen anderen Gegenständen.
+  \item Das System soll \textbf{jede Münze finden}, ihren \textbf{Wert bestimmen} und den \textbf{Gesamtbetrag} berechnen.
+  \item Schere, Stifte und Platine sollen \textbf{nicht} gezählt werden.
+  \item Werkzeug: \textbf{YOLO26n}, nachtrainiert mit öffentlichen und eigenen Münzbildern
+\end{itemize}
+\vfill
+Dieses Ergebnis erarbeiten wir in diesem Kapitel Schritt für Schritt.
+\end{column}
+\begin{column}{0.60\textwidth}
+\centering
+\includegraphics[width=0.9\linewidth]{figures/yolo_testbild_kasse.jpg}
+
+\scriptsize \texttt{testbild.jpg} nach dem Training: Klasse, Confidence und Summe
+\end{column}
+\end{columns}
+\end{frame}
 
 \makesubsectionpage{Von der Klassifikation zur Objekterkennung}
 
@@ -129,51 +152,6 @@ YOLO beherrscht alle vier Aufgaben. Im Fokus steht hier die \textbf{Objekterkenn
 }
 \end{column}
 \end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Unser Projekt: Die KI-Kasse}
-\footnotesize
-\setbeamerfont{block title}{size=\footnotesize}
-\begin{columns}
-\begin{column}{0.47\textwidth}
-\begin{itemize}
-  \item \textbf{Ziel:} Münzen liegen unter einer Kamera, das System zeigt \textbf{live die Summe} an.
-  \item Kamera $\rightarrow$ YOLO $\rightarrow$ Detektionen $\rightarrow$ Summe
-  \item \textbf{8 Klassen:} 1, 2, 5, 10, 20 und 50 Cent sowie 1\,€ und 2\,€
-  \item Das Ergebnis ist im Hörsaal \textbf{sofort überprüfbar}.
-  \item Herausforderungen:
-  \footnotesize
-  \begin{itemize}
-    \item Sehr ähnliche Klassen
-    \item Unterschiedliche nationale Rückseiten
-    \item Spiegelungen, Abnutzung, Überlappungen
-    \item Größe hilft nur bei \textbf{fester Kamerahöhe}
-  \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\centering
-\begin{tabular}{lrl}
-\toprule
-\textbf{Münze} & \textbf{Ø in mm} & \textbf{Farbe} \\
-\midrule
-1\,ct  & 16,25 & Kupfer \\
-2\,ct  & 18,75 & Kupfer \\
-10\,ct & 19,75 & Gold \\
-5\,ct  & 21,25 & Kupfer \\
-20\,ct & 22,25 & Gold \\
-1\,€   & 23,25 & Gold/Silber \\
-50\,ct & 24,25 & Gold \\
-2\,€   & 25,75 & Silber/Gold \\
-\bottomrule
-\end{tabular}
-
-\vspace{0.6em}
-Nach Größe sortiert wechseln sich die Farben ab. Das Netz muss \textbf{Größe, Farbe und Prägung} kombinieren.
-\end{column}
-\end{columns}
-\source{\cite{bundesbank_euromuenzen}}
 \end{frame}
 
 % ---------------------------------------------------------
@@ -1306,24 +1284,28 @@ for r in model.track(source="video.mp4",
 \end{frame}
 
 % ---------------------------------------------------------
-\begin{frame}{Warum erkennt YOLO26n keine Münzen?}
+\begin{frame}{Das Testbild mit dem vortrainierten Modell}
 \footnotesize
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.35\textwidth}
 \begin{itemize}
-  \item Das COCO-Modell findet auf dem Münzbild \textbf{nichts}, selbst bei \texttt{conf=0.1}.
-  \item COCO enthält \textbf{keine Klasse für Münzen}.
-  \item Ein Modell kann nur erkennen, was es gelernt hat.
+  \item YOLO26n ohne Anpassung, vortrainiert auf COCO
+  \item Gefunden wird nur die \textbf{Schere} mit Confidence 0,91.
+  \item Keine der neun Münzen wird erkannt, auch nicht bei \texttt{conf=0.05}.
+  \item COCO enthält \textbf{keine Klasse für Münzen}. Ein Modell erkennt nur, was es gelernt hat.
   \item Der Backbone hat trotzdem nützliche Merkmale gelernt: Kanten, Kreise, Farben, Texturen.
 \end{itemize}
 \vfill
-\textbf{Lösung: Transfer Learning} mit einem eigenen Münzdatensatz, wie bei VGG16 für Hunde und Katzen
+\textbf{Lösung: Transfer Learning} mit einem eigenen Münzdatensatz
 \end{column}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.60\textwidth}
 \centering
-\includegraphics[width=0.9\linewidth]{figures/yolo_muenzen.jpg}
+\includegraphics[width=0.95\linewidth]{figures/yolo_testbild_coco.jpg}
+
+\scriptsize \texttt{testbild.jpg} mit dem COCO-Modell
 \end{column}
 \end{columns}
+\source{\texttt{LösungYoloAnwenden.ipynb}}
 \end{frame}
 
 % ---------------------------------------------------------
@@ -1335,7 +1317,7 @@ for r in model.track(source="video.mp4",
   \item Wenden Sie YOLO26n auf \texttt{strasse.jpg} und \texttt{bus.jpg} an und zählen Sie die Objekte je Klasse.
   \item Vergleichen Sie YOLO26n und YOLO26s hinsichtlich der Anzahl der Detektionen, der mittleren Confidence und der Laufzeit.
   \item Untersuchen Sie, wie die Anzahl erkannter Objekte vom Schwellenwert \texttt{conf} abhängt.
-  \item Wenden Sie das vortrainierte Modell auf ein Münzbild an und erklären Sie das Ergebnis.
+  \item Wenden Sie das vortrainierte Modell auf \texttt{testbild.jpg} an und erklären Sie das Ergebnis.
 \end{enumerate}
 \end{column}
 \begin{column}{0.35\textwidth}
@@ -1346,7 +1328,50 @@ for r in model.track(source="video.mp4",
 \source{Lösung: \texttt{LösungYoloAnwenden.ipynb}}
 \end{frame}
 
-\makesubsectionpage{Der Münzdatensatz}
+\makesubsectionpage{Das Projekt: Die KI-Kasse}
+
+% ---------------------------------------------------------
+\begin{frame}{Unser Projekt: Die KI-Kasse}
+\footnotesize
+\setbeamerfont{block title}{size=\footnotesize}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+  \item \textbf{Ziel:} Münzen erkennen und \textbf{die Summe} anzeigen
+  \item \textbf{8 Klassen:} 1, 2, 5, 10, 20 und 50 Cent sowie 1\,€ und 2\,€
+  \item \textbf{Daten:} Roboflow-Datensatz und eigene Fotos
+  \item Herausforderungen:
+  \begin{itemize}
+    \item Ähnliche Klassen, verschiedene Länderseiten
+    \item Spiegelungen, Abnutzung, Überlappungen
+    \item Störobjekte wie Stifte, Chips oder Murmeln
+    \item Größe hilft nur bei \textbf{fester Kamerahöhe}.
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tabular}{lrl}
+\toprule
+\textbf{Münze} & \textbf{Ø in mm} & \textbf{Farbe} \\
+\midrule
+1\,ct  & 16,25 & Kupfer \\
+2\,ct  & 18,75 & Kupfer \\
+10\,ct & 19,75 & Gold \\
+5\,ct  & 21,25 & Kupfer \\
+20\,ct & 22,25 & Gold \\
+1\,€   & 23,25 & Gold/Silber \\
+50\,ct & 24,25 & Gold \\
+2\,€   & 25,75 & Silber/Gold \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+Nach Größe sortiert wechseln sich die Farben ab. Das Netz muss \textbf{Größe, Farbe und Prägung} kombinieren.
+\end{column}
+\end{columns}
+\source{\cite{bundesbank_euromuenzen}}
+\end{frame}
 
 % ---------------------------------------------------------
 \begin{frame}{Woher kommen die Trainingsdaten?}
@@ -1373,198 +1398,11 @@ for r in model.track(source="video.mp4",
 \end{column}
 \begin{column}{0.35\textwidth}
 \begin{itemize}
-  \item In dieser Vorlesung: \textbf{öffentlicher Datensatz} als Grundlage
-  \item Eigene Fotos dienen als \textbf{Live-Testset}.
-  \item Die nächsten Folien zeigen, wie man eigene Daten aufnimmt und annotiert.
+  \item In unserem Projekt: \textbf{beides}
+  \item Grundlage: 748 annotierte Bilder von Roboflow Universe
+  \item Dazu 109 eigene Handyfotos, die wir selbst annotiert haben
+  \item Eigene Fotos bringen die \textbf{Einsatzumgebung} ins Training.
 \end{itemize}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Eigene Daten aufnehmen: Anforderungen}
-\footnotesize
-\begin{columns}
-\begin{column}{0.60\textwidth}
-\begin{itemize}
-  \item \textbf{Umfang:} Für die Vorlesung reichen 200 bis 300 Bilder. Entscheidend ist die Zahl der \textbf{annotierten Münzen}, nicht der Bilder.
-  \item \textbf{Viele Objekte pro Bild:} 5 bis 15 Münzen, auch überlappend
-  \item \textbf{Variation} ist wichtiger als Menge:
-  \begin{itemize}
-    \item Untergrund, Licht und Tageszeit
-    \item Vorder- und Rückseiten verschiedener Länder
-    \item Abgegriffene und glänzende Münzen
-    \item Verschiedene Kameras
-  \end{itemize}
-  \item \textbf{Hintergrundbilder} ohne Münzen, etwa 5 bis 10\,\%, gegen Fehlalarme
-  \item \textbf{Feste Kamerahöhe}, damit die Größe als Merkmal nutzbar bleibt
-\end{itemize}
-\end{column}
-\begin{column}{0.35\textwidth}
-\centering
-\twemoji[width=0.8\linewidth]{camera}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Datenleck: Aufteilung nach Aufnahmeort}
-\footnotesize
-\begin{columns}
-\begin{column}{0.47\textwidth}
-\begin{itemize}
-  \item Bilder einer Serie sind sich \textbf{fast identisch}.
-  \item Zufällige Aufteilung bringt nahezu gleiche Bilder in Training und Validierung. Die mAP ist dann \textbf{zu optimistisch}.
-  \item Daher \textbf{nach Aufnahmeort oder Sitzung} aufteilen
-  \item Das Testset stammt aus einem Raum, der im Training nie vorkam.
-  \item Dateinamen mit Ort als Präfix, z.\,B. \texttt{labor\_017.jpg}
-\end{itemize}
-\end{column}
-\begin{column}{0.48\textwidth}
-\centering
-\resizebox{0.9\linewidth}{!}{%
-\begin{tikzpicture}[
-  ort/.style={draw, rounded corners=2pt, minimum width=1.9cm, minimum height=0.6cm, font=\small},
-  pfeil/.style={-{Latex[length=2mm]}, line width=0.7pt, DarkGrey}]
-  \node[ort, fill=SecondaryColor!20] (o1) at (0,2.4) {Hörsaal};
-  \node[ort, fill=SecondaryColor!20] (o2) at (0,1.6) {Labor};
-  \node[ort, fill=SecondaryColor!20] (o3) at (0,0.8) {Büro};
-  \node[ort, fill=AccentColor!30] (o4) at (0,0) {Mensa};
-  \node[ort, fill=ExampleColor!35] (o5) at (0,-0.8) {Bibliothek};
-  \node[ort, fill=SecondaryColor!40, minimum height=1.9cm, minimum width=2.2cm] (tr) at (4,1.6) {\textbf{Training}};
-  \node[ort, fill=AccentColor!50, minimum width=2.2cm] (va) at (4,0) {\textbf{Validierung}};
-  \node[ort, fill=ExampleColor!55, minimum width=2.2cm] (te) at (4,-0.8) {\textbf{Test}};
-  \foreach \o in {o1,o2,o3} \draw[pfeil] (\o.east) -- (tr.west);
-  \draw[pfeil] (o4.east) -- (va.west);
-  \draw[pfeil] (o5.east) -- (te.west);
-\end{tikzpicture}%
-}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}[fragile]{COCO-Format und YOLO-Format}
-\footnotesize
-\begin{columns}
-\begin{column}{0.60\textwidth}
-{\footnotesize
-\begin{minted}{json}
-{
-  "images": [
-    {"id": 1, "file_name": "labor_017.jpg",
-     "width": 1280, "height": 960}],
-  "annotations": [
-    {"id": 1, "image_id": 1, "category_id": 8,
-     "bbox": [512, 384, 128, 128]}],
-  "categories": [
-    {"id": 8, "name": "2eur"}]
-}
-\end{minted}
-}
-Entspricht der YOLO-Zeile \texttt{7 0.450 0.467 0.100 0.133}
-\end{column}
-\begin{column}{0.35\textwidth}
-\begin{itemize}
-  \item COCO: \textbf{eine JSON-Datei} für den ganzen Datensatz
-  \item \texttt{bbox}: $(x_1, y_1, w, h)$ in \textbf{Pixeln}
-  \item Kategorie-IDs beginnen meist bei $1$.
-  \item YOLO: eine Textdatei pro Bild, normiert, IDs ab $0$
-  \item Viele Werkzeuge exportieren beide Formate.
-  \item Umwandlung mit \texttt{convert\_coco()} aus \texttt{ultralytics.data.converter}
-\end{itemize}
-\end{column}
-\end{columns}
-\source{\cite{lin2014coco, ultralytics_datasets_detect}}
-\end{frame}
-
-
-% ---------------------------------------------------------
-\begin{frame}{Annotationswerkzeuge}
-\footnotesize
-\begin{columns}
-\begin{column}{0.60\textwidth}
-\centering
-\begin{tabular}{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{3.3cm}}
-\toprule
-\textbf{Werkzeug} & \textbf{Vorteile} & \textbf{Nachteile} \\
-\midrule
-Label Studio & Lokal per \texttt{pip} installierbar, Daten bleiben auf dem Rechner & Gemeinsames Arbeiten nur mit Server \\
-\midrule
-CVAT & Open Source, Aufgaben auf Personen verteilbar, selbst hostbar & Betrieb aufwendig, sonst Cloud \\
-\midrule
-Roboflow & Sehr bequem, Aufteilung und Export integriert & Cloud-Dienst, Daten liegen extern \\
-\bottomrule
-\end{tabular}
-\end{column}
-\begin{column}{0.35\textwidth}
-\begin{itemize}
-  \item Alle drei exportieren direkt im \textbf{YOLO-Format}.
-  \item Für die Lehre: CVAT über das Rechenzentrum oder Label Studio lokal
-  \item Bei Fotos mit Personen auf den \textbf{Datenschutz} achten
-\end{itemize}
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Annotationsrichtlinie}
-\footnotesize
-\setbeamerfont{block title}{size=\footnotesize}
-\begin{columns}
-\begin{column}{0.60\textwidth}
-\begin{enumerate}
-  \item Die Box liegt \textbf{eng} am Objekt an.
-  \item \textbf{Jede} Münze im Bild wird annotiert.
-  \item Bei Verdeckung wird nur der \textbf{sichtbare Teil} umrahmt.
-  \item Münzen, die am Bildrand abgeschnitten sind, werden annotiert.
-  \item Nicht mehr erkennbare Münzen werden nach einer \textbf{festen Regel} ausgelassen, z.\,B. kleiner als 15 Pixel.
-  \item Jede Klasse hat eine Definition mit Beispielen und \textbf{Grenzfällen}.
-\end{enumerate}
-\end{column}
-\begin{column}{0.35\textwidth}
-\begin{blockC3}{Häufigster Fehler}
-Eine vergessene Münze lernt das Modell als \textbf{Hintergrund}. Es wird dafür bestraft, sie zu erkennen.
-\end{blockC3}
-\vspace{0.5em}
-Ohne gemeinsame Richtlinie annotiert jede Gruppe anders.
-\end{column}
-\end{columns}
-\end{frame}
-
-% ---------------------------------------------------------
-\begin{frame}{Ablauf in der Gruppe und Vorannotation}
-\footnotesize
-\begin{columns}
-\begin{column}{0.47\textwidth}
-\begin{enumerate}
-  \item Jede Gruppe fotografiert 30 bis 50 Bilder an \textbf{ihrem} Ort.
-  \item Jede Gruppe annotiert die eigenen Bilder, etwa 10 bis 20 Sekunden pro Box.
-  \item Eine andere Gruppe prüft rund 10\,\% der Bilder. Die \textbf{IoU} zwischen zwei Annotierenden misst die Übereinstimmung.
-  \item Export im YOLO-Format, Aufteilung nach Ort
-\end{enumerate}
-\end{column}
-\begin{column}{0.48\textwidth}
-\begin{itemize}
-  \item \textbf{Vorannotation:} Nach etwa 50 Bildern ein Nano-Modell trainieren
-  \item Das Modell schlägt Boxen für die restlichen Bilder vor.
-  \item Menschen \textbf{korrigieren} nur noch.
-  \item Spart Zeit und zeigt, wie Datensätze in der Praxis wachsen
-\end{itemize}
-\vspace{0.5em}
-\centering
-\resizebox{0.8\linewidth}{!}{%
-\begin{tikzpicture}[schritt/.style={draw, rounded corners=2pt, fill=SecondaryColor!20, font=\small, minimum width=2cm, minimum height=0.6cm}]
-  \node[schritt] (a) at (0,1) {annotieren};
-  \node[schritt] (b) at (3,1) {trainieren};
-  \node[schritt] (c) at (3,0) {vorschlagen};
-  \node[schritt] (d) at (0,0) {korrigieren};
-  \draw[-{Latex[length=2mm]}, line width=0.7pt] (a) -- (b);
-  \draw[-{Latex[length=2mm]}, line width=0.7pt] (b) -- (c);
-  \draw[-{Latex[length=2mm]}, line width=0.7pt] (c) -- (d);
-  \draw[-{Latex[length=2mm]}, line width=0.7pt] (d) -- (a);
-\end{tikzpicture}%
-}
 \end{column}
 \end{columns}
 \end{frame}
@@ -1716,6 +1554,287 @@ names:
 \end{columns}
 \source{\cite{ultralytics_datasets_detect}}
 \end{frame}
+% ---------------------------------------------------------
+\begin{frame}{Eigene Daten aufnehmen: Anforderungen}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{itemize}
+  \item \textbf{Umfang:} Entscheidend ist die Zahl der \textbf{annotierten Münzen}, nicht der Bilder.
+  \item \textbf{Viele Objekte pro Bild:} 5 bis 15 Münzen, auch überlappend
+  \item \textbf{Variation} ist wichtiger als Menge:
+  \begin{itemize}
+    \item Untergrund, Licht und Tageszeit
+    \item Vorder- und Rückseiten verschiedener Länder
+    \item Abgegriffene und glänzende Münzen
+    \item Verschiedene Kameras
+  \end{itemize}
+  \item \textbf{Hintergrundbilder} ohne Münzen, etwa 5 bis 10\,\%, gegen Fehlalarme
+  \item \textbf{Feste Kamerahöhe}, damit die Größe als Merkmal nutzbar bleibt
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\centering
+\twemoji[width=0.8\linewidth]{camera}
+\end{column}
+\end{columns}
+\end{frame}
+% ---------------------------------------------------------
+\begin{frame}{Unsere eigenen Fotos}
+\footnotesize
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item 113 Handyfotos aus zwei Sitzungen, nach dem Aussortieren \textbf{109}
+  \item Verschiedene Untergründe, Lichtverhältnisse und Abstände
+  \item \textbf{Störobjekte:} Stifte, Schere, Chips, Murmeln, Billardkugeln
+  \item 1 bis 41 Münzen pro Bild, insgesamt \textbf{897 Münzen}
+  \item Für das Training auf höchstens 1600 Pixel verkleinert
+  \item Das Testbild stammt aus einer eigenen Aufnahme und ist in keinem Split enthalten.
+\end{itemize}
+\end{column}
+\begin{column}{0.60\textwidth}
+\centering
+\includegraphics[width=0.95\linewidth]{figures/yolo_eigene_fotos.jpg}
+
+\scriptsize Ausschnitte aus sechs eigenen Fotos
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Annotationsrichtlinie}
+\footnotesize
+\setbeamerfont{block title}{size=\footnotesize}
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\begin{enumerate}
+  \item Die Box liegt \textbf{eng} am Objekt an.
+  \item \textbf{Jede} Münze im Bild wird annotiert.
+  \item Bei Verdeckung wird nur der \textbf{sichtbare Teil} umrahmt.
+  \item Münzen, die am Bildrand abgeschnitten sind, werden annotiert.
+  \item Nicht mehr erkennbare Münzen werden nach einer \textbf{festen Regel} ausgelassen, z.\,B. kleiner als 15 Pixel.
+  \item Jede Klasse hat eine Definition mit Beispielen und \textbf{Grenzfällen}.
+\end{enumerate}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{blockC3}{Häufigster Fehler}
+Eine vergessene Münze lernt das Modell als \textbf{Hintergrund}. Es wird dafür bestraft, sie zu erkennen.
+\end{blockC3}
+\vspace{0.5em}
+Ohne gemeinsame Richtlinie annotiert jede Gruppe anders.
+\end{column}
+\end{columns}
+\end{frame}
+% ---------------------------------------------------------
+\begin{frame}{Vorannotation mit dem eigenen Modell}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{enumerate}
+  \item Modell nur mit den Roboflow-Daten trainieren
+  \item \texttt{Vorannotieren.py}: Das Modell schlägt für alle Fotos Boxen und Klassen vor, mit \texttt{imgsz=960} und \texttt{conf=0.25}.
+  \item Vorschläge im YOLO-Format in ein Annotationswerkzeug laden
+  \item Klassen korrigieren, Fehlalarme löschen, fehlende Münzen ergänzen
+  \item Export im YOLO-Format
+\end{enumerate}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \item Die Boxen sitzen meist gut, die \textbf{Klassen} sind oft falsch.
+  \item Fehlalarme auf Kugeln, Murmeln und Chips
+  \item Aus 1130 Vorschlägen wurden 957 korrigierte Boxen.
+  \item Korrigieren geht deutlich schneller als jede Box neu zu zeichnen.
+\end{itemize}
+\vspace{0.5em}
+\centering
+\resizebox{0.8\linewidth}{!}{%
+\begin{tikzpicture}[schritt/.style={draw, rounded corners=2pt, fill=SecondaryColor!20, font=\small, minimum width=2cm, minimum height=0.6cm}]
+  \node[schritt] (a) at (0,1) {annotieren};
+  \node[schritt] (b) at (3,1) {trainieren};
+  \node[schritt] (c) at (3,0) {vorschlagen};
+  \node[schritt] (d) at (0,0) {korrigieren};
+  \draw[-{Latex[length=2mm]}, line width=0.7pt] (a) -- (b);
+  \draw[-{Latex[length=2mm]}, line width=0.7pt] (b) -- (c);
+  \draw[-{Latex[length=2mm]}, line width=0.7pt] (c) -- (d);
+  \draw[-{Latex[length=2mm]}, line width=0.7pt] (d) -- (a);
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\source{\texttt{Vorannotieren.py}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Annotieren mit makesense.ai}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/yolo_makesense_ai.png}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Läuft im Browser, die Bilder \textbf{verlassen den Rechner nicht}.
+  \item Import der Vorannotation: alle \texttt{.txt}-Dateien zusammen mit \texttt{labels.txt}, die die Klassennamen in der richtigen Reihenfolge enthält
+  \item Rechts die Liste der Boxen: Klasse ändern, Box löschen
+  \item Keine automatische Speicherung: \textbf{regelmäßig exportieren}
+  \item Export als ZIP mit einer YOLO-Datei pro Bild
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{makesense}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Alternative Annotationswerkzeuge}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+\centering
+\begin{tabular}{>{\raggedright\arraybackslash}p{2cm}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{3.3cm}}
+\toprule
+\textbf{Werkzeug} & \textbf{Vorteile} & \textbf{Nachteile} \\
+\midrule
+X-AnyLabeling & Lokale Anwendung, speichert automatisch, KI-Vorschläge integriert & Installation nötig, groß \\
+\midrule
+Label Studio & Lokal per \texttt{pip}, Daten bleiben auf dem Rechner & Gemeinsames Arbeiten nur mit Server \\
+\midrule
+CVAT & Open Source, Aufgaben verteilbar, selbst hostbar & Betrieb aufwendig, kostenlose Cloud begrenzt \\
+\midrule
+Roboflow & Sehr bequem, Aufteilung und Export integriert & Kostenlos nur mit öffentlichen Projekten \\
+\bottomrule
+\end{tabular}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item Alle exportieren direkt im \textbf{YOLO-Format}.
+  \item makesense.ai eignet sich für eine Sitzung, X-AnyLabeling oder CVAT für Arbeit über mehrere Tage.
+  \item Bei Fotos mit Personen auf den \textbf{Datenschutz} achten
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{xanylabeling}}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}[fragile]{COCO-Format und YOLO-Format}
+\footnotesize
+\begin{columns}
+\begin{column}{0.60\textwidth}
+{\footnotesize
+\begin{minted}{json}
+{
+  "images": [
+    {"id": 1, "file_name": "labor_017.jpg",
+     "width": 1280, "height": 960}],
+  "annotations": [
+    {"id": 1, "image_id": 1, "category_id": 8,
+     "bbox": [512, 384, 128, 128]}],
+  "categories": [
+    {"id": 8, "name": "2eur"}]
+}
+\end{minted}
+}
+Entspricht der YOLO-Zeile \texttt{7 0.450 0.467 0.100 0.133}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{itemize}
+  \item COCO: \textbf{eine JSON-Datei} für den ganzen Datensatz
+  \item \texttt{bbox}: $(x_1, y_1, w, h)$ in \textbf{Pixeln}
+  \item Kategorie-IDs beginnen meist bei $1$.
+  \item YOLO: eine Textdatei pro Bild, normiert, IDs ab $0$
+  \item Viele Werkzeuge exportieren beide Formate.
+  \item Umwandlung mit \texttt{convert\_coco()} aus \texttt{ultralytics.data.converter}
+\end{itemize}
+\end{column}
+\end{columns}
+\source{\cite{lin2014coco, ultralytics_datasets_detect}}
+\end{frame}
+% ---------------------------------------------------------
+\begin{frame}{Datenleck: Aufteilung nach Szenen}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{itemize}
+  \item Kurz nacheinander aufgenommene Fotos zeigen meist \textbf{dieselbe Anordnung}.
+  \item Zufällige Aufteilung bringt nahezu gleiche Bilder in Training und Test. Die mAP ist dann \textbf{zu optimistisch}.
+  \item Unsere Regel: Fotos mit höchstens \textbf{30 Sekunden} Abstand bilden eine Szene.
+  \item 19 Szenen, ganze Szenen werden auf Training, Validierung und Test verteilt.
+  \item Allgemein: nach Aufnahmeort, Sitzung oder Person aufteilen
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\resizebox{0.9\linewidth}{!}{%
+\begin{tikzpicture}[
+  ort/.style={draw, rounded corners=2pt, minimum width=1.9cm, minimum height=0.6cm, font=\small},
+  pfeil/.style={-{Latex[length=2mm]}, line width=0.7pt, DarkGrey}]
+  \node[ort, fill=SecondaryColor!20] (o1) at (0,2.4) {Szene 1};
+  \node[ort, fill=SecondaryColor!20] (o2) at (0,1.6) {Szene 2};
+  \node[ort, fill=SecondaryColor!20] (o3) at (0,0.8) {Szene 4};
+  \node[ort, fill=AccentColor!30] (o4) at (0,0) {Szene 3};
+  \node[ort, fill=ExampleColor!35] (o5) at (0,-0.8) {Szene 6};
+  \node[ort, fill=SecondaryColor!40, minimum height=1.9cm, minimum width=2.2cm] (tr) at (4,1.6) {\textbf{Training}};
+  \node[ort, fill=AccentColor!50, minimum width=2.2cm] (va) at (4,0) {\textbf{Validierung}};
+  \node[ort, fill=ExampleColor!55, minimum width=2.2cm] (te) at (4,-0.8) {\textbf{Test}};
+  \foreach \o in {o1,o2,o3} \draw[pfeil] (\o.east) -- (tr.west);
+  \draw[pfeil] (o4.east) -- (va.west);
+  \draw[pfeil] (o5.east) -- (te.west);
+\end{tikzpicture}%
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------------------------------------------------------
+\begin{frame}{Der Gesamtdatensatz}
+\footnotesize
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Split} & \textbf{Roboflow} & \textbf{eigene} & \textbf{gesamt} \\
+\midrule
+Training & 512 & 78 & 590 \\
+Validierung & 146 & 15 & 161 \\
+Test & 90 & 16 & 106 \\
+\midrule
+\textbf{Summe} & \textbf{748} & \textbf{109} & \textbf{857} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\begin{itemize}
+  \item Ordner \texttt{muenzen\_gesamt}, eigene Fotos mit Präfix \texttt{eigen\_}
+  \item Eigene Fotos haben im Mittel 8 Münzen pro Bild und sind hochaufgelöst.
+  \item Training daher mit \texttt{imgsz=960} statt 640
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\begin{tabular}{lrr}
+\toprule
+\textbf{Klasse} & \textbf{Roboflow} & \textbf{eigene} \\
+\midrule
+1\,ct  & 573 & 42 \\
+2\,ct  & 552 & 106 \\
+5\,ct  & 498 & 78 \\
+10\,ct & 556 & 70 \\
+20\,ct & 424 & 114 \\
+50\,ct & 365 & 23 \\
+1\,€   & 395 & 32 \\
+2\,€   & 303 & 67 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.4em}
+\scriptsize Münzen je Klasse im Trainingssplit
+\end{column}
+\end{columns}
+\source{\texttt{LösungDatensatzVorbereiten.ipynb}}
+\end{frame}
 
 % ---------------------------------------------------------
 \begin{frame}{Labels prüfen}
@@ -1728,7 +1847,7 @@ names:
   \item \textbf{Boxgrößen:} Passen sie zur Kamerahöhe?
   \item \textbf{Sichtprüfung:} Boxen auf Stichproben einzeichnen
   \item \textbf{Klassennamen:} Stimmt die Reihenfolge in \texttt{data.yaml} mit dem Export überein?
-  \item Unser Trainingssplit: 3666 Münzen auf 473 Bildern, dazu 39 Hintergrundbilder
+  \item Unser Trainingssplit: 4198 Münzen auf 551 Bildern, dazu 39 Hintergrundbilder
 \end{itemize}
 \vspace{0.5em}
 Fehler im Datensatz lassen sich durch kein Training ausgleichen.
@@ -1739,7 +1858,6 @@ Fehler im Datensatz lassen sich durch kein Training ausgleichen.
 \end{column}
 \end{columns}
 \end{frame}
-
 % ---------------------------------------------------------
 \begin{frame}{Aufgabe: Münzdatensatz vorbereiten}
 \footnotesize
@@ -1749,7 +1867,8 @@ Fehler im Datensatz lassen sich durch kein Training ausgleichen.
   \item Laden Sie den Datensatz „Small object detection for euro coins“ (Version 5) im Format YOLOv8 von Roboflow Universe herunter.
   \item Erzeugen Sie den reduzierten Datensatz mit einem Bild pro Quellbild und den Klassen-IDs der Vorlesung.
   \item Prüfen Sie Klassenverteilung und Boxgrößen und sehen Sie sich Ausschnitte je Klasse an. Finden Sie falsch annotierte Münzen?
-  \item Optional: Fotografieren und annotieren Sie 30 bis 50 eigene Münzbilder als Live-Testset.
+  \item Fotografieren Sie 50 bis 100 eigene Münzbilder, lassen Sie diese mit \texttt{Vorannotieren.py} vorannotieren und korrigieren Sie die Boxen in makesense.ai.
+  \item Führen Sie beide Datensätze zusammen und teilen Sie die eigenen Fotos nach Szenen auf.
 \end{enumerate}
 \end{column}
 \begin{column}{0.35\textwidth}
@@ -1757,7 +1876,7 @@ Fehler im Datensatz lassen sich durch kein Training ausgleichen.
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: \texttt{LösungDatensatzVorbereiten.ipynb}}
+\source{Lösung: \texttt{LösungDatensatzVorbereiten.ipynb}, \texttt{Vorannotieren.py}}
 \end{frame}
 
 \makesubsectionpage{Training}
@@ -1811,12 +1930,13 @@ from ultralytics import YOLO
 
 model = YOLO("yolo26n.pt")
 results = model.train(
-    data="muenzen/data.yaml",
+    data="muenzen_gesamt/data.yaml",
     epochs=50,
-    imgsz=640,
+    imgsz=960,
     batch=16,
     patience=10,
     name="muenzen",
+    exist_ok=True,
 )
 \end{minted}
 }
@@ -1884,7 +2004,7 @@ results = model.train(
 \centering
 \includegraphics[width=0.95\linewidth]{figures/yolo_results.png}
 
-\scriptsize Verlauf beim Training auf dem Münzdatensatz, 50 Epochen auf einer GPU
+\scriptsize Verlauf beim Training auf dem Gesamtdatensatz, 50 Epochen mit \texttt{imgsz=960} auf einer GPU
 \end{column}
 \end{columns}
 \end{frame}
@@ -1928,18 +2048,18 @@ results = model.train(
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{itemize}
-  \item Unser Test: YOLO26n, 512 Trainingsbilder, $640 \times 640$ Pixel, CPU mit 2 Kernen
+  \item Unser Training: YOLO26n, 590 Bilder, \texttt{imgsz=960}, \texttt{batch=16}
   \begin{itemize}
-    \item Etwa \textbf{4,5 Minuten pro Epoche}, rund 6\,GB Arbeitsspeicher bei \texttt{batch=16}
-    \item 50 Epochen dauern damit fast vier Stunden.
+    \item Mit GPU: \textbf{50 Epochen in gut 7 Minuten}, rund 9 Sekunden pro Epoche
+    \item Zum Vergleich auf einer CPU mit 2 Kernen bei \texttt{imgsz=640}: etwa 4,5 Minuten pro Epoche
   \end{itemize}
-  \item Mit GPU: \textbf{50 Epochen in gut 3 Minuten}, also rund 4 Sekunden pro Epoche
+  \item Bei 960 statt 640 Pixeln braucht jedes Bild rund \textbf{2,25-mal so viel Speicher}.
+  \item Startet der Notebook-Kernel ohne Fehlermeldung neu, ist meist der \textbf{Arbeitsspeicher} voll.
   \item Stellschrauben bei wenig Rechenleistung:
   \begin{itemize}
+    \item \texttt{batch=8}, \texttt{workers=2}, Training im Terminal
     \item Kleineres Modell (\texttt{n} statt \texttt{s})
     \item Kleinere Eingabegröße, aber Vorsicht bei kleinen Münzen
-    \item \texttt{batch=8} bei wenig Arbeitsspeicher
-    \item Weniger Epochen mit \texttt{patience}
   \end{itemize}
 \end{itemize}
 \end{column}
@@ -1956,7 +2076,7 @@ results = model.train(
 \begin{columns}
 \begin{column}{0.60\textwidth}
 \begin{enumerate}
-  \item Trainieren Sie YOLO26n auf dem reduzierten Münzdatensatz.
+  \item Trainieren Sie YOLO26n mit \texttt{imgsz=960} auf dem Gesamtdatensatz aus Roboflow-Bildern und eigenen Fotos.
   \item Stellen Sie Loss und mAP über die Epochen dar und beurteilen Sie, ob Overfitting auftritt.
   \item Sehen Sie sich \texttt{labels.jpg} und \texttt{train\_batch0.jpg} an. Was fällt Ihnen auf?
   \item Trainieren Sie mit \texttt{scale=0.1} statt des Standardwerts und vergleichen Sie die mAP.
@@ -2177,7 +2297,6 @@ AR$_{1}$, AR$_{10}$, AR$_{100}$ & Recall bei höchstens 1, 10, 100 Detektionen \
 \source{\cite{lin2014coco, coco_eval}}
 \end{frame}
 
-
 % ---------------------------------------------------------
 \begin{frame}[fragile]{Bewertung mit Ultralytics}
 \footnotesize
@@ -2187,7 +2306,7 @@ AR$_{1}$, AR$_{10}$, AR$_{100}$ & Recall bei höchstens 1, 10, 100 Detektionen \
 \begin{minted}{python}
 model = YOLO("best.pt")
 metrics = model.val(
-    data="muenzen/data.yaml",
+    data="muenzen_gesamt/data.yaml",
     split="test")
 
 metrics.box.mp      # Precision
@@ -2199,7 +2318,7 @@ metrics.box.maps    # je Klasse
 }
 \begin{itemize}
   \item \texttt{split="test"}: ungesehene Testdaten
-  \item Unser Modell: mAP@0.5 von 0,82 auf den Validierungsdaten, aber nur 0,65 auf den Testdaten
+  \item Unser Modell: mAP@0.5 von 0,83 auf den Validierungsdaten, aber nur 0,65 auf den Testdaten
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -2223,7 +2342,7 @@ metrics.box.maps    # je Klasse
   \item Für die KI-Kasse zählt: Ist die \textbf{Summe} pro Bild richtig?
   \item Ein einziger Fehlalarm oder eine übersehene Münze macht das Ergebnis falsch.
   \item Der Schwellenwert \texttt{conf} wird so gewählt, dass möglichst viele Beträge stimmen.
-  \item Unser Test: mAP@0.5 von 0,65, aber nur bei \textbf{36 von 71} Testbildern mit Münzen stimmt der Betrag exakt.
+  \item Unser Test: mAP@0.5 von 0,65, aber nur bei \textbf{43 von 87} Testbildern mit Münzen stimmt der Betrag exakt.
 \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
@@ -2244,20 +2363,33 @@ metrics.box.maps    # je Klasse
 \begin{frame}{Fehleranalyse und Domain Shift}
 \footnotesize
 \begin{columns}
-\begin{column}{0.47\textwidth}
+\begin{column}{0.60\textwidth}
 \begin{itemize}
-  \item \textbf{Domain Shift:} Die Einsatzumgebung unterscheidet sich von den Trainingsdaten, z.\,B. Licht im Hörsaal oder eine andere Kamera.
-  \item \textbf{Live-Testset:} Bilder der Live-Kamera aufnehmen, etwa 50 annotieren
-  \item mAP auf Validierungsdaten und auf dem Live-Testset vergleichen
-  \item Die Lücke zeigt, wie gut das Modell \textbf{generalisiert}.
-  \item 20 bis 30 Bilder aus der Einsatzumgebung ins Training aufnehmen, neu trainieren, erneut messen
+  \item \textbf{Domain Shift:} Die Einsatzumgebung unterscheidet sich von den Trainingsdaten, z.\,B. Untergrund, Kamera, Licht.
+  \item Vergleich auf den Testdaten, \texttt{conf=0.5}:
+\end{itemize}
+\centering
+\begin{tabular}{lrr}
+\toprule
+ & \textbf{nur Roboflow} & \textbf{+ eigene Fotos} \\
+\midrule
+mAP@0.5, Roboflow & 0,62 & 0,68 \\
+mAP@0.5, eigene Fotos & 0,67 & 0,67 \\
+Betrag exakt, Roboflow & 36 von 71 & 43 von 71 \\
+Betrag exakt, eigene Fotos & 2 von 16 & 0 von 16 \\
+\texttt{testbild.jpg} & 5,24\,€ & 5,58\,€ \\
+\bottomrule
+\end{tabular}
+\begin{itemize}
+  \item Auf den eigenen Fotos mit vielen Münzen pro Bild liegt der Betrag im Mittel rund 1\,€ daneben.
+  \item 78 eigene Trainingsfotos reichen noch nicht: \textbf{mehr Daten} aus der Einsatzumgebung sammeln
 \end{itemize}
 \end{column}
-\begin{column}{0.48\textwidth}
+\begin{column}{0.35\textwidth}
 \centering
 \resizebox{0.9\linewidth}{!}{%
 \begin{tikzpicture}[schritt/.style={draw, rounded corners=3pt, fill=SecondaryColor!20, font=\small, minimum width=2.4cm, minimum height=0.7cm, align=center}]
-  \node[schritt] (a) at (90:2.6) {Live-Bilder\\aufnehmen};
+  \node[schritt] (a) at (90:2.6) {Bilder\\aufnehmen};
   \node[schritt] (b) at (18:3.2) {Fehler\\analysieren};
   \node[schritt] (c) at (-54:2.9) {Daten\\ergänzen};
   \node[schritt] (d) at (-126:2.9) {neu\\trainieren};
@@ -2280,6 +2412,7 @@ metrics.box.maps    # je Klasse
   \item Bewerten Sie Ihr trainiertes Modell mit \texttt{model.val()} auf den Testdaten. Welche Klassen schneiden am schlechtesten ab?
   \item Interpretieren Sie die Konfusionsmatrix. Welche Münzen werden verwechselt?
   \item Bestimmen Sie den Anteil der Testbilder, bei denen die Summe exakt stimmt, und analysieren Sie die Bilder mit dem größten Fehler.
+  \item Werten Sie \texttt{testbild.jpg} aus und vergleichen Sie mit den tatsächlichen Münzen.
 \end{enumerate}
 \end{column}
 \begin{column}{0.35\textwidth}
@@ -2287,7 +2420,7 @@ metrics.box.maps    # je Klasse
 \twemoji[width=0.9\linewidth]{laptop}
 \end{column}
 \end{columns}
-\source{Lösung: \texttt{LösungYoloEvaluation.ipynb}}
+\source{Lösung: \texttt{LösungYoloEvaluation.ipynb}, \texttt{MuenzbildAuswerten.ipynb}}
 \end{frame}
 
 \makesubsectionpage{Deployment und Ausblick}
@@ -2299,9 +2432,10 @@ metrics.box.maps    # je Klasse
 \begin{column}{0.47\textwidth}
 {\footnotesize
 \begin{minted}{python}
-for r in model.predict(source=0,
-                       stream=True,
-                       conf=conf):
+for r in model.predict(
+        source=0, stream=True,
+        conf=conf,
+        agnostic_nms=True):
     total = sum(VALUES[r.names[int(c)]]
                 for c in r.boxes.cls)
     image = r.plot()
@@ -2309,26 +2443,25 @@ for r in model.predict(source=0,
 \end{minted}
 }
 \begin{itemize}
+  \item \texttt{agnostic\_nms=True}: NMS über alle Klassen, eine Box pro Münze
   \item Skript \texttt{KiKasse.py} mit Reglern für \texttt{conf} und \texttt{iou}
-  \item Taste \texttt{n}: NMS ein und aus
-  \item Taste \texttt{s}: Bild für das Live-Testset speichern
+  \item Taste \texttt{s}: Bild für neue Trainingsdaten speichern
 \end{itemize}
 
 \note{
 \begin{itemize}
-  \item Das Foto stammt nicht aus dem Datensatz: anderer Untergrund, andere Kamera, andere Beleuchtung.
-  \item Die beiden 2-€-Münzen und die 1-€-Münze werden erkannt.
-  \item 20 ct und 10 ct werden übersehen, die Kupfermünze wird mit Confidence 0,90 als 2\,€ erkannt.
-  \item Ergebnis: 7,00\,€ statt rund 5,30\,€, ein typischer Domain Shift.
-  \item Abhilfe: eigene Fotos mit diesem Untergrund und dieser Kamera ins Training aufnehmen.
+  \item Alle neun Münzen werden gefunden, Schere, Stifte und Platine nicht.
+  \item Eine Kupfermünze wird als 2\,ct statt 5\,ct erkannt: 5,58\,€ statt 5,61\,€.
+  \item Ohne \texttt{agnostic\_nms} erhält eine Kupfermünze zwei Boxen, 5\,ct und 2\,ct.
+  \item Bei \texttt{conf=0.25} kommen weitere Doppeltreffer hinzu, die Summe steigt auf 6,00\,€.
 \end{itemize}
 }
 \end{column}
 \begin{column}{0.48\textwidth}
 \centering
-\includegraphics[width=0.9\linewidth]{figures/yolo_kikasse.jpg}
+\includegraphics[width=0.85\linewidth]{figures/yolo_testbild_kasse.jpg}
 
-\scriptsize Eigenes Foto, nicht aus dem Datensatz: 7,00\,€ statt rund 5,30\,€
+\scriptsize \texttt{testbild.jpg} mit \texttt{conf=0.5} und \texttt{agnostic\_nms=True}
 \end{column}
 \end{columns}
 \end{frame}
@@ -2360,7 +2493,7 @@ iPhone, Mac & \texttt{coreml} \\
 \end{tabular}
 
 \vspace{0.8em}
-Unser Test auf einer CPU: PyTorch 84\,ms, ONNX 63\,ms pro Bild
+Unser Test auf einer CPU mit \texttt{imgsz=960}: PyTorch 190\,ms, ONNX 167\,ms pro Bild
 \end{column}
 \end{columns}
 \source{\cite{ultralytics_export, ultralytics_yolo26}}
@@ -2453,7 +2586,7 @@ Unser Test auf einer CPU: PyTorch 84\,ms, ONNX 63\,ms pro Bild
 \begin{enumerate}
   \item Exportieren Sie Ihr bestes Modell nach ONNX und vergleichen Sie die Laufzeit mit dem PyTorch-Modell.
   \item Starten Sie \texttt{KiKasse.py} mit Ihrer Webcam und testen Sie verschiedene Werte für \texttt{conf} und \texttt{iou}.
-  \item Nehmen Sie mit der Taste \texttt{s} mindestens 30 Bilder auf, annotieren Sie diese und bestimmen Sie die mAP auf diesem Live-Testset.
+  \item Nehmen Sie mit der Taste \texttt{s} mindestens 30 Bilder auf, annotieren Sie diese mit makesense.ai und bestimmen Sie die mAP auf diesem Live-Testset.
   \item Ergänzen Sie das Training um 20 bis 30 weitere Bilder aus dem Hörsaal und vergleichen Sie die mAP auf dem Live-Testset vor und nach dem Nachtraining.
 \end{enumerate}
 \end{column}
